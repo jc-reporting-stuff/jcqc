@@ -1,0 +1,187 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.8rem;
+}
+
+.container {
+  width: auto;
+  margin: auto;
+}
+
+.csv-input {
+  padding: 10px;
+  display: block;
+  margin: 15px auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.blankTable td {
+  border-bottom: 1px solid black;
+  padding: 1px 3px;
+  text-align: center;
+  width: 95px !important;
+}
+
+.centeredText {
+  text-align: center;
+}
+
+.colouredRow {
+  background-color: gainsboro;
+}
+
+.calTable,
+.sampleTable,
+.blankTable,
+.RMTable,
+.methodTable {
+  border-collapse: collapse;
+}
+
+.calTable td,
+.sampleTable td,
+.RMTable td {
+  border-bottom: 1px solid black;
+  padding: 3px 3px;
+  text-align: center;
+  width: 105px !important;
+  vertical-align: middle;
+}
+
+.calTable th,
+.sampleTable th,
+.blankTable th,
+.RMTable th {
+  border-bottom: 2px solid black;
+  width: 105px !important;
+  padding: 3px 3px;
+}
+
+.custom-file-input {
+  color: transparent;
+  display: block;
+  cursor: pointer;
+  margin-left: 75px;
+  padding: 0;
+}
+
+.custom-file-input::-webkit-file-upload-button {
+  visibility: hidden;
+}
+
+.custom-file-input::before {
+  content: "Select Sequence Export";
+  color: darkslategray;
+  display: inline-block;
+  background: lightgreen;
+  border: 1px solid darkgreen;
+  border-radius: 3px;
+  padding: 5px 8px;
+  outline: none;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 12pt;
+}
+
+.custom-file-input:hover::before {
+  border-color: black;
+}
+
+.custom-file-input:active {
+  outline: 0;
+}
+
+.custom-file-input:active::before {
+  background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+
+.firstCol {
+  text-align: left !important;
+  min-width: 175px !important;
+}
+
+.greyTopBorder {
+  border-top: 1px solid lightgrey;
+}
+
+.headerItem {
+  font-weight: bold;
+  padding: 10px;
+}
+
+.insertSpan {
+  margin: 0;
+  padding: 0;
+  font-size: 0.55rem;
+  cursor: pointer;
+}
+
+.methodButton {
+  margin: 2px 5px;
+  padding: 2px 10px;
+  color: darkslategray;
+  background-color: gainsboro;
+  border: 1px solid grey;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.methodButtons {
+  margin: auto;
+  text-align: center;
+  padding: 10px;
+}
+
+.methodTable th,
+.methodTable td {
+  padding: 5px 10px;
+  text-align: center;
+}
+
+.centeredContainerParent {
+  position: relative;
+}
+
+.centeredContainerChild {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.sampleFail {
+  background-color: mistyrose;
+  color: firebrick;
+}
+
+.sampleNeutral {
+  background-color: gainsboro;
+  color: darkslategray;
+}
+
+.samplePass {
+  background-color: honeydew;
+  color: darkgreen;
+}
+
+.calTable tr:nth-child(even) {
+  background-color: gainsboro;
+}
+
+.stripedTable tr:nth-child(even) {
+  background-color: gainsboro;
+}
+
+.thickBottomBorder {
+  border-bottom: 2px solid black;
+}
+
+input {
+  margin: 10px;
+}
