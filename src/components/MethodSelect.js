@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link, useParams, useHistory } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import Method from "./Method";
 import FileSelector from "./FileSelector";
@@ -13,7 +13,6 @@ const MethodSelect = ({
   setMethod
 }) => {
   const nameFromUrl = useParams().name;
-  const history = useHistory();
   useEffect(() => {
     if (nameFromUrl && methods) {
       setMethod(methods.find(m => m.name === nameFromUrl));
