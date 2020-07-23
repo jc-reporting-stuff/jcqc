@@ -39,6 +39,47 @@ const CHEM162 = {
   ]
 };
 
+const CHEM055 = {
+  name: "CHEM-055",
+  description: "Metals in Tissues",
+  elements: ["Mn", "Fe", "Co", "Cu", "Zn", "Se", "Mo", "Pb"],
+  units: ["ppb", "ppm", "ppb", "ppm", "ppm", "ppm", "ppb", "ppm"],
+  checkStdTolerance: 0.1,
+  checkStds: [
+    {
+      name: "5/50 ppb",
+      expectedValues: [5, 50, 5, 50, 50, 5, 5, 5]
+    }
+  ],
+  blanks: [
+    {
+      name: "Serum Blank",
+      type: "serum",
+      LOQs: [0.9, 0.013, 0.3, 0.0008, 0.0011, 0.007, 1, null]
+    },
+    {
+      name: "Blood Blank",
+      type: "blood",
+      LOQs: [null, null, null, null, null, 0.029, null, 0.001]
+    }
+  ],
+  duplicateTolerance: 15,
+  calStandards: [0.05, 0.1, 0.25, 0.5, 1, 5, 10, 50, 250],
+  sigFigs: 3,
+  referenceMaterials: [
+    {
+      name: "QM-S Q1807",
+      rangesLow: [2.6, 0.7, 3.7, 0.9, 0.9, 0.1, 1.0, null],
+      rangesHigh: [3.1, 1.0, 4.2, 1.2, 1.2, 0.15, 1.7, null]
+    },
+    {
+      name: "QM-B Q1720",
+      rangesLow: [null, null, null, null, null, 0.15, null, 0.1],
+      rangesHigh: [null, null, null, null, null, 0.2, null, 0.14]
+    }
+  ]
+};
+
 const CHEM057 = {
   name: "CHEM-057",
   description: "Iodine in Milk, Tissue and Feeds",
@@ -315,6 +356,6 @@ const TOXI064 = {
   ]
 };
 
-const methods = [CHEM162, CHEM057, TOXI064];
+const methods = [CHEM162, CHEM057, TOXI064, CHEM055];
 
 module.exports = methods;

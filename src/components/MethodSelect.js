@@ -51,12 +51,6 @@ const MethodSelect = ({
           <>
             <br />
             <br />
-            <button
-              onClick={() => history.push(`/edit/${method.name}`)}
-              className="methodButton"
-            >
-              Edit {method.name}
-            </button>
           </>
         )}
 
