@@ -105,7 +105,7 @@ const CHEM057 = {
   referenceMaterials: [
     {
       name: "Skim Milk Powder",
-      rangesLow: [2500],
+      rangesLow: [2501],
       rangesHigh: [3200]
     }
   ]
