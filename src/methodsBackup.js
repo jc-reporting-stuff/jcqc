@@ -41,7 +41,7 @@ const CHEM162 = {
 
 const CHEM055 = {
   name: "CHEM-055",
-  description: "Metals in Tissues - DO NOT USE YET",
+  description: "Metals in Tissues",
   elements: ["Mn", "Fe", "Co", "Cu", "Zn", "Se", "Mo", "Pb"],
   units: ["ppb", "ppm", "ppb", "ppm", "ppm", "ppm", "ppb", "ppm"],
   checkStdTolerance: 0.1,
@@ -105,8 +105,8 @@ const CHEM057 = {
   referenceMaterials: [
     {
       name: "Skim Milk Powder",
-      rangesLow: [2317],
-      rangesHigh: [3229]
+      rangesLow: [2501],
+      rangesHigh: [3200]
     }
   ]
 };
