@@ -28,8 +28,8 @@ const CHEM162 = {
   referenceMaterials: [
     {
       name: "QM-S Q1807",
-      rangesLow: [2.6, 0.7, 3.7, 0.9, 0.9, 0.1, 1.0, null],
-      rangesHigh: [3.1, 1.0, 4.2, 1.2, 1.2, 0.15, 1.7, null]
+      rangesLow: [2.23, 0.747, 3.47, 1.03, 0.913, 0.119, 1.11, null],
+      rangesHigh: [3.2, 0.851, 4.3, 1.16, 1.16, 0.152, 1.73, null]
     },
     {
       name: "QM-B Q1720",
