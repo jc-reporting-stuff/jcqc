@@ -33,8 +33,8 @@ const CHEM162 = {
     },
     {
       name: "QM-B Q1720",
-      rangesLow: [null, null, null, null, null, 0.152, null, 0.0962],
-      rangesHigh: [null, null, null, null, null, 0.243, null, 0.1526]
+      rangesLow: [null, null, null, null, null, 0.153, null, 0.102],
+      rangesHigh: [null, null, null, null, null, 0.216, null, 0.143]
     }
   ]
 };
