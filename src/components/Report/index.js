@@ -51,6 +51,7 @@ const Report = ({ data, method }) => {
           const sample = d.id.match(sampleIdRegEx);
 
           if (d.id === "Cal Blank") {
+            // Might need to change next line to .length + 1 ?
             const calData = data.slice(idx, idx + method.calStandards.length);
             return <Calibration data={calData} key={idx} method={method} />;
           } else if (sampleBlank) {
