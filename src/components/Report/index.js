@@ -47,7 +47,7 @@ const Report = ({ data, method }) => {
           // const duplicate = d.id.match(sampleIdRegEx) && d.dupValues
           const duplicate = d.dupValues;
 
-          const sampleIdRegEx = new RegExp("[0-9]{2}-[0-9]{6}-[0-9]{4}");
+          const sampleIdRegEx = new RegExp("^[0-9]{2}-[0-9]{6}-[0-9]{4}");
           const sample = d.id.match(sampleIdRegEx);
 
           if (d.id === "Cal Blank") {
