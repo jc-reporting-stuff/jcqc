@@ -1,6 +1,5 @@
-const parseJsonData = output => {
+const parseJsonData = (output) => {
   const data = [];
-  const dupRegEx = new RegExp(" (d|dup)", "i");
 
   const firstElementMass = output[0].mass;
   let i = 1;
@@ -18,12 +17,13 @@ const parseJsonData = output => {
 
     for (let j = 0; j < elementCount; j++) {
       const findMassIndex = massesPresent.findIndex(
-        m => m === parseInt(output[i + j].mass)
+        (m) => m === parseInt(output[i + j].mass)
       );
       values[findMassIndex] = Number(output[i + j].concentration);
       units.push(output[i + j].units);
     }
 
+    const dupRegEx = new RegExp("(d|dup)$", "i");
     if (data.length > 1 && output[i].sample_name.match(dupRegEx)) {
       data[data.length - 1].dupValues = values;
     } else {

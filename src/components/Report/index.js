@@ -12,8 +12,6 @@ import CheckStd from "./CheckStd";
 import ReferenceMaterial from "./ReferenceMaterial";
 
 const Report = ({ data, method }) => {
-  const sampleIdRegEx = new RegExp("[0-9]{2}-[0-9]{6}-[0-9]{4}");
-
   if (!data) {
     return (
       <div style={{ textAlign: "center" }}>
@@ -41,13 +39,15 @@ const Report = ({ data, method }) => {
       <HeaderInfo method={method} />
       {data[0].id &&
         data.map((d, idx) => {
-          const sampleBlank = method.blanks.find(b => b.name === d.id);
-          const checkStd = method.checkStds.find(c => c.name === d.id);
+          const sampleBlank = method.blanks.find((b) => b.name === d.id);
+          const checkStd = method.checkStds.find((c) => c.name === d.id);
           const referenceMaterial = method.referenceMaterials.find(
-            r => r.name === d.id
+            (r) => r.name === d.id
           );
           // const duplicate = d.id.match(sampleIdRegEx) && d.dupValues
           const duplicate = d.dupValues;
+
+          const sampleIdRegEx = new RegExp("[0-9]{2}-[0-9]{6}-[0-9]{4}");
           const sample = d.id.match(sampleIdRegEx);
 
           if (d.id === "Cal Blank") {
@@ -57,7 +57,7 @@ const Report = ({ data, method }) => {
             );
             return <Calibration data={calData} key={idx} method={method} />;
           } else if (sampleBlank) {
-            const LOQs = method.blanks.find(b => b.type === sampleBlank.type)
+            const LOQs = method.blanks.find((b) => b.type === sampleBlank.type)
               .LOQs;
             return (
               <Blank
@@ -79,7 +79,7 @@ const Report = ({ data, method }) => {
             );
           } else if (referenceMaterial) {
             const LOQs = method.blanks.find(
-              b => b.type === referenceMaterial.type
+              (b) => b.type === referenceMaterial.type
             );
             if (!duplicate) {
               return (
