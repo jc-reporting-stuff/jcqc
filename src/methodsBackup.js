@@ -28,20 +28,20 @@ const CHEM162 = {
   referenceMaterials: [
     {
       name: "QM-S Q1807",
-      rangesLow: [2.6, 0.7, 3.7, 0.9, 0.9, 0.1, 1.0, null],
-      rangesHigh: [3.1, 1.0, 4.2, 1.2, 1.2, 0.15, 1.7, null]
+      rangesLow: [2.23, 0.747, 3.47, 1.03, 0.913, 0.119, 1.11, null],
+      rangesHigh: [3.2, 0.851, 4.3, 1.16, 1.16, 0.152, 1.73, null]
     },
     {
       name: "QM-B Q1720",
-      rangesLow: [null, null, null, null, null, 0.15, null, 0.1],
-      rangesHigh: [null, null, null, null, null, 0.2, null, 0.14]
+      rangesLow: [null, null, null, null, null, 0.153, null, 0.102],
+      rangesHigh: [null, null, null, null, null, 0.216, null, 0.143]
     }
   ]
 };
 
 const CHEM055 = {
   name: "CHEM-055",
-  description: "Metals in Tissues",
+  description: "Metals in Tissues - DO NOT USE YET",
   elements: ["Mn", "Fe", "Co", "Cu", "Zn", "Se", "Mo", "Pb"],
   units: ["ppb", "ppm", "ppb", "ppm", "ppm", "ppm", "ppb", "ppm"],
   checkStdTolerance: 0.1,
@@ -105,8 +105,8 @@ const CHEM057 = {
   referenceMaterials: [
     {
       name: "Skim Milk Powder",
-      rangesLow: [2501],
-      rangesHigh: [3200]
+      rangesLow: [2317],
+      rangesHigh: [3229]
     }
   ]
 };
