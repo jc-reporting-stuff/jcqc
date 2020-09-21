@@ -15,7 +15,7 @@ const MethodSelect = ({
   const nameFromUrl = useParams().name;
   useEffect(() => {
     if (nameFromUrl && methods) {
-      setMethod(methods.find(m => m.name === nameFromUrl));
+      setMethod(methods.find((m) => m.name === nameFromUrl));
     }
   }, [methods, nameFromUrl, setMethod]);
 
@@ -23,29 +23,41 @@ const MethodSelect = ({
     return <div>Loading...</div>;
   }
 
+  const flexContainer = {
+    display: "flex",
+    flexWrap: "wrap",
+    lineHeight: "2rem",
+    justifyContent: "center"
+  };
+
   return (
     <div className="methodButtons">
       <div>
         <h1 style={{ textAlign: "center" }}>JCQC Reporting Application</h1>
         {error && <span style={{ color: "red" }}>Error: {error}</span>}
         <hr style={{ width: "36rem", marginBottom: "1rem" }} />
-        {methods.map(m => {
-          return (
-            <span key={m.name}>
-              <Link
-                to={`/${m.name}`}
-                className="methodButton"
-                onClick={() => setMethod(m)}
-              >
-                {m.name}
-              </Link>{" "}
-            </span>
-          );
-        })}
+        <div style={flexContainer}>
+          {methods.map((m) => {
+            return (
+              <div key={m.name}>
+                <Link
+                  to={`/${m.name}`}
+                  className="methodButton"
+                  onClick={() => setMethod(m)}
+                  style={{ margin: "8px" }}
+                >
+                  {m.name}
+                </Link>
+              </div>
+            );
+          })}
 
-        <Link to="/" className="methodButton" onClick={() => setMethod()}>
-          Clear
-        </Link>
+          <div>
+            <Link to="/" className="methodButton" onClick={() => setMethod()}>
+              Clear
+            </Link>
+          </div>
+        </div>
         {method && (
           <>
             <br />
