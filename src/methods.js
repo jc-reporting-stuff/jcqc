@@ -43,7 +43,19 @@ const CHEM114 = {
   name: "CHEM-114",
   description: "Metals in soils, biosolids and wastewaters",
   elements: ["Cr", "Co", "Ni", "Cu", "Zn", "As", "Se", "Mo", "Cd", "Hg", "Pb"],
-  units: ["ppm", "ppm", "ppm", "ppm", "ppm", "ppm", "ppm", "ppm"],
+  units: [
+    "ppm",
+    "ppm",
+    "ppm",
+    "ppm",
+    "ppm",
+    "ppm",
+    "ppm",
+    "ppm",
+    "ppm",
+    "ppm",
+    "ppm"
+  ],
   checkStdTolerance: 0.15,
   checkStds: [
     {
