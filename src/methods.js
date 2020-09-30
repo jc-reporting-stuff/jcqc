@@ -331,7 +331,7 @@ const CHEM057 = {
   checkStdTolerance: 0.15,
   checkStds: [
     {
-      name: "0.5 ppm check",
+      name: "500 ppb check",
       expectedValues: [500]
     }
   ],
