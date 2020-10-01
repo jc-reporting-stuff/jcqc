@@ -615,7 +615,7 @@ const TOXI064Pb = {
     {
       name: "Method Blank",
       type: "any",
-      LOQs: [0.001]
+      LOQs: [0.004]
     }
   ],
   duplicateTolerance: 20,
