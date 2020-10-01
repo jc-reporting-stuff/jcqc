@@ -106,7 +106,7 @@ const CHEM055 = {
     }
   ],
   duplicateTolerance: 20,
-  calStandards: [0.01, 0.05, 0.25, 0.5, 1, 5, 10, 0.25, 0.5, 1, 5, 10, 50],
+  calStandards: [0, 0.01, 0.05, 0.25, 0.5, 1, 5, 10, 0.25, 0.5, 1, 5, 10, 50],
   sigFigs: 3,
   referenceMaterials: [
     {
@@ -278,7 +278,7 @@ const CHEM114 = {
     }
   ],
   duplicateTolerance: 15,
-  calStandards: [0.05, 0.1, 0.5, 1, 5, 10, 50],
+  calStandards: [0, 0.05, 0.1, 0.5, 1, 5, 10, 50],
   sigFigs: 3,
   referenceMaterials: [
     {
@@ -338,7 +338,7 @@ const CHEM162 = {
     }
   ],
   duplicateTolerance: 15,
-  calStandards: [0.05, 0.1, 0.25, 0.5, 1, 5, 10, 50, 250],
+  calStandards: [0, 0.05, 0.1, 0.25, 0.5, 1, 5, 10, 50, 250],
   sigFigs: 3,
   referenceMaterials: [
     {
@@ -630,6 +630,50 @@ const TOXI064Pb = {
   ]
 };
 
-const methods = [CHEM055, CHEM057, CHEM114, CHEM162, TOXI064, TOXI064Pb];
+const CHEM055AllTech = {
+  name: "CHEM-055 - Project",
+  description: "Animal Nutrition Project - AllTech",
+  elements: ["Mn", "Fe", "Co", "Cu", "Zn", "Se", "Mo"],
+  units: ["ppb", "ppm", "ppm", "ppm", "ppm", "ppm", "ppm"],
+  checkStdTolerance: 0.1,
+  checkStds: [
+    {
+      name: "Calibration Check",
+      expectedValues: [10, 10, 10, 10, 10, 10, 10]
+    }
+  ],
+  blanks: [
+    {
+      name: "Serum Blank",
+      type: "serum",
+      LOQs: [0.9, 0.013, 0.3, 0.0008, 0.0011, 0.007, 1]
+    },
+    {
+      name: "Blood Blank",
+      type: "blood",
+      LOQs: [null, null, null, null, null, 0.029, null]
+    }
+  ],
+  duplicateTolerance: 15,
+  calStandards: [0, 0.00025, 0.0005, 0.001, 0.005, 0.01, 0.05, 0.2, 0.5, 1.0],
+  sigFigs: 3,
+  referenceMaterials: [
+    {
+      name: "Wheat Flour",
+      rangesLow: [23.45, 27.4, 0.003, 2.85, 19.38, 0.66, 0.54],
+      rangesHigh: [46.19, 54.28, 0.01, 6.45, 46.02, 1.98, 1.38]
+    }
+  ]
+};
+
+const methods = [
+  CHEM055,
+  CHEM057,
+  CHEM114,
+  CHEM162,
+  TOXI064,
+  TOXI064Pb,
+  CHEM055AllTech
+];
 
 module.exports = methods;
