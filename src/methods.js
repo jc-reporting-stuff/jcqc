@@ -624,8 +624,8 @@ const TOXI064Pb = {
   referenceMaterials: [
     {
       name: "Control MS",
-      rangesLow: [0.45],
-      rangesHigh: [0.55]
+      rangesLow: [0.4],
+      rangesHigh: [0.52]
     }
   ]
 };
