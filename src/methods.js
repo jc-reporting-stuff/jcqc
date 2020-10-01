@@ -624,15 +624,15 @@ const TOXI064Pb = {
   referenceMaterials: [
     {
       name: "Control MS",
-      rangesLow: [0.4],
-      rangesHigh: [0.52]
+      rangesLow: [0.324],
+      rangesHigh: [0.526]
     }
   ]
 };
 
-const CHEM055AllTech = {
-  name: "CHEM-055 - Project",
-  description: "Animal Nutrition Project - AllTech",
+const CHEM055Alltech = {
+  name: "CHEM-055 - Alltech",
+  description: "Animal Nutrition Project - Alltech",
   elements: ["Mn", "Fe", "Co", "Cu", "Zn", "Se", "Mo"],
   units: ["ppb", "ppm", "ppm", "ppm", "ppm", "ppm", "ppm"],
   checkStdTolerance: 0.1,
@@ -673,7 +673,7 @@ const methods = [
   CHEM162,
   TOXI064,
   TOXI064Pb,
-  CHEM055AllTech
+  CHEM055Alltech
 ];
 
 module.exports = methods;
