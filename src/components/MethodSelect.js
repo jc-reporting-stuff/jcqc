@@ -27,7 +27,9 @@ const MethodSelect = ({
     display: "flex",
     flexWrap: "wrap",
     lineHeight: "2rem",
-    justifyContent: "center"
+    justifyContent: "center",
+    width: "36rem",
+    margin: "auto"
   };
 
   return (
