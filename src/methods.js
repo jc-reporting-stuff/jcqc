@@ -401,7 +401,7 @@ const TOXI064 = {
     "ppm",
     "ppm"
   ],
-  checkStdTolerance: 0.1,
+  checkStdTolerance: 0.15,
   checkStds: [
     {
       name: "Calibration Check",
@@ -509,7 +509,7 @@ const TOXI064 = {
         0.62,
         769.6,
         0.77,
-        0.64,
+        0.058,
         -0.07,
         23.45,
         27.4,
@@ -531,7 +531,7 @@ const TOXI064 = {
         1.58,
         1704,
         5.27,
-        3.4,
+        0.615,
         0.17,
         46.19,
         54.28,

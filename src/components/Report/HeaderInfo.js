@@ -9,7 +9,9 @@ const HeaderInfo = ({ method }) => {
       <div className="headerItem">
         Sequence ID: ______________________________________
       </div>
-      <div className="headerItem">Software Version: MassHunter v4.6</div>
+      <div className="headerItem">
+        Software Version: MassHunter v4.6 Build 621.8 Patch 1
+      </div>
       <div className="headerItem">Autosampler Info: ESI prepFAST SC4</div>
     </div>
   );
