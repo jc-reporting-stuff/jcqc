@@ -3,9 +3,9 @@ const parseJsonData = (output) => {
 
   const firstElementMass = output[0].mass;
   let i = 1;
-  let massesPresent = [parseInt(output[0].mass)];
+  let massesPresent = [Number(output[0].mass)];
   while (output[i].mass !== firstElementMass) {
-    massesPresent.push(parseInt(output[i].mass));
+    massesPresent.push(Number(output[i].mass));
     i++;
   }
   const elementCount = i;
@@ -17,15 +17,18 @@ const parseJsonData = (output) => {
 
     for (let j = 0; j < elementCount; j++) {
       const findMassIndex = massesPresent.findIndex(
-        (m) => m === parseInt(output[i + j].mass)
+        (m) => m === Number(output[i + j].mass)
       );
       values[findMassIndex] = Number(output[i + j].concentration);
       units.push(output[i + j].units);
     }
 
-    const dupRegEx = new RegExp("(d|dup)$", "i");
+    const dupRegEx = new RegExp("(.*)(d|dup)$", "i");
     if (data.length > 1 && output[i].sample_name.match(dupRegEx)) {
-      data[data.length - 1].dupValues = values;
+      const sampleId = output[i].sample_name.match(dupRegEx)[1].trim();
+      const refSample = data.find((datum) => datum.id === sampleId);
+      refSample.dupValues = values;
+      // data[data.length - 1].dupValues = values;
     } else {
       const sampleObject = {
         id: output[i].sample_name,
