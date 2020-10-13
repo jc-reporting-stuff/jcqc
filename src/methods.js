@@ -686,7 +686,7 @@ const REEs = {
     }
   ],
   duplicateTolerance: 20,
-  calStandards: [0, 0.05, 0.25, 1, 25, 100, 200],
+  calStandards: [0, 0.05, 0.25, 1, 5, 25, 100, 200],
   sigFigs: 3,
   referenceMaterials: []
 };
