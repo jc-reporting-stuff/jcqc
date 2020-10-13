@@ -27,8 +27,15 @@ const parseJsonData = (output) => {
     if (data.length > 1 && output[i].sample_name.match(dupRegEx)) {
       const sampleId = output[i].sample_name.match(dupRegEx)[1].trim();
       const refSample = data.find((datum) => datum.id === sampleId);
-      refSample.dupValues = values;
-      // data[data.length - 1].dupValues = values;
+      console.log(sampleId);
+      try {
+        refSample.dupValues = values;
+        // data[data.length - 1].dupValues = values;
+      } catch (e) {
+        alert(
+          `Error: Couldn't find Reference for duplicate with sample ID ${sampleId}`
+        );
+      }
     } else {
       const sampleObject = {
         id: output[i].sample_name,
