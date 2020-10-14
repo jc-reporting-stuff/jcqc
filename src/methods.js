@@ -634,8 +634,8 @@ const CHEM055Alltech = {
   name: "CHEM-055 - Alltech",
   description: "Animal Nutrition Project - Alltech",
   elements: ["Mn", "Fe", "Co", "Cu", "Zn", "Se", "Mo"],
-  units: ["ppb", "ppm", "ppm", "ppm", "ppm", "ppm", "ppm"],
-  checkStdTolerance: 0.1,
+  units: ["ppm", "ppm", "ppm", "ppm", "ppm", "ppm", "ppm"],
+  checkStdTolerance: 0.15,
   checkStds: [
     {
       name: "Calibration Check",
@@ -644,18 +644,13 @@ const CHEM055Alltech = {
   ],
   blanks: [
     {
-      name: "Serum Blank",
+      name: "Method Blank",
       type: "serum",
-      LOQs: [0.9, 0.013, 0.3, 0.0008, 0.0011, 0.007, 1]
-    },
-    {
-      name: "Blood Blank",
-      type: "blood",
-      LOQs: [null, null, null, null, null, 0.029, null]
+      LOQs: [0.52, 8.6, 0.03, 0.46, 2.1, 0.07, 0.02]
     }
   ],
-  duplicateTolerance: 15,
-  calStandards: [0, 0.00025, 0.0005, 0.001, 0.005, 0.01, 0.05, 0.2, 0.5, 1.0],
+  duplicateTolerance: 20,
+  calStandards: [0, 0.25, 0.5, 1, 5, 10, 50, 200, 500, 1000],
   sigFigs: 3,
   referenceMaterials: [
     {
