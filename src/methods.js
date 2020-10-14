@@ -645,12 +645,12 @@ const CHEM055Alltech = {
   blanks: [
     {
       name: "Method Blank",
-      type: "serum",
+      type: "methoblank",
       LOQs: [0.52, 8.6, 0.03, 0.46, 2.1, 0.07, 0.02]
     },
     {
       name: "Undiluted Blank",
-      type: "serum",
+      type: "undilblank",
       LOQs: [0.052, 0.86, 0.003, 0.046, 0.21, 0.007, 0.002]
     }
   ],
