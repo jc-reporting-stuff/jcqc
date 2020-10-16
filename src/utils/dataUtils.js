@@ -23,7 +23,7 @@ const parseJsonData = (output) => {
       units.push(output[i + j].units);
     }
 
-    const dupRegEx = new RegExp("(.*)(d|dup)$", "i");
+    const dupRegEx = new RegExp("(.*) (d|dup)$", "i");
     if (data.length > 1 && output[i].sample_name.match(dupRegEx)) {
       const sampleId = output[i].sample_name.match(dupRegEx)[1].trim();
       const refSample = data.find((datum) => datum.id === sampleId);
