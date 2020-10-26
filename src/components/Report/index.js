@@ -48,7 +48,8 @@ const Report = ({ data, method }) => {
           const duplicate = d.dupValues;
 
           const sampleIdRegEx = new RegExp("^[0-9]{2}-[0-9]{6}-[0-9]{4}");
-          const sample = d.id.match(sampleIdRegEx);
+          const qcRegEx = new RegExp("^QC(.*)", "i");
+          const sample = d.id.match(sampleIdRegEx) || d.id.match(qcRegEx);
 
           if (d.id === "Cal Blank") {
             const calData = data.slice(idx, idx + method.calStandards.length);
