@@ -262,7 +262,7 @@ const CHEM114 = {
   checkStds: [
     {
       name: "Calibration Check",
-      expectedValues: [10, 10, 10, 50, 50, 10, 10, 10, 10, 1, 10]
+      expectedValues: [10, 10, 10, 10, 10, 10, 10, 10, 10, 1, 10]
     }
   ],
   blanks: [
@@ -277,7 +277,7 @@ const CHEM114 = {
       LOQs: [null, null, null, null, null, null, null, null, null, null, null]
     }
   ],
-  duplicateTolerance: 15,
+  duplicateTolerance: 20,
   calStandards: [0, 0.05, 0.1, 0.5, 1, 5, 10, 50],
   sigFigs: 3,
   referenceMaterials: [
