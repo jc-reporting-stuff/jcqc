@@ -112,7 +112,9 @@ const Report = ({ data, method }) => {
             );
           } else if (sample) {
             const prevSampleExists = data[idx - 1];
-            const prevSampleIsSample = data[idx - 1].id.match(sampleIdRegEx);
+            const prevSampleIsSample =
+              data[idx - 1].id.match(sampleIdRegEx) ||
+              data[idx - 1].id.match(qcRegEx);
             const prevSampleIsDup = data[idx - 1].dupValues;
 
             // If this is the first sample of a block of samples,
