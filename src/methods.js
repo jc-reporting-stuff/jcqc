@@ -279,7 +279,7 @@ const CHEM114 = {
   ],
   duplicateTolerance: 20,
   calStandards: [0, 0.05, 0.1, 0.5, 1, 5, 10, 50],
-  sigFigs: 3,
+  sigFigs: 4,
   referenceMaterials: [
     {
       name: "Ref 2b",
@@ -639,7 +639,7 @@ const CHEM055Alltech = {
   checkStds: [
     {
       name: "Calibration Check",
-      expectedValues: [10, 10, 10, 10, 10, 10, 10]
+      expectedValues: [100, 100, 10, 100, 100, 10, 10]
     }
   ],
   blanks: [
