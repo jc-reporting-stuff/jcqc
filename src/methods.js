@@ -226,7 +226,7 @@ const CHEM057 = {
     {
       name: "Method Blank",
       type: "any",
-      LOQs: [3]
+      LOQs: [4]
     }
   ],
   duplicateTolerance: 20,
