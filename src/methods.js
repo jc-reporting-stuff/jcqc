@@ -707,8 +707,8 @@ const CHEM055Alltech = {
   referenceMaterials: [
     {
       name: "Wheat Flour",
-      rangesLow: [30.5, 35.7, null, 3.84, 31.7, 1.05, 0.86],
-      rangesHigh: [49.1, 45.2, null, 5.21, 42.4, 1.39, 1.01]
+      rangesLow: [31.6, 36.8, null, 4.14, 30.1, 0.92, 0.77],
+      rangesHigh: [48.1, 55.4, null, 5.68, 40.8, 1.43, 1.08]
     }
   ]
 };
