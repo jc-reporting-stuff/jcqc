@@ -23,7 +23,7 @@ const CheckStd = ({ data, checkStd, method }) => {
           <tr>
             <td className="firstCol">{data.id}</td>
             {data.values.map((v, i) => {
-              if (v < 1) {
+              if (v < 2) {
                 v = v * 1000;
               }
               return (
