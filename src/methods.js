@@ -646,6 +646,31 @@ const TOXI064 = {
   ]
 };
 
+const TOXI064Bi = {
+  name: "TOXI-064 - Bismuth",
+  description: "Bismuth in Milk",
+  elements: ["Bi"],
+  units: ["ppb"],
+  checkStdTolerance: 0.15,
+  checkStds: [
+    {
+      name: "Calibration Check",
+      expectedValues: [20]
+    }
+  ],
+  blanks: [
+    {
+      name: "Method Blank",
+      type: "any",
+      LOQs: [0.15]
+    }
+  ],
+  duplicateTolerance: 20,
+  calStandards: [0, 0.1, 1, 5, 10, 20],
+  sigFigs: 3,
+  referenceMaterials: []
+};
+
 const TOXI064Pb = {
   name: "TOXI-064 - Pb only",
   description: "Metals in Food",
@@ -744,6 +769,7 @@ const methods = [
   CHEM114,
   CHEM162,
   TOXI064,
+  TOXI064Bi,
   TOXI064Pb,
   CHEM055Alltech,
   REEs
