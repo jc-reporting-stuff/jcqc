@@ -226,7 +226,7 @@ const CHEM057 = {
     {
       name: "Method Blank",
       type: "any",
-      LOQs: [3]
+      LOQs: [4]
     }
   ],
   duplicateTolerance: 20,
@@ -348,8 +348,8 @@ const CHEM162 = {
     },
     {
       name: "QM-B Q1720",
-      rangesLow: [null, null, null, null, null, 0.153, null, 0.102],
-      rangesHigh: [null, null, null, null, null, 0.216, null, 0.143]
+      rangesLow: [null, null, null, null, null, 0.169, null, 0.109],
+      rangesHigh: [null, null, null, null, null, 0.238, null, 0.134]
     }
   ]
 };
@@ -509,7 +509,7 @@ const TOXI064 = {
         0.62,
         1208,
         2.46,
-        0.058,
+        null,
         0.006,
         30.5,
         35.7,
@@ -531,7 +531,7 @@ const TOXI064 = {
         1.55,
         1637,
         5.04,
-        0.615,
+        null,
         0.036,
         49.1,
         45.2,
@@ -553,50 +553,122 @@ const TOXI064 = {
       name: "Dried Potato",
       rangesLow: [
         null,
-        2.76,
-        727,
-        0.18,
-        0.74,
-        0.031,
-        4.06,
-        9.37,
-        0.02,
-        0.116,
-        0.02,
-        5.99,
+        1.51,
+        744,
+        0.449,
+        0.015,
+        -0.04,
+        4.93,
+        10.6,
+        0.021,
+        0.119,
+        1.59,
+        8.43,
         null,
-        -0.06,
-        -0.05,
-        0.152,
         null,
-        -0.0005,
-        -0.0001,
-        -0.0005
+        0.159,
+        0.162,
+        null,
+        null,
+        null,
+        null
       ],
       rangesHigh: [
         null,
-        4.02,
-        841,
-        1.14,
-        2.18,
-        0.127,
-        5.8,
-        13.93,
+        5.73,
+        1012,
+        0.996,
+        0.447,
+        0.107,
+        7.88,
+        14.8,
         0.026,
-        0.164,
-        3.62,
-        9.83,
-        null,
-        0.117,
-        0.452,
         0.188,
+        2.05,
+        12.7,
         null,
-        0.0013,
-        0.0005,
-        0.0025
+        null,
+        0.195,
+        0.204,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      name: "Dried Soup",
+      rangesLow: [
+        null,
+        4.49,
+        1063,
+        5.1,
+        0.37,
+        0.01,
+        9.95,
+        26.31,
+        0.037,
+        0.29,
+        3.98,
+        22.0,
+        0.007,
+        0.064,
+        0.524,
+        0.046,
+        null,
+        null,
+        null,
+        0.017
+      ],
+      rangesHigh: [
+        null,
+        14.61,
+        1605,
+        9.79,
+        0.83,
+        0.24,
+        17.94,
+        39.37,
+        0.046,
+        0.47,
+        5.59,
+        34.3,
+        0.01,
+        0.13,
+        0.638,
+        0.061,
+        null,
+        null,
+        null,
+        0.025
       ]
     }
   ]
+};
+
+const TOXI064Bi = {
+  name: "TOXI-064 - Bismuth",
+  description: "Bismuth in Milk",
+  elements: ["Bi"],
+  units: ["ppb"],
+  checkStdTolerance: 0.15,
+  checkStds: [
+    {
+      name: "Calibration Check",
+      expectedValues: [20]
+    }
+  ],
+  blanks: [
+    {
+      name: "Method Blank",
+      type: "any",
+      LOQs: [0.15]
+    }
+  ],
+  duplicateTolerance: 20,
+  calStandards: [0, 0.1, 1, 5, 10, 20],
+  sigFigs: 3,
+  referenceMaterials: []
 };
 
 const TOXI064Pb = {
@@ -660,8 +732,8 @@ const CHEM055Alltech = {
   referenceMaterials: [
     {
       name: "Wheat Flour",
-      rangesLow: [30.5, 35.7, null, 3.84, 31.7, 1.05, 0.86],
-      rangesHigh: [49.1, 45.2, null, 5.21, 42.4, 1.39, 1.01]
+      rangesLow: [31.6, 36.8, 0.0045, 4.14, 30.1, 0.92, 0.77],
+      rangesHigh: [48.1, 55.4, 0.0077, 5.68, 40.8, 1.43, 1.08]
     }
   ]
 };
@@ -697,6 +769,7 @@ const methods = [
   CHEM114,
   CHEM162,
   TOXI064,
+  TOXI064Bi,
   TOXI064Pb,
   CHEM055Alltech,
   REEs
