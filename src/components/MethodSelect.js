@@ -41,6 +41,11 @@ const MethodSelect = ({
     boxShadow: "0 0 5px #086077"
   };
 
+  const saveInstrument = (idx) => {
+    localStorage.setItem("instrument", instrument);
+    setInstrument(instruments[idx]);
+  };
+
   return (
     <div className="methodButtons">
       <div>
@@ -53,7 +58,7 @@ const MethodSelect = ({
             <div style={{ display: "inline" }}>
               <button
                 className="methodButton"
-                onClick={() => setInstrument(instruments[idx])}
+                onClick={() => saveInstrument(idx)}
                 style={
                   instrument.name === `Agilent 7900-${idx + 1}`
                     ? selectedButton

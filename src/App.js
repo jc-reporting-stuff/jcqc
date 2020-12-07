@@ -13,7 +13,8 @@ const App = () => {
   const [error, setError] = useState(null);
   const [data, setData] = useState();
   const [method, setMethod] = useState();
-  const [instrument, setInstrument] = useState(instruments[0]);
+  const savedInstrument = localStorage.getItem("instrument") || instruments[0];
+  const [instrument, setInstrument] = useState(savedInstrument);
 
   return (
     <div>
