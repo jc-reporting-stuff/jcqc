@@ -7,6 +7,10 @@ body {
   font-size: 0.8rem;
 }
 
+button:focus {
+  outline: none;
+}
+
 .container {
   width: auto;
   margin: auto;
