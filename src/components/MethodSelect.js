@@ -42,8 +42,8 @@ const MethodSelect = ({
   };
 
   const saveInstrument = (idx) => {
-    localStorage.setItem("instrument", instrument);
     setInstrument(instruments[idx]);
+    localStorage.setItem("instrument", instruments[idx].name);
   };
 
   return (
