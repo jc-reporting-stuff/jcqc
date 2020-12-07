@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Helmet from "react-helmet";
 
 import methods from "./methods";
+import instruments from "./instruments";
 
 import MethodSelect from "./components/MethodSelect";
 import Report from "./components/Report/index";
@@ -12,6 +13,7 @@ const App = () => {
   const [error, setError] = useState(null);
   const [data, setData] = useState();
   const [method, setMethod] = useState();
+  const [instrument, setInstrument] = useState(instruments[0]);
 
   return (
     <div>
@@ -27,7 +29,12 @@ const App = () => {
           </Route>
 
           <Route path="/report">
-            <Report method={method} data={data} setError={setError} />
+            <Report
+              method={method}
+              data={data}
+              setError={setError}
+              instrument={instrument}
+            />
           </Route>
 
           <Route path="/:name">
@@ -38,6 +45,9 @@ const App = () => {
               setMethod={setMethod}
               setError={setError}
               setData={setData}
+              instrument={instrument}
+              instruments={instruments}
+              setInstrument={setInstrument}
             />
           </Route>
 
@@ -47,6 +57,9 @@ const App = () => {
               methods={methods}
               setMethod={setMethod}
               error={error}
+              instrument={instrument}
+              instruments={instruments}
+              setInstrument={setInstrument}
             />
           </Route>
         </Switch>

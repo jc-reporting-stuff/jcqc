@@ -10,7 +10,10 @@ const MethodSelect = ({
   methods,
   setData,
   setError,
-  setMethod
+  setMethod,
+  instrument,
+  instruments,
+  setInstrument
 }) => {
   const nameFromUrl = useParams().name;
   useEffect(() => {
@@ -32,12 +35,38 @@ const MethodSelect = ({
     margin: "auto"
   };
 
+  const selectedButton = {
+    color: "darkslategrey",
+    borderColor: "#086077",
+    boxShadow: "0 0 5px #086077"
+  };
+
   return (
     <div className="methodButtons">
       <div>
         <h1 style={{ textAlign: "center" }}>JCQC Reporting Application</h1>
         {error && <span style={{ color: "red" }}>Error: {error}</span>}
-        <hr style={{ width: "36rem", marginBottom: "1rem" }} />
+        <hr style={{ width: "36rem", marginTop: "1rem" }} />
+        <h2>- Select instrument -</h2>
+        {instruments.map((inst, idx) => {
+          return (
+            <div style={{ display: "inline" }}>
+              <button
+                className="methodButton"
+                onClick={() => setInstrument(instruments[idx])}
+                style={
+                  instrument.name === `Agilent 7900-${idx + 1}`
+                    ? selectedButton
+                    : { color: "grey" }
+                }
+              >
+                {inst.name}
+              </button>{" "}
+            </div>
+          );
+        })}
+        <hr style={{ width: "36rem", marginTop: "1rem" }} />
+        <h2>- Select Method -</h2>
         <div style={flexContainer}>
           {methods.map((m) => {
             return (

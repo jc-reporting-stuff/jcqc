@@ -11,7 +11,7 @@ import HeaderInfo from "./HeaderInfo";
 import CheckStd from "./CheckStd";
 import ReferenceMaterial from "./ReferenceMaterial";
 
-const Report = ({ data, method }) => {
+const Report = ({ data, method, instrument }) => {
   if (!data) {
     return (
       <div style={{ textAlign: "center" }}>
@@ -36,7 +36,7 @@ const Report = ({ data, method }) => {
         </div>
       )}
 
-      <HeaderInfo method={method} />
+      <HeaderInfo method={method} instrument={instrument} />
       {data[0].id &&
         data.map((d, idx) => {
           const sampleBlank = method.blanks.find((b) => b.name === d.id);

@@ -1,6 +1,6 @@
 import React from "react";
 
-const HeaderInfo = ({ method }) => {
+const HeaderInfo = ({ method, instrument }) => {
   return (
     <div>
       <h1>Sequence Information - {method.name}</h1>
@@ -10,9 +10,12 @@ const HeaderInfo = ({ method }) => {
         Sequence ID: ______________________________________
       </div>
       <div className="headerItem">
-        Software Version: MassHunter v4.6 Build 621.8 Patch 1
+        Software Version: {instrument.sw} - Version {instrument.swVersion} -
+        Build {instrument.swBuild}
       </div>
-      <div className="headerItem">Autosampler Info: ESI prepFAST SC4</div>
+      <div className="headerItem" style={{ marginTop: "-1rem" }}>
+        Autosampler Info: {instrument.as} - Serial Number {instrument.asSerial}
+      </div>
     </div>
   );
 };
