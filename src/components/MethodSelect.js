@@ -74,7 +74,7 @@ const MethodSelect = ({
           <h2>Select instrument</h2>
           {instruments.map((inst, idx) => {
             return (
-              <div style={{ display: "inline" }}>
+              <div key={inst.name} style={{ display: "inline" }}>
                 <button
                   className="methodButton"
                   onClick={() => saveInstrument(idx)}
