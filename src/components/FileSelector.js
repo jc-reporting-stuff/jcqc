@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 
 const FileSelector = ({ setError, setData, method }) => {
   const history = useHistory();
-  const fileHandler = event => {
+  const fileHandler = (event) => {
     event.preventDefault();
     const inputFile = event.target.files[0];
     if (inputFile.type !== "text/plain") {
@@ -27,7 +27,7 @@ const FileSelector = ({ setError, setData, method }) => {
   return (
     <div
       className="centeredContainerParent"
-      style={{ height: "60px", padding: "25px" }}
+      style={{ height: "60px", padding: "5px" }}
     >
       <div className="centeredContainerChild">
         {method.name && (

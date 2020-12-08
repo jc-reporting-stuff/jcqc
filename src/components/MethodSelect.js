@@ -41,6 +41,22 @@ const MethodSelect = ({
     boxShadow: "0 0 5px #086077"
   };
 
+  const instrumentBox = {
+    border: "1px solid #999",
+    borderRadius: "15px",
+    margin: " 10px auto",
+    paddingTop: "0",
+    paddingBottom: "1rem",
+    width: "300px"
+  };
+
+  const methodBox = {
+    border: "1px solid #999",
+    borderRadius: "15px",
+    width: "36rem",
+    margin: "auto"
+  };
+
   const saveInstrument = (idx) => {
     setInstrument(instruments[idx]);
     localStorage.setItem("instrument", instruments[idx].name);
@@ -52,51 +68,57 @@ const MethodSelect = ({
         <h1 style={{ textAlign: "center" }}>JCQC Reporting Application</h1>
         {error && <span style={{ color: "red" }}>Error: {error}</span>}
         <hr style={{ width: "36rem", marginTop: "1rem" }} />
-        <h2>- Select instrument -</h2>
-        {instruments.map((inst, idx) => {
-          return (
-            <div style={{ display: "inline" }}>
-              <button
-                className="methodButton"
-                onClick={() => saveInstrument(idx)}
-                style={
-                  instrument.name === `Agilent 7900-${idx + 1}`
-                    ? selectedButton
-                    : { color: "grey" }
-                }
-              >
-                {inst.name}
-              </button>{" "}
-            </div>
-          );
-        })}
-        <hr style={{ width: "36rem", marginTop: "1rem" }} />
-        <h2>- Select Method -</h2>
-        <div style={flexContainer}>
-          {methods.map((m) => {
+
+        <div style={instrumentBox}>
+          <h2>Select instrument</h2>
+          {instruments.map((inst, idx) => {
             return (
-              <div key={m.name}>
-                <Link
-                  to={`/${m.name}`}
+              <div style={{ display: "inline" }}>
+                <button
                   className="methodButton"
-                  onClick={() => setMethod(m)}
-                  style={{ margin: "8px" }}
+                  onClick={() => saveInstrument(idx)}
+                  style={
+                    instrument.name === `Agilent 7900-${idx + 1}`
+                      ? selectedButton
+                      : { color: "grey" }
+                  }
                 >
-                  {m.name}
-                </Link>
+                  {inst.name}
+                </button>{" "}
               </div>
             );
           })}
+        </div>
 
-          <div>
-            <Link to="/" className="methodButton" onClick={() => setMethod()}>
-              Clear
-            </Link>
+        <div style={methodBox}>
+          <h2>Select Method</h2>
+          <div style={flexContainer}>
+            {methods.map((m) => {
+              return (
+                <div key={m.name}>
+                  <Link
+                    to={`/${m.name}`}
+                    className="methodButton"
+                    onClick={() => setMethod(m)}
+                    style={
+                      method && method.name === m.name ? selectedButton : {}
+                    }
+                  >
+                    {m.name}
+                  </Link>
+                </div>
+              );
+            })}
+
+            <div>
+              <Link to="/" className="methodButton" onClick={() => setMethod()}>
+                Clear
+              </Link>
+            </div>
           </div>
         </div>
         {method && (
           <>
-            <br />
             <br />
           </>
         )}
