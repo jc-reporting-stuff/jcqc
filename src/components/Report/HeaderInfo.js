@@ -9,11 +9,15 @@ const HeaderInfo = ({ method, instrument }) => {
       <div className="headerItem">
         Sequence ID: ______________________________________
       </div>
+
       <div className="headerItem">
+        Instrument: {instrument.name} (Serial Number: {instrument.serial})
+      </div>
+      <div className="headerItem" style={{ marginTop: "-0.7rem" }}>
         Software Version: {instrument.sw} - Version {instrument.swVersion} -
         Build {instrument.swBuild}
       </div>
-      <div className="headerItem" style={{ marginTop: "-1rem" }}>
+      <div className="headerItem" style={{ marginTop: "-0.7rem" }}>
         Autosampler Info: {instrument.as} - Serial Number {instrument.asSerial}
       </div>
     </div>
