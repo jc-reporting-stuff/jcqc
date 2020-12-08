@@ -12,7 +12,7 @@ import CheckStd from "./CheckStd";
 import ReferenceMaterial from "./ReferenceMaterial";
 
 const Report = ({ data, method, instrument }) => {
-  if (!data) {
+  if (!data || !instrument) {
     return (
       <div style={{ textAlign: "center" }}>
         Loading data. If your report doesn't load soon, &nbsp;
