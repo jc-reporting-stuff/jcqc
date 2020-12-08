@@ -54,7 +54,8 @@ const MethodSelect = ({
     border: "1px solid #999",
     borderRadius: "15px",
     width: "36rem",
-    margin: "auto"
+    margin: "auto",
+    padding: "0 0 0.8rem 0"
   };
 
   const saveInstrument = (idx) => {
