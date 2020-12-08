@@ -42,12 +42,14 @@ const MethodSelect = ({
   };
 
   const instrumentBox = {
+    display: "inline-block",
     border: "1px solid #999",
     borderRadius: "15px",
     margin: " 10px auto",
     paddingTop: "0",
-    paddingBottom: "1rem",
-    width: "300px"
+    paddingBottom: "0.8rem",
+    width: "200px",
+    lineHeight: "2rem"
   };
 
   const methodBox = {
@@ -56,6 +58,13 @@ const MethodSelect = ({
     width: "36rem",
     margin: "auto",
     padding: "0 0 0.8rem 0"
+  };
+
+  const boxContainer = {
+    display: "flex",
+    width: "800px",
+    margin: "auto",
+    justifyContent: "space-around"
   };
 
   const saveInstrument = (idx) => {
@@ -70,51 +79,57 @@ const MethodSelect = ({
         {error && <span style={{ color: "red" }}>Error: {error}</span>}
         <hr style={{ width: "36rem", marginTop: "1rem" }} />
 
-        <div style={instrumentBox}>
-          <h2>Select instrument</h2>
-          {instruments.map((inst, idx) => {
-            return (
-              <div key={inst.name} style={{ display: "inline" }}>
-                <button
-                  className="methodButton"
-                  onClick={() => saveInstrument(idx)}
-                  style={
-                    instrument.name === `Agilent 7900-${idx + 1}`
-                      ? selectedButton
-                      : { color: "grey" }
-                  }
-                >
-                  {inst.name}
-                </button>{" "}
-              </div>
-            );
-          })}
-        </div>
-
-        <div style={methodBox}>
-          <h2>Select Method</h2>
-          <div style={flexContainer}>
-            {methods.map((m) => {
+        <div style={boxContainer}>
+          <div style={instrumentBox}>
+            <h2 style={{ marginBottom: "0.5rem" }}>Select instrument</h2>
+            {instruments.map((inst, idx) => {
               return (
-                <div key={m.name}>
-                  <Link
-                    to={`/${m.name}`}
+                <div key={inst.name} style={{ display: "inline" }}>
+                  <button
                     className="methodButton"
-                    onClick={() => setMethod(m)}
+                    onClick={() => saveInstrument(idx)}
                     style={
-                      method && method.name === m.name ? selectedButton : {}
+                      instrument.name === `Agilent 7900-${idx + 1}`
+                        ? selectedButton
+                        : { color: "grey" }
                     }
                   >
-                    {m.name}
-                  </Link>
+                    {inst.name}
+                  </button>{" "}
                 </div>
               );
             })}
+          </div>
 
-            <div>
-              <Link to="/" className="methodButton" onClick={() => setMethod()}>
-                Clear
-              </Link>
+          <div style={methodBox}>
+            <h2>Select Method</h2>
+            <div style={flexContainer}>
+              {methods.map((m) => {
+                return (
+                  <div key={m.name}>
+                    <Link
+                      to={`/${m.name}`}
+                      className="methodButton"
+                      onClick={() => setMethod(m)}
+                      style={
+                        method && method.name === m.name ? selectedButton : {}
+                      }
+                    >
+                      {m.name}
+                    </Link>
+                  </div>
+                );
+              })}
+
+              <div>
+                <Link
+                  to="/"
+                  className="methodButton"
+                  onClick={() => setMethod()}
+                >
+                  Clear
+                </Link>
+              </div>
             </div>
           </div>
         </div>
