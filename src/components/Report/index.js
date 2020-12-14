@@ -128,7 +128,8 @@ const Report = ({ data, method, instrument }) => {
               // This loop will stay true until the end of the sample
               // block is reached, or we hit a duplicate
               while (stillASample && data[j]) {
-                const isASample = data[j].id.match(sampleIdRegEx);
+                const isASample =
+                  data[j].id.match(sampleIdRegEx) || data[j].id.match(qcRegEx);
                 const isADup = data[j].dupValues;
                 stillASample = isASample && !isADup;
                 if (stillASample) sampleList.push(data[j]);
