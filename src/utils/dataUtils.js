@@ -26,10 +26,17 @@ const parseJsonData = (output) => {
     const dupRegEx = new RegExp("(.*) (d|dup)$", "i");
     if (data.length > 1 && output[i].sample_name.match(dupRegEx)) {
       const sampleId = output[i].sample_name.match(dupRegEx)[1].trim();
-      const refSample = data.find((datum) => datum.id === sampleId);
+      const refSample = () => {
+        for (let count = data.length - 1; count > 0; count--) {
+          if (data[count].id === sampleId) {
+            console.log(data[count].id === sampleId);
+            return data[count];
+          }
+        }
+      };
+      //const refSample = data.find((datum) => datum.id === sampleId);
       try {
-        refSample.dupValues = values;
-        // data[data.length - 1].dupValues = values;
+        refSample().dupValues = values;
       } catch (e) {
         alert(
           `Error: Couldn't find Reference for duplicate with sample ID ${sampleId}`
