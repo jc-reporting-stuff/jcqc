@@ -660,7 +660,7 @@ const TOXI064Bi = {
   checkStds: [
     {
       name: "Calibration Check",
-      expectedValues: [20]
+      expectedValues: [10]
     }
   ],
   blanks: [

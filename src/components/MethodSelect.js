@@ -81,7 +81,7 @@ const MethodSelect = ({
 
         <div style={boxContainer}>
           <div style={instrumentBox}>
-            <h2 style={{ marginBottom: "0.5rem" }}>Select instrument</h2>
+            <h2 style={{ marginBottom: "0.5rem" }}>Select Instrument</h2>
             {instruments.map((inst, idx) => {
               return (
                 <div key={inst.name} style={{ display: "inline" }}>
