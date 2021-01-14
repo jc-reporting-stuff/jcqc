@@ -18,7 +18,7 @@ const CHEM114 = {
   duplicateTolerance: 20,
   checkStdTolerance: 0.15,
   calStandards: [0, 0.05, 0.1, 0.5, 1, 5, 10, 50],
-  sigFigs: 4,
+  sigFigs: 3,
   checkStds: [
     {
       name: "Calibration Check",
