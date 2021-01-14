@@ -8,11 +8,14 @@ const Method = ({ method }) => {
           className="centeredContainerChild"
           style={{ textAlign: "left", paddingTop: "15px" }}
         >
-          <h2>{method.name}</h2>
-          <h3>{method.description}</h3>
+          <h2>
+            {method.name}
+            {": "}
+            {method.description}{" "}
+          </h2>
 
-          <h4>Percent RPD for duplicates: {method.duplicateTolerance}</h4>
-          <h4>Number of significant figures on report: {method.sigFigs}</h4>
+          <p>Percent RPD for duplicates: {method.duplicateTolerance}</p>
+          <p>Number of significant figures on report: {method.sigFigs}</p>
 
           <p>
             Calibration Standard concentrations:{" "}
@@ -23,7 +26,7 @@ const Method = ({ method }) => {
             <thead>
               <tr>
                 <th className="firstCol">Elements</th>
-                {method.elements.map(e => (
+                {method.elements.map((e) => (
                   <th key={e}>{e}</th>
                 ))}
               </tr>
