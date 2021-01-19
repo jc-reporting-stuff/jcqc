@@ -1,19 +1,19 @@
 const TOXI064Bi = {
-  name: "TOXI-064 - Bismuth",
-  description: "Bismuth in Milk",
-  elements: ["Bi"],
-  units: ["ppb"],
+  name: 'TOXI-064 - Bismuth',
+  description: 'Bismuth in Milk',
+  elements: ['Bi'],
+  units: ['ppb'],
   checkStdTolerance: 0.15,
   checkStds: [
     {
-      name: "Calibration Check",
+      name: 'Calibration Check',
       expectedValues: [10]
     }
   ],
   blanks: [
     {
-      name: "Method Blank",
-      type: "any",
+      name: 'Method Blank',
+      type: 'any',
       LOQs: [0.15]
     }
   ],

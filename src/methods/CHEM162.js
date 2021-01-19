@@ -1,24 +1,24 @@
 const CHEM162 = {
-  name: "CHEM-162",
-  description: "Metals in Blood and Serum",
-  elements: ["Mn", "Fe", "Co", "Cu", "Zn", "Se", "Mo", "Pb"],
-  units: ["ppb", "ppm", "ppb", "ppm", "ppm", "ppm", "ppb", "ppm"],
+  name: 'CHEM-162',
+  description: 'Metals in Blood and Serum',
+  elements: ['Mn', 'Fe', 'Co', 'Cu', 'Zn', 'Se', 'Mo', 'Pb'],
+  units: ['ppb', 'ppm', 'ppb', 'ppm', 'ppm', 'ppm', 'ppb', 'ppm'],
   checkStdTolerance: 0.1,
   checkStds: [
     {
-      name: "5/50 ppb",
+      name: '5/50 ppb',
       expectedValues: [5, 50, 5, 50, 50, 5, 5, 5]
     }
   ],
   blanks: [
     {
-      name: "Serum Blank",
-      type: "serum",
+      name: 'Serum Blank',
+      type: 'serum',
       LOQs: [0.9, 0.013, 0.3, 0.0008, 0.0011, 0.007, 1, null]
     },
     {
-      name: "Blood Blank",
-      type: "blood",
+      name: 'Blood Blank',
+      type: 'blood',
       LOQs: [null, null, null, null, null, 0.029, null, 0.001]
     }
   ],
@@ -27,17 +27,17 @@ const CHEM162 = {
   sigFigs: 3,
   referenceMaterials: [
     {
-      name: "QM-S Q1807",
+      name: 'QM-S Q1807',
       rangesLow: [2.23, 0.747, 3.47, 1.03, 0.913, 0.119, 1.11, null],
       rangesHigh: [3.2, 0.851, 4.3, 1.22, 1.16, 0.152, 1.73, null]
     },
     {
-      name: "QM-S Q2007",
+      name: 'QM-S Q2007',
       rangesLow: [4.67, 0.47, 0.384, 2.22, 1.04, 0.123, 1.834, null],
       rangesHigh: [6.83, 0.618, 0.985, 2.52, 1.25, 0.131, 2.356, null]
     },
     {
-      name: "QM-B Q1720",
+      name: 'QM-B Q1720',
       rangesLow: [null, null, null, null, null, 0.169, null, 0.109],
       rangesHigh: [null, null, null, null, null, 0.238, null, 0.134]
     }

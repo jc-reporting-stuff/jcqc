@@ -1,19 +1,19 @@
 const CHEM114 = {
-  name: "CHEM-114",
-  description: "Metals in soils, biosolids and wastewaters",
-  elements: ["Cr", "Co", "Ni", "Cu", "Zn", "As", "Se", "Mo", "Cd", "Hg", "Pb"],
+  name: 'CHEM-114',
+  description: 'Metals in soils, biosolids and wastewaters',
+  elements: ['Cr', 'Co', 'Ni', 'Cu', 'Zn', 'As', 'Se', 'Mo', 'Cd', 'Hg', 'Pb'],
   units: [
-    "ppm",
-    "ppm",
-    "ppm",
-    "ppm",
-    "ppm",
-    "ppm",
-    "ppm",
-    "ppm",
-    "ppm",
-    "ppm",
-    "ppm"
+    'ppm',
+    'ppm',
+    'ppm',
+    'ppm',
+    'ppm',
+    'ppm',
+    'ppm',
+    'ppm',
+    'ppm',
+    'ppm',
+    'ppm'
   ],
   duplicateTolerance: 20,
   checkStdTolerance: 0.15,
@@ -21,19 +21,19 @@ const CHEM114 = {
   sigFigs: 3,
   checkStds: [
     {
-      name: "Calibration Check",
+      name: 'Calibration Check',
       expectedValues: [10, 10, 10, 10, 10, 10, 10, 10, 10, 1, 10]
     }
   ],
   blanks: [
     {
-      name: "Solids Blank",
-      type: "solids",
+      name: 'Solids Blank',
+      type: 'solids',
       LOQs: [1.9, 0.04, 0.6, 0.4, 3.3, 2.2, 0.3, 0.2, 0.04, 0.04, 0.3]
     },
     {
-      name: "Liquids Blank",
-      type: "waters",
+      name: 'Liquids Blank',
+      type: 'waters',
       LOQs: [
         0.0082,
         0.0004,
@@ -51,7 +51,7 @@ const CHEM114 = {
   ],
   referenceMaterials: [
     {
-      name: "EnviroMAT BE-1",
+      name: 'EnviroMAT BE-1',
       rangesLow: [
         34.6,
         5.05,
@@ -80,7 +80,7 @@ const CHEM114 = {
       ]
     },
     {
-      name: "EnviroMAT CP-1",
+      name: 'EnviroMAT CP-1',
       rangesLow: [
         7.66,
         1.78,
@@ -109,7 +109,7 @@ const CHEM114 = {
       ]
     },
     {
-      name: "EnviroMAT ES-H",
+      name: 'EnviroMAT ES-H',
       rangesLow: [
         0.37,
         0.103,
@@ -138,9 +138,38 @@ const CHEM114 = {
       ]
     },
     {
-      name: "EnviroMAT SS-1",
+      name: 'EnviroMAT SS-1',
       rangesLow: [66.6, 10.2, 50.4, 334, 860, 14.0, 0.02, 4.7, 1.8, 0.29, 665],
       rangesHigh: [140, 15.7, 68, 472, 1369, 27.5, 1.54, 9, 4.7, 0.53, 863]
+    },
+    {
+      name: 'NIST 2709a',
+      rangesLow: [
+        48.27,
+        9.44,
+        58.3,
+        24.2,
+        61.1,
+        6,
+        0.863,
+        0.35,
+        0.247,
+        0.632,
+        9.4
+      ],
+      rangesHigh: [
+        101.6,
+        12.62,
+        80.5,
+        31.4,
+        101.8,
+        11.1,
+        1.45,
+        0.99,
+        0.423,
+        1.03,
+        13.5
+      ]
     }
   ]
 };
