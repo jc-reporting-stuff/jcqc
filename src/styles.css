@@ -79,11 +79,11 @@ button:focus {
 }
 
 .custom-file-input::before {
-  content: "Select Sequence Export";
-  color: darkslategray;
+  content: 'Choose Exported Sequence';
+  color: #2d6a4f;
   display: inline-block;
-  background: lightgreen;
-  border: 1px solid darkgreen;
+  background: #d8f3dc;
+  border: 1px solid #1b4332;
   border-radius: 3px;
   padding: 5px 8px;
   outline: none;
