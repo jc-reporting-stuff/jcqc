@@ -1,12 +1,12 @@
-import CHEM055 from "./methods/CHEM055";
-import CHEM057 from "./methods/CHEM057";
-import CHEM114 from "./methods/CHEM114";
-import CHEM162 from "./methods/CHEM162";
-import TOXI064 from "./methods/TOXI064";
-import TOXI064Bi from "./methods/TOXI064Bi";
-import TOXI064Pb from "./methods/TOXI064Pb";
-import CHEM055Alltech from "./methods/CHEM055Alltech";
-import REEs from "./methods/REEs";
+import CHEM055 from './methods/CHEM055';
+import CHEM057 from './methods/CHEM057';
+import CHEM114 from './methods/CHEM114';
+import CHEM162 from './methods/CHEM162';
+import TOXI064 from './methods/TOXI064';
+import TOXI064Bi from './methods/TOXI064Bi';
+import TOXI064Pb from './methods/TOXI064Pb';
+import CHEM055Alltech from './methods/CHEM055Alltech';
+import REEs from './methods/REEs';
 
 const methods = [
   CHEM055,
