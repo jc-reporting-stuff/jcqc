@@ -113,7 +113,7 @@ const CHEM055 = {
       name: 'Bovine Liver',
       rangesLow: [
         null,
-        null,
+        0.453,
         459.33,
         null,
         null,
@@ -136,7 +136,7 @@ const CHEM055 = {
       ],
       rangesHigh: [
         null,
-        null,
+        0.79,
         558.39,
         null,
         null,
