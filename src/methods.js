@@ -5,9 +5,11 @@ import CHEM162 from './methods/CHEM162';
 import TOXI064 from './methods/TOXI064';
 import TOXI064Bi from './methods/TOXI064Bi';
 import TOXI064Pb from './methods/TOXI064Pb';
-import CHEM055Alltech from './methods/CHEM055Alltech';
+// import CHEM055Alltech from './methods/CHEM055Alltech';
 import REEs from './methods/REEs';
+import SerumIodine from './methods/SerumIodine';
 
+// Removed CHEM055Alltech
 const methods = [
   CHEM055,
   CHEM057,
@@ -16,8 +18,8 @@ const methods = [
   TOXI064,
   TOXI064Bi,
   TOXI064Pb,
-  CHEM055Alltech,
-  REEs
+  REEs,
+  SerumIodine
 ];
 
 export default methods;
