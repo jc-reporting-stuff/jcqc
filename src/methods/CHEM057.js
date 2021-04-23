@@ -18,7 +18,7 @@ const CHEM057 = {
     }
   ],
   duplicateTolerance: 20,
-  calStandards: [0, 0.05, 0.1, 0.2, 0.5, 1],
+  calStandards: [0, 1, 2, 4, 10, 20],
   sigFigs: 3,
   referenceMaterials: [
     {
