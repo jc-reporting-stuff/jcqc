@@ -14,7 +14,7 @@ const CHEM162 = {
     {
       name: 'Serum Blank',
       type: 'serum',
-      LOQs: [0.9, 0.013, 0.3, 0.0008, 0.0011, 0.007, 1, null]
+      LOQs: [0.9, 0.013, 0.3, 0.0008, 0.011, 0.007, 1, null]
     },
     {
       name: 'Blood Blank',
