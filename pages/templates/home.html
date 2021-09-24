@@ -1,0 +1,15 @@
+{% extends '_base.html' %}
+
+{% block title %}Home{% endblock title %}
+
+{% block content %}
+    <h1>Welcome to the Oligos and Sequencing Website</h1>
+
+    {% if user.is_authenticated %}
+        <p>Yes hello you are logged in as {{ user.username }}!!</p>
+        <p><a href={% url 'logout' %}>Log out?</a></p>
+    {% else %}
+        <p>Care to <a href={% url 'login' %}>Log in?</a></p>
+        <p>or <a href={% url 'signup' %}>Sign up?</a></p>
+    {% endif %}
+{% endblock content %}
