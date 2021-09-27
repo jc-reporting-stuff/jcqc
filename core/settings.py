@@ -38,10 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # third-party
-    'tailwind',
-    'theme',
-
     # local
     'accounts',
     'pages'
@@ -146,13 +142,5 @@ AUTH_USER_MODEL = 'accounts.User'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.emailBackend'
 
-# Tailwind CSS
-TAILWIND_APP_NAME = 'theme'
-INTERNAL_IPS = ['127.0.0.1']
-
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
-
-
-if os.name == 'nt':
-    NPM_BIN_PATH = 'C:\\Program Files\\nodejs\\npm.cmd'
