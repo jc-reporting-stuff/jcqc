@@ -1,13 +1,26 @@
 {% extends '_base.html' %}
 
+{% load static %}
+
 {% block title %}Log in{% endblock title %}
 
 {% block content %}
-    <h2>Log in</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn">Log In</button>
-    </form>
+    <div class="flex justify-between items-center mx-auto" style="width: 1280px;">
+        <div class="inline"><img src="{% static "images/afl-logo.svg"%}" style="width: 300px;"></div>
+        <div class="inline"><img src="{% static "images/afl-header-about.jpg"%}" style="width: 550px;"></div>
+    </div>
+    
+    <div class="mx-auto w-100">
+        <h2>Log in</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn">Log In</button>
+        </form>
+    </div>
+
+    <div style="width: 1280px;" class="mx-auto">
+        <img src="{% static "images/peace-of-mind.png" %}">
+    </div>
 
 {% endblock content %}
