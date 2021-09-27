@@ -34,7 +34,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_student = models.BooleanField(default=False)
     is_supervisor = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     students = models.ManyToManyField('self', related_name="supervisors", symmetrical=False, through='Preapproval')
 
     USERNAME_FIELD = 'username'

@@ -7,9 +7,9 @@
 
     {% if user.is_authenticated %}
         <p>Yes hello you are logged in as <span class="text-gray-700 italic">{{ user.username }}</span>!!</p>
-        <p class="underline"><a href={% url 'logout' %}>Log out?</a></p>
+        <p class="underline"><a href={% url 'account_logout' %}>Log out?</a></p>
     {% else %}
-        <p>Care to <a href="{% url 'login' %}">Log in?</a></p>
-        <p>or <a href="{% url 'signup' %}">Sign up?</a></p>
+        <p>Care to <a href="{% url 'account_login' %}">Log in?</a></p>
+        <p>or <a href="{% url 'account_signup' %}">Sign up?</a></p>
     {% endif %}
 {% endblock content %}

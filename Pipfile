@@ -9,6 +9,7 @@ psycopg2-binary = "*"
 django-tailwind = "*"
 django-crispy-forms = "*"
 crispy-tailwind = "*"
+django-allauth = "*"
 
 [dev-packages]
 

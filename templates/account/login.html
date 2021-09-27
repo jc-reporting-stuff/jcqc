@@ -1,0 +1,33 @@
+{% extends '_base.html' %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Log in{% endblock title %}
+
+{% block content %}
+
+    <div class="flex justify-between items-center mx-auto" style="width: 1280px;">
+        <div class="inline"><img src="{% static "images/afl-logo.svg"%}" style="width: 300px;"></div>
+        <div class="inline"><img src="{% static "images/afl-header-about.jpg"%}" style="width: 450px;"></div>
+    </div>
+    
+    <div class="mx-auto w-6/12 m-4 mt-8 p-3 shadow rounded bg-gray-100">
+        <h1 class="text-3xl pl-8 font-bold" style="color: #AF272F;">Welcome to the Oligos and Sequencing Website</h1>
+        <h2 class="text-2xl pl-10 pt-2 font-bold" style="color: #1D43BC;">Please log in</h2>
+        <div class="w-6/12 mx-auto my-12">
+            <form method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="border border-blue-700 bg-blue-200 text-blue-900 px-2 py-1 mx-auto mt-6 rounded hover:bg-blue-100 ml-auto">Log In</button>
+            </form>
+        </div>
+
+        <div><a href="{% url 'account_signup' %}">Sign up?</a> | <a href="{% url 'account_reset_password' %}">Forgot your password?</a></div>
+    </div>
+
+    <div style="width: 1280px;" class="mx-auto pt-4">
+        <img src="{% static "images/peace-of-mind.png" %}">
+    </div>
+
+{% endblock content %}

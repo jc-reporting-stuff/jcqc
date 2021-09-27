@@ -12,7 +12,7 @@
       href="{% static 'images/favicon.ico' %}"
     />
     <title>
-      {% block title %}{% endblock title %} - Oligo and Sequencing Website
+      {% block title %}Welcome{% endblock title %} - Oligo and Sequencing Website
     </title>
   </head>
   <body>
@@ -39,6 +39,18 @@
     </header>
 
     <div class="container mx-auto">
+      {% if user.is_authenticated %}
+        {% include '_nav.html' %}
+      {% endif %}
+
+      {% if messages %}
+        <ul class="messages w-4/12">
+          {% for message in messages %}
+          <li class="border border-gray-300 bg-gray-200 py-1 px-2">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
       {% block content %} {% endblock content %}
     </div>
 
