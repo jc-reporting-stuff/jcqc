@@ -29,8 +29,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=150, unique=True)
     display_name = models.CharField(max_length=150)
+    phone = models.CharField(max_length=30)
+    extension = models.CharField(max_length=40, blank=True)
+    fax_number = models.CharField(max_length=30, blank=True)
+    institution = models.CharField(max_length=150, blank=True)
+    department = models.CharField(max_length=150, blank=True)
+    room_number = models.CharField(max_length=150, blank=True)
+    address = models.CharField(max_length=250)
+    city = models.CharField(max_length=150)
+    province = models.CharField(max_length=100)
+    country = models.CharField(max_length=150)
+    postal_code = models.CharField(max_length=150)
     create_date = models.DateTimeField(auto_now_add=True)
-    institution = models.CharField(max_length=150)
     is_student = models.BooleanField(default=False)
     is_supervisor = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
@@ -41,6 +51,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['email', 'display_name']
 
     objects = CustomAccountManager()
+
+    def is_external(self):
+        return not (self.is_student or self.is_supervisor)
 
     def __str__(self):
         return self.username
