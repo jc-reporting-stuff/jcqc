@@ -30,8 +30,24 @@ class UserSignupForm(SignupForm):
 
     def save(self, request):
         user = super(UserSignupForm, self).save(request)
+        form_fields = [
+            'display_name', 'phone', 'extension', 'fax_number', 'institution', 'department', 'room_number',
+            'address', 'city', 'province', 'country', 'postal_code',
+            ]
         user.display_name = self.cleaned_data['display_name']
+        user.phone = self.cleaned_data['phone']
+        user.extension = self.cleaned_data['extension']
+        user.fax_number = self.cleaned_data['fax_number']
         user.institution = self.cleaned_data['institution']
+        user.department = self.cleaned_data['department']
+        user.room_number = self.cleaned_data['room_number']
+        user.address = self.cleaned_data['address']
+        user.city = self.cleaned_data['city']
+        user.province = self.cleaned_data['province']
+        user.country = self.cleaned_data['country']
+        user.postal_code = self.cleaned_data['postal_code']
+        user.is_student = self.cleaned_data['is_student']
+        user.is_supervisor = self.cleaned_data['is_supervisor']
         user.save()
         return user
 
