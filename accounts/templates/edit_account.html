@@ -10,7 +10,10 @@
 <li><a class="underline" href="{% url 'account_change_password' %}">Change password</a></li>
 <li><a class="underline" href="{% url 'update_profile' pk=user.pk %}">Update profile</a></li>
 <ul class="list-disc ml-4"><li>Change address, phone number, etc.</li></ul>
-<li>Add financial accounts</li>
+{% if user.is_student is not True %}
+<li><a class="underline" href="{% url 'view_user_accounts' %}">View/Add financial accounts</a></li>
+{% endif %}
+
 <li>Add/revoke student approval</li>
 </ul>
 </div>

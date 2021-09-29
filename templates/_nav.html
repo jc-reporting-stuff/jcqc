@@ -24,6 +24,13 @@
         <a href="{% url 'account_logout' %}" class="font-bold text-blue-100">Log out!</a>
     </div>
 
+    
+    {% if user.is_superuser %}
+        <div class-"text-blue-100 font-2xl">
+            <a href="/admin">Admin</a>
+        </div>
+    {% endif %}
+
 
 
 </div>

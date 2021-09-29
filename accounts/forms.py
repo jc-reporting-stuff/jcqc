@@ -1,6 +1,10 @@
 from allauth.account.forms import SignupForm
+from django.forms.formsets import formset_factory
+from django.forms.models import inlineformset_factory
 from django.urls import reverse
+from django.forms import formset_factory
 from django import forms
+from .models import Account, User
 
 
 class UserSignupForm(SignupForm):
@@ -30,10 +34,6 @@ class UserSignupForm(SignupForm):
 
     def save(self, request):
         user = super(UserSignupForm, self).save(request)
-        form_fields = [
-            'display_name', 'phone', 'extension', 'fax_number', 'institution', 'department', 'room_number',
-            'address', 'city', 'province', 'country', 'postal_code',
-            ]
         user.display_name = self.cleaned_data['display_name']
         user.phone = self.cleaned_data['phone']
         user.extension = self.cleaned_data['extension']
@@ -53,3 +53,6 @@ class UserSignupForm(SignupForm):
 
     def get_success_url(self):
         return reverse('edit_account')
+
+
+AccountsFormset = inlineformset_factory(User, Account, fields=['code','comment','is_active'], extra=1, can_delete=False)

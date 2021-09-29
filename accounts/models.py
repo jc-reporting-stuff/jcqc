@@ -63,3 +63,18 @@ class Preapproval(models.Model):
     supervisor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='approved_supervisor')
     approved = models.BooleanField(default=False)
     # add accounts to this at some point after model exists
+
+# This is a bit confusing since users are also in the accounts folder, I'm sorry.
+# This models is definitely the Financial Accounts model.
+class Account(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='accounts')
+    create_date = models.DateTimeField(auto_now_add=True)
+    code = models.CharField(max_length=50)
+    comment = models.CharField(max_length=150, blank=True)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['owner', '-is_active']
+
+    def __str__(self):
+        return self.comment
