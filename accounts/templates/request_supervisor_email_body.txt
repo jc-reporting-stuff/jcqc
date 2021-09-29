@@ -1,0 +1,10 @@
+{% load account %}{% autoescape off %}Hello from {{ site_name }}!
+
+{{ user }} has asked to be pre-approved using your financial accounts. Please visit {{ site_domain }}, login and choose to Edit Account to approve them.
+
+If this email has reached you in error, you can safely ignore it.
+
+
+Thank you from the Oligo and Sequencing Team at the University of Guelph!
+{{ site_domain }}
+{% endautoescape %}

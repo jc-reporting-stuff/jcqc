@@ -4,18 +4,25 @@
 
 {% block content %}
 <div class="w-6/12 mx-auto my-4">
-<h1 class="text-2xl font-bold ">Account settings for {{ user.display_name }}</h1>
+    <h1 class="text-2xl font-bold ">Account settings for {{ user.display_name }}</h1>
 
-<ul class="list-disc p-4">
-<li><a class="underline" href="{% url 'account_change_password' %}">Change password</a></li>
-<li><a class="underline" href="{% url 'update_profile' pk=user.pk %}">Update profile</a></li>
-<ul class="list-disc ml-4"><li>Change address, phone number, etc.</li></ul>
-{% if user.is_student is not True %}
-<li><a class="underline" href="{% url 'view_user_accounts' %}">View/Add financial accounts</a></li>
-{% endif %}
+    <ul class="list-disc p-4">
+        <li><a class="underline" href="{% url 'account_change_password' %}">Change password</a></li>
 
-<li>Add/revoke student approval</li>
-</ul>
+        <li><a class="underline" href="{% url 'update_profile' pk=user.pk %}">Update profile</a></li>
+
+        <ul class="list-disc ml-4"><li>Change address, phone number, etc.</li></ul>
+
+        {% if user.is_student is not True %}
+        <li><a class="underline" href="{% url 'view_user_accounts' %}">View/Add financial accounts</a></li>
+        {% endif %}
+
+        {% if user.is_student or user.is_superuser %}
+        <li><a class="underline" href="{% url 'student_supervisor_request' %}">Request supervisor pre-approval</a></li>
+        {% endif %}
+        <li>Add/revoke student approval</li>
+
+    </ul>
 </div>
 
 {% endblock %}

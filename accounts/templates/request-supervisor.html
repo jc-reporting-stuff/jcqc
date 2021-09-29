@@ -1,0 +1,23 @@
+{% extends '_base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Request supervisor pre-approval{% endblock title %}
+
+{% block content %}
+
+    <div class="w-6/12 mx-auto my-4">
+        <h1 class="text-2xl font-bold">Request supervisor pre-approval</h1>
+
+        <p class="my-4">Enter your supervisor's email and submit. They will be notified to login and choose which accounts to associate with your account.</p>
+
+        <p class="my-4">You will then be able to place orders without waiting for approval each time.</p>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <input type="submit" value="Request pre-approval" class="bg-gray-100 border border-gray-600 text-gray-700 my-4 py-1 px-3 rounded">
+        </form>
+    </div>
+
+{% endblock content %}

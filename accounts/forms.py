@@ -1,8 +1,6 @@
 from allauth.account.forms import SignupForm
-from django.forms.formsets import formset_factory
 from django.forms.models import inlineformset_factory
 from django.urls import reverse
-from django.forms import formset_factory
 from django import forms
 from .models import Account, User
 
@@ -56,3 +54,6 @@ class UserSignupForm(SignupForm):
 
 
 AccountsFormset = inlineformset_factory(User, Account, fields=['code','comment','is_active'], extra=1, can_delete=False)
+
+class RequestSupervisorForm(forms.Form):
+    email = forms.EmailField(max_length=130, required=True, label='Supervisor email')
