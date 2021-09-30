@@ -11,7 +11,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
 
-from .models import Account, User
+from .models import Preapproval, User
 from .forms import  AccountsFormset, RequestSupervisorForm
 
 class AccountSignupView(SignupView):
@@ -76,9 +76,10 @@ class RequestSupervisorView(FormView):
                 add_sent_message(request)
                 return HttpResponseRedirect(reverse('edit_account'))
 
+            # This line creates the preapproval in the model, with no account and not approved.
+            Preapproval.objects.create(student=self.request.user, supervisor=supervisor, approved=False)
 
-            self.request.user.supervisors.add(supervisor)
-            name = supervisor.display_name
+
             subject = render_to_string('request_supervisor_email_subject.txt')
             body = render_to_string('request_supervisor_email_body.txt', {'user': self.request.user.display_name, 'site_domain': request.get_host })
             send_mail(
