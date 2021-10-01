@@ -62,25 +62,23 @@ class RequestSupervisorForm(forms.Form):
     email = forms.EmailField(max_length=130, required=True, label='Supervisor email')
 
 
-class ManageStudentsForm(forms.Form):
+class ApproveStudentsForm(forms.Form):
     def __init__(self, *args, user, **kwargs):
-        super(ManageStudentsForm, self).__init__(*args, **kwargs)
-        student_choices = ((approval_request.student.id, str(approval_request.student.display_name)) for approval_request in Preapproval.objects.filter(supervisor_id=user.id, approved=False))
+        super(ApproveStudentsForm, self).__init__(*args, **kwargs)
+        student_choices = set(((approval_request.student.id, str(approval_request.student.display_name)) for approval_request in Preapproval.objects.filter(supervisor_id=user.id, approved=False)))
         account_choices = ((account.id, str(account.code)) for account in user.accounts.all())
         self.fields['student'] = forms.ChoiceField(choices=student_choices, widget=forms.Select(attrs={'disabled':'disabled'}), required=False)
         self.fields['student_id'] = forms.CharField(max_length=10, widget=forms.widgets.HiddenInput())
         self.fields['account'] = forms.ChoiceField(choices=account_choices)
 
 
-'''
-class ManageStudentsForm(forms.ModelForm):
-    class Meta:
-        model = Preapproval
-        fields = ['student','account','approved', 'supervisor']
-
+class ManageStudentsForm(forms.Form):
     def __init__(self, *args, user, **kwargs):
         super(ManageStudentsForm, self).__init__(*args, **kwargs)
-        self.fields['student'] = forms.ModelChoiceField(queryset=user.students.all())
-        self.fields['account'] = forms.ModelChoiceField(queryset=user.accounts.all())
-        self.fields['approved'] = forms.BooleanField(required=False)
-    '''
+        student_choices = list(set([(approval_request.student.id, str(approval_request.student.display_name)) for approval_request in Preapproval.objects.filter(supervisor_id=user.id, approved=True)]))
+        student_choices.append(('', '- - - - - - - - - - '))
+        account_choices = [(account.id, str(account.code)) for account in user.accounts.all()]
+        account_choices.append(('', '- - - - - - - - '))
+        self.fields['student'] = forms.ChoiceField(choices=student_choices, required=False)
+        self.fields['account'] = forms.ChoiceField(choices=account_choices)
+        self.fields['preapproval_id'] = forms.CharField(initial='-1', max_length=10, widget=forms.widgets.HiddenInput())
