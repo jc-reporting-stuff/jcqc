@@ -65,12 +65,22 @@ class RequestSupervisorForm(forms.Form):
 class ManageStudentsForm(forms.Form):
     def __init__(self, *args, user, **kwargs):
         super(ManageStudentsForm, self).__init__(*args, **kwargs)
-        student_choices = ((student.id, str(student.display_name)) for student in user.students.all())
+        student_choices = ((approval_request.student.id, str(approval_request.student.display_name)) for approval_request in Preapproval.objects.filter(supervisor_id=user.id, approved=False))
         account_choices = ((account.id, str(account.code)) for account in user.accounts.all())
-        #print(self.user.students.all())
-        self.fields['student'] = forms.ChoiceField(choices=student_choices)
+        self.fields['student'] = forms.ChoiceField(choices=student_choices, widget=forms.Select(attrs={'disabled':'disabled'}), required=False)
+        self.fields['student_id'] = forms.CharField(max_length=10, widget=forms.widgets.HiddenInput())
         self.fields['account'] = forms.ChoiceField(choices=account_choices)
 
-    #student = forms.CharField(required=True)
-    #account = forms.CharField(required=True)
-    active = forms.BooleanField(required=False)
+
+'''
+class ManageStudentsForm(forms.ModelForm):
+    class Meta:
+        model = Preapproval
+        fields = ['student','account','approved', 'supervisor']
+
+    def __init__(self, *args, user, **kwargs):
+        super(ManageStudentsForm, self).__init__(*args, **kwargs)
+        self.fields['student'] = forms.ModelChoiceField(queryset=user.students.all())
+        self.fields['account'] = forms.ModelChoiceField(queryset=user.accounts.all())
+        self.fields['approved'] = forms.BooleanField(required=False)
+    '''

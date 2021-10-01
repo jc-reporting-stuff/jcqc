@@ -6,13 +6,13 @@ from django.http.response import HttpResponseRedirect
 from django.urls.base import reverse_lazy
 from django.views.generic import TemplateView
 from django.views.generic.base import TemplateResponseMixin, View
-from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import FormView, UpdateView
 from django.urls import reverse
 from django.shortcuts import redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.shortcuts import render
+from .models import Account
 
 from .models import Preapproval, User
 from .forms import  AccountsFormset, RequestSupervisorForm, ManageStudentsForm
@@ -48,13 +48,62 @@ class ApproveStudentsView(FormView):
     template_name = 'approve_students.html'
 
     def get(self, request, *args, **kwargs):
+        ManageStudentsFormset = formset_factory(ManageStudentsForm, extra=0)
+        objects_awaiting_approval = Preapproval.objects.filter(supervisor_id=request.user.id, approved=False)
+        initial_values = []
+        for object in objects_awaiting_approval:
+            initial_values.append({'student': str(object.student.id), 'account': '', 'student_id': str(object.student.id) })
+        formset = ManageStudentsFormset(initial=initial_values, form_kwargs={'user': request.user})
+        return render(request, 'approve_students.html', {'formset': formset})
+
+    def post(self, request, *args, **kwargs):
         ManageStudentsFormset = formset_factory(ManageStudentsForm)
-        formset = ManageStudentsFormset(initial=[
-            {'student': 'student', 'account': 5, 'active':True}
-            ], form_kwargs={'user': request.user})
+        formset = ManageStudentsFormset(request.POST, form_kwargs={'user': request.user})
+        if formset.is_valid():
+            for form in formset:
+                cd = form.cleaned_data
+                student = User.objects.get(id=cd['student_id'])
+                supervisor = User.objects.get(id=request.user.id)
+                account = Account.objects.get(id=cd['account'])
+                try:
+                    p = Preapproval.objects.get(supervisor=supervisor, student=student, approved=False)
+                    p.approved=True
+                    p.save()
+                    print(p)
+                except:
+                    print('oh crap didnt save')
+            messages.success(self.request, 'Changes applied successfully.')
+            return redirect(reverse('edit_account'))
         return render(request, 'approve_students.html', {'formset': formset})
 
 
+'''
+class ApproveStudentsView(FormView):
+    template_name = 'approve_students.html'
+
+    def get(self, request, *args, **kwargs):
+        ManageStudentFormset = formset_factory(ManageStudentsForm, can_delete=True)
+        initial_students = Preapproval.objects.filter(supervisor=request.user).values_list('student_id', flat=False)
+        initial_accounts = Preapproval.objects.filter(supervisor=request.user).values_list('account', flat=False)
+        initial_approved = Preapproval.objects.filter(supervisor=request.user).values_list('approved', flat=False)
+        initial_list = []
+        for i in range(len(initial_students)):
+            initial_list.append({'students': initial_students[i], 'account': initial_accounts[i], 'approved': initial_approved[i]})
+        formset = ManageStudentFormset(form_kwargs={'user': request.user}, initial=initial_list)
+        return render(request, 'approve_students.html', {'formset': formset})
+
+    def post(self, request, *args, **kwargs):
+        ManageStudentFormset = formset_factory(ManageStudentsForm)
+        formset = ManageStudentFormset(request.POST, form_kwargs={'user': request.user})
+        if formset.is_valid():
+            for form in formset:
+                obj = form.save(commit=False)
+                obj.supervisor = request.user
+                form.save()
+            HttpResponseRedirect(reverse('edit_account'))
+        else:
+            return render(request, 'approve_students.html', {'formset': formset})
+'''
     
 
 
