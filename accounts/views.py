@@ -71,6 +71,7 @@ class ApproveStudentsView(FormView):
                     p.save()
                     print(p)
                 except:
+                    #### Do better error-cjecling?!!!! ###
                     print('oh crap didnt save')
             messages.success(self.request, 'Changes applied successfully.')
             return redirect(reverse('edit_account'))
