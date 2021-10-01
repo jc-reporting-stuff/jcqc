@@ -14,13 +14,16 @@
         <ul class="list-disc ml-4"><li>Change address, phone number, etc.</li></ul>
 
         {% if user.is_student is not True %}
-        <li><a class="underline" href="{% url 'view_user_accounts' %}">View/Add financial accounts</a></li>
+            <li><a class="underline" href="{% url 'view_user_accounts' %}">View/Add financial accounts</a></li>
         {% endif %}
 
         {% if user.is_student or user.is_superuser %}
-        <li><a class="underline" href="{% url 'student_supervisor_request' %}">Request supervisor pre-approval</a></li>
+            <li><a class="underline" href="{% url 'student_supervisor_request' %}">Request supervisor pre-approval</a></li>
         {% endif %}
-        <li>Add/revoke student approval</li>
+
+        {% if user.is_supervisor or user.is_superuser %}
+            <li><a href="{% url 'approve_students' %}" class="underline">{{ pending_approval|length }} student{{ pending_approval|pluralize }} pending approval</a></li>
+        {% endif %}
 
     </ul>
 </div>

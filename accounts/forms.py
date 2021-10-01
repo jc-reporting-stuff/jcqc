@@ -1,8 +1,11 @@
 from allauth.account.forms import SignupForm
-from django.forms.models import inlineformset_factory
+from django.db.models.fields import BooleanField
+from django.db.models.query import QuerySet
+from django.forms.formsets import formset_factory
+from django.forms.models import ModelForm, inlineformset_factory
 from django.urls import reverse
 from django import forms
-from .models import Account, User
+from .models import Account, User, Preapproval
 
 
 class UserSignupForm(SignupForm):
@@ -57,3 +60,17 @@ AccountsFormset = inlineformset_factory(User, Account, fields=['code','comment',
 
 class RequestSupervisorForm(forms.Form):
     email = forms.EmailField(max_length=130, required=True, label='Supervisor email')
+
+
+class ManageStudentsForm(forms.Form):
+    def __init__(self, *args, user, **kwargs):
+        super(ManageStudentsForm, self).__init__(*args, **kwargs)
+        student_choices = ((student.id, str(student.display_name)) for student in user.students.all())
+        account_choices = ((account.id, str(account.code)) for account in user.accounts.all())
+        #print(self.user.students.all())
+        self.fields['student'] = forms.ChoiceField(choices=student_choices)
+        self.fields['account'] = forms.ChoiceField(choices=account_choices)
+
+    #student = forms.CharField(required=True)
+    #account = forms.CharField(required=True)
+    active = forms.BooleanField(required=False)

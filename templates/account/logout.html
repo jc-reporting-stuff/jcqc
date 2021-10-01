@@ -6,15 +6,18 @@
 
 {% block content %}
 
-<h1>Logout</h1>
 
-<p>Please confirm your logout.</p>
+<div class="w-6/12 mx-auto my-4">
+    <h1 class="text-2xl font-bold py-4">Logout</h1>
 
-<form action="{% url 'account_logout' %}" method="post">
-    {% csrf_token %}
-    {{ form|crispy }}
-    <button class="font-bold bg-red-100 text-red-500 border border-red-700 py-1 px-2 rounded mt-4">Log out</button>
-</form>
+    <p class="py-4">Please confirm your logout.</p>
 
+    <form action="{% url 'account_logout' %}" method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button class="font-bold bg-gray-100 text-gray-500 border border-gray-700 py-1 px-2 rounded mt-4">Log out</button>
+    </form>
+
+</div>
 
 {% endblock content %}

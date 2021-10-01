@@ -81,3 +81,9 @@ class Preapproval(models.Model):
     approved = models.BooleanField(default=False)
     account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='account_owner', blank=True, null=True)
     create_date = models.DateTimeField(auto_now_add=True)
+
+    def add_new(student, supervisor, account=None, approved=False):
+        return Preapproval.objects.create(student=student, supervisor=supervisor, account=account, approved=approved)
+    
+    def __str__(self):
+        return ' approving '.join([self.supervisor.username, self.student.username])
