@@ -42,71 +42,6 @@ class UpdateProfileView(UpdateView):
     def get_success_url(self):
         messages.success(self.request, 'Profile update successful!')
         return reverse('edit_account')
-    
-
-class ApproveStudentsView(FormView):
-    template_name = 'approve_students.html'
-
-    def get(self, request, *args, **kwargs):
-        ManageStudentsFormset = formset_factory(ManageStudentsForm, extra=0)
-        objects_awaiting_approval = Preapproval.objects.filter(supervisor_id=request.user.id, approved=False)
-        initial_values = []
-        for object in objects_awaiting_approval:
-            initial_values.append({'student': str(object.student.id), 'account': '', 'student_id': str(object.student.id) })
-        formset = ManageStudentsFormset(initial=initial_values, form_kwargs={'user': request.user})
-        return render(request, 'approve_students.html', {'formset': formset})
-
-    def post(self, request, *args, **kwargs):
-        ManageStudentsFormset = formset_factory(ManageStudentsForm)
-        formset = ManageStudentsFormset(request.POST, form_kwargs={'user': request.user})
-        if formset.is_valid():
-            for form in formset:
-                cd = form.cleaned_data
-                student = User.objects.get(id=cd['student_id'])
-                supervisor = User.objects.get(id=request.user.id)
-                account = Account.objects.get(id=cd['account'])
-                try:
-                    p = Preapproval.objects.get(supervisor=supervisor, student=student, approved=False)
-                    p.approved=True
-                    p.save()
-                    print(p)
-                except:
-                    #### Do better error-cjecling?!!!! ###
-                    print('oh crap didnt save')
-            messages.success(self.request, 'Changes applied successfully.')
-            return redirect(reverse('edit_account'))
-        return render(request, 'approve_students.html', {'formset': formset})
-
-
-'''
-class ApproveStudentsView(FormView):
-    template_name = 'approve_students.html'
-
-    def get(self, request, *args, **kwargs):
-        ManageStudentFormset = formset_factory(ManageStudentsForm, can_delete=True)
-        initial_students = Preapproval.objects.filter(supervisor=request.user).values_list('student_id', flat=False)
-        initial_accounts = Preapproval.objects.filter(supervisor=request.user).values_list('account', flat=False)
-        initial_approved = Preapproval.objects.filter(supervisor=request.user).values_list('approved', flat=False)
-        initial_list = []
-        for i in range(len(initial_students)):
-            initial_list.append({'students': initial_students[i], 'account': initial_accounts[i], 'approved': initial_approved[i]})
-        formset = ManageStudentFormset(form_kwargs={'user': request.user}, initial=initial_list)
-        return render(request, 'approve_students.html', {'formset': formset})
-
-    def post(self, request, *args, **kwargs):
-        ManageStudentFormset = formset_factory(ManageStudentsForm)
-        formset = ManageStudentFormset(request.POST, form_kwargs={'user': request.user})
-        if formset.is_valid():
-            for form in formset:
-                obj = form.save(commit=False)
-                obj.supervisor = request.user
-                form.save()
-            HttpResponseRedirect(reverse('edit_account'))
-        else:
-            return render(request, 'approve_students.html', {'formset': formset})
-'''
-    
-
 
 
 class UserAccountsView(TemplateResponseMixin, View):
@@ -171,3 +106,41 @@ class RequestSupervisorView(FormView):
             return self.form_valid(form)
         else:
              return self.form_invalid(form)
+
+
+class ApproveStudentsView(FormView):
+    template_name = 'approve_students.html'
+
+    def get(self, request, *args, **kwargs):
+        ManageStudentsFormset = formset_factory(ManageStudentsForm, extra=0)
+        objects_awaiting_approval = Preapproval.objects.filter(supervisor_id=request.user.id, approved=False)
+        initial_values = []
+        for object in objects_awaiting_approval:
+            initial_values.append({'student': str(object.student.id), 'account': '', 'student_id': str(object.student.id) })
+        formset = ManageStudentsFormset(initial=initial_values, form_kwargs={'user': request.user})
+        return render(request, 'approve_students.html', {'formset': formset})
+
+    def post(self, request, *args, **kwargs):
+        ManageStudentsFormset = formset_factory(ManageStudentsForm)
+        formset = ManageStudentsFormset(request.POST, form_kwargs={'user': request.user})
+        if formset.is_valid():
+            for form in formset:
+                cd = form.cleaned_data
+                student = User.objects.get(id=cd['student_id'])
+                supervisor = User.objects.get(id=request.user.id)
+                account = Account.objects.get(id=cd['account'])
+                try:
+                    p = Preapproval.objects.get(supervisor=supervisor, student=student, approved=False)
+                    p.approved=True
+                    p.save()
+                    print(p)
+                except:
+                    #### Do better error-cjecling?!!!! ###
+                    print('oh crap didnt save')
+            messages.success(self.request, 'Changes applied successfully.')
+            return redirect(reverse('edit_account'))
+        return render(request, 'approve_students.html', {'formset': formset})
+
+
+class ManageStudentsView(TemplateView):
+    template_name = 'manage_students.html'

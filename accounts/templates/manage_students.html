@@ -1,0 +1,31 @@
+{% extends '_base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Approve Students{% endblock title %}
+
+{% block content %}
+
+    <div class="w-6/12 mx-auto py-4">
+
+        <h1 class="text-2xl font-bold py-4">List of students for {{ user.display_name }}</h1>
+
+        <p>Use dropdown list to choose account for each student. For privacy reasons, to add a new student, the student must request approval from their account.</p>
+
+        <form method="post" class="py-4">
+            {{ formset.management_form }}
+
+                {% for form in formset %}
+                    {{form.as_p }}
+                    <hr class="py-4">
+                {% endfor %}
+
+            {% csrf_token %}
+
+            <input type="submit" value="Save" class="my-4 py-1 px-3 border border-gray-500 bg-gray-100 text-gray-700 rounded">
+
+        </form>
+
+    </div>
+
+{% endblock content %}

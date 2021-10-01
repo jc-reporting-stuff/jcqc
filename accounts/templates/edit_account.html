@@ -25,6 +25,12 @@
             <li><a href="{% url 'approve_students' %}" class="underline">{{ pending_approval|length }} student{{ pending_approval|pluralize }} pending approval</a></li>
         {% endif %}
 
+        {% if user.is_supervisor or user.is_superuser %}
+            <li><a href="{% url 'manage_students' %}" class="underline">Manage student account approvals</li>
+        {% endif %}
+
+        
+
     </ul>
 </div>
 
