@@ -16,7 +16,10 @@
             {{ formset.management_form }}
 
                 {% for form in formset %}
-                    {{form.as_p }}
+                    {% if forloop.last %}
+                    <div>Use the following form to add an account to an existing student.</div>
+                    {% endif %}
+                    {{form|crispy }}
                     <hr class="py-4">
                 {% endfor %}
 

@@ -169,7 +169,7 @@ class ManageStudentsView(TemplateView):
         for object in objects:
             initial_values.append({'student': str(object.student.id), 'account': object.account.id, 'preapproval_id': object.id or '' })
         formset = ManageStudentsFormset(initial=initial_values, form_kwargs={'user': request.user})
-        return render(request, 'approve_students.html', {'formset': formset})
+        return render(request, 'manage_students.html', {'formset': formset})
     
     def post(self, request, *args, **kwargs):
         ManageStudentsFormset = formset_factory(ManageStudentsForm, can_delete=True)

@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-import os
+import platform
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     # 3rd party
     'allauth',
     'allauth.account',
+    'tailwind',
+    'theme',
     'crispy_forms',
     'crispy_tailwind',
 
@@ -175,6 +177,12 @@ ACCOUNT_FORMS = {
     # Use our custom signup form
     "signup": "accounts.forms.UserSignupForm",
 }
+
+# Tailwind config
+TAILWIND_APP_NAME = 'theme'
+INTERNAL_IPS = ['127.0.0.1']
+if platform.system() == 'Windows':
+    NPM_BIN_PATH = r'C:\Program Files\nodejs\npm.cmd'
 
 # Crispy forms
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'tailwind'

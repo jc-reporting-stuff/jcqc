@@ -76,8 +76,8 @@ class Account(models.Model):
 
 
 class Preapproval(models.Model):
-    supervisor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='approved_supervisor')
-    student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='approved_student')
+    supervisor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='linked_students')
+    student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='linked_supervisors')
     approved = models.BooleanField(default=False)
     account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='account_owner', blank=True, null=True)
     create_date = models.DateTimeField(auto_now_add=True)
