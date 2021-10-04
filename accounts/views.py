@@ -33,7 +33,7 @@ class EditAccountView(TemplateView):
 class UpdateProfileView(UpdateView):
     model = get_user_model()
     fields = [
-        'username', 'email', 'display_name', 'phone', 'extension', 'fax_number',
+        'email', 'display_name', 'phone', 'extension', 'fax_number',
         'institution', 'department', 'room_number', 'address', 'city', 'province',
         'country', 'postal_code', 'is_student', 'is_supervisor',
     ]

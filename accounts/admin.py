@@ -8,7 +8,7 @@ class UserAdminConfig(UserAdmin):
     list_display = ('username', 'email', 'display_name', 'is_active', 'is_staff', 'is_student', 'is_supervisor', 'student_list')
 
     fieldsets = (
-        (None, {'fields': ('username', 'email', 'display_name')}),
+        (None, {'fields': ('email', 'display_name')}),
         ('Details', {'fields': (
             'phone', 'extension', 'fax_number', 'institution', 'department',
             'room_number', 'address', 'city', 'province', 'country', 'postal_code'

@@ -11,9 +11,17 @@
         <h1 class="text-2xl font-bold">List of financial accounts for {{ user.display_name }}</h1>
 
         <form method="post">
-            {{ formset|crispy }}
-            {{ formset.management_form }}
             {% csrf_token %}
+            {{ formset.management_form }}
+
+            {% for form in formset %}
+                {% if forloop.last %}
+                <hr class="my-4">
+                <div class="my-4 text-xl">Add a new account:</div>
+                {% endif %}
+                {{ form|crispy }}
+            {% endfor %}
+        
             <input type="submit" value="Save" class="my-4 py-1 px-3 border border-gray-500 bg-gray-100 text-gray-700 rounded">
 
         </form>
