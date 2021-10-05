@@ -1,0 +1,42 @@
+{% extends '_base.html' %}
+
+{% block title %}All Ordered Oligos{% endblock title %}
+
+{% block content %}
+
+<div>
+
+    <table class="p-2 m-4 oligo-view">
+        <tr>
+            <th class="px-4 text-center">Order ID</th>
+            <th class="px-4">Submitter</th>
+            <th class="px-4">Account</th>
+            <th class="px-4">Oligo Name</th>
+            <th class="px-4">Sequence</th>
+            <th class="px-4">Scale</th>
+            <th class="px-4">Purity</th>
+            <th class="px-4">Modification</th>
+            <th class="px-4">Quant.</th>
+            <th class="px-4">Ordered</th>
+            <th class="px-4">Delivered</th>
+        </tr>
+    {% for order in orders %}
+        <tr {% if forloop.counter|divisibleby:2 %}class="bg-gray-200"{% endif %}>
+            <td class="text-center">{{ order.order_id }}</td>
+            <td class="text-center">{{ order.submitter }}</td>
+            <td class="text-center">{{ order.account.code }}</td>
+            <td class="text-center">{{ order.name }}</td>
+            <td class="text-center">{{ order.sequence }}</td>
+            <td class="text-center">{{ order.scale }}</td>
+            <td class="text-center">{{ order.purity }}</td>
+            <td class="text-center">{{ order.modification }}</td>
+            <td class="text-center">{{ order.quantity }}</td>
+            <td class="text-center">{{ order.created_at|date:'Y/m/d' }}</td>
+            <td class="text-center">{{ order.delivery_date|date:'Y/m/d' }}</td>
+
+        </tr>
+    {% endfor %}
+
+</div>
+
+{% endblock content %}

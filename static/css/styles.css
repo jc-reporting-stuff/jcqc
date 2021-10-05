@@ -1,3 +1,7 @@
 div.pointer-events-none > svg {
     display: none;
 }
+
+.oligo-cell {
+    padding: 5px;
+}

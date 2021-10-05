@@ -21,7 +21,10 @@ class Oligo(models.Model):
     price = models.DecimalField(decimal_places=2, max_digits=7)
     volume = models.IntegerField()
     OD_reading = models.DecimalField(
-        decimal_places=2, max_digits=5, blank=True)
+        decimal_places=2, max_digits=5, blank=True, null=True)
+
+    class Meta:
+        ordering = ['-id']
 
     def __str__(self):
         return self.name

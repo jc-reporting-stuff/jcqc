@@ -3,21 +3,21 @@
     <div class="border border-blue-600 w-100 rounded-lg py-1 px-2  bg-blue-700 mx-2">
         <div class="border-b-2 border-blue-600 text-center font-bold text-blue-100">Oligos</div>
         <div class="flex-row">
-            <a href="#" class="text-yellow-400 hover:text-yellow-500 px-3">Order</a> <span class="text-blue-500">|</span> 
-            <a href="#" class="text-yellow-400 hover:text-yellow-500 px-3">View</a>
+            <a href="{% url 'oligos:order_quantity' %}" class="text-yellow-300 px-3 hover:text-yellow-200">Order</a><span class="text-blue-500">|</span> 
+            <a href="{% url 'oligos:client_order_list' %}" class="text-yellow-300 hover:text-yellow-200 px-3">View</a>
         </div>
     </div>
 
     <div class="border border-blue-600 w-42 rounded-lg py-1 px-2 bg-blue-700 mx-2">
         <div class="border-b-2 border-blue-600 text-center font-bold text-blue-100">Sequencing</div>
         <div class="flex-row">
-            <a href="#" class="text-yellow-400 hover:text-yellow-500 px-3">Order</a> <span class="text-blue-500">|</span> 
-            <a href="#" class="text-yellow-400 hover:text-yellow-500 px-3">View</a>
+            <a href="#" class="text-yellow-300 hover:text-yellow-200 px-3">Order</a> <span class="text-blue-500">|</span> 
+            <a href="#" class="text-yellow-300 hover:text-yellow-200 px-3">View</a>
         </div>
     </div>
 
     <div class="border border-blue-600 rounded-lg bg-blue-700 mx-2 py-1 px-3 hover:bg-blue-600">
-    <img src="{% static 'images/user-icon.svg' %}" class="w-4 inline">
+    <img src="{% static 'images/user-icon.svg' %}" class="w-4 inline" alt="user icon">
         <a href="{% url 'edit_account' %}" class="font-bold text-blue-100">{{ user.username }}</a>
     </div>
 
@@ -27,7 +27,7 @@
 
     
     {% if user.is_superuser %}
-        <div class="text-blue-100 font-2xl border-dashed border-blue-200 border py-1 px-3 rounded hover:bg-blue-700">
+        <div class="text-blue-100 font-2xl border-dashed border-blue-200 border py-1 px-3 rounded-md hover:bg-blue-700">
             <a href="/admin">Admin Dashboard</a>
         </div>
     {% endif %}

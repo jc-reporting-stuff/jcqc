@@ -55,6 +55,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     def is_external(self):
         return not (self.is_student or self.is_supervisor)
 
+    def get_financial_accounts(self):
+        if self.is_student:
+            return Account.objects.filter(owner__linked_students__student=self, owner__linked_students__approved=True)
+        else:
+            return Account.objects.filter(owner=self)
+
     def __str__(self):
         return self.username
 

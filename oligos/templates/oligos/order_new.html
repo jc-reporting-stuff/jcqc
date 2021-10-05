@@ -1,0 +1,63 @@
+{% extends '_base.html' %}
+
+{% block title %}Number of oligos to order{% endblock title %}
+
+
+{% load crispy_forms_tags%}
+
+{% block content %}
+
+<form method="post">
+
+{% comment%} THIS IS THE FILLING OUT FORM SECTION -- PREVIEW SECTION IS BELOW {% endcomment %}
+
+
+<div {% if previewing %}style="display:none;"{% endif %}>
+
+<h1 class="text-2xl font-bold my-4">Step 2 of 3: Define New Oligos</h1>
+
+
+{{ formset.management_form }}
+{% csrf_token %}
+
+{% for form in formset %}
+
+    {{ form|crispy }}
+
+    <hr class="my-8">
+
+{% endfor%}
+
+<input type="submit" name="previewing" value="Proceed to Preview" class="my-4 border border-gray-400 rounded px-3 py-1">
+
+</div>
+
+{% comment %} ABOVE THIS IS THE FORM TO BE SUBMITTED /// BELOW THIS LINE IS THE PREVIEW DIV{% endcomment %}
+
+<div {% if not previewing %}style="display:none;"{% endif %}>
+
+<h1 class="text-2xl font-bold">Step 3 of 3: Verify your orders</h1>
+
+<table>
+    <tr>
+        <th class="p-4 text-center">Name</th>
+        <th class="py-1 px-2 text-center">Sequence</th>
+    </tr>
+    {% for form in formset %}
+    <tr>
+        <td class="text-center">{{ form.name.value }}</td>
+        <td class="text-center">{{ form.sequence.value }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<input type="submit" name="submitting" value="Place order"  class="my-4 border border-gray-400 rounded px-3 py-1">
+
+</div>
+
+</form>
+
+
+
+
+{% endblock content %}

@@ -24,6 +24,9 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('accounts.urls')),
 
+    # Oligos orders
+    path('oligos/', include('oligos.urls')),
+
     # Local apps
     path('', include('pages.urls')),
 ]
