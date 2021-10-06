@@ -15,4 +15,16 @@ class OligoInitialForm(forms.Form):
 class OligoOrderForm(forms.ModelForm):
     class Meta:
         model = Oligo
-        fields = ['name', 'sequence']
+        fields = ['scale', 'purity', 'modification', 'name', 'sequence',]
+        
+    scale = forms.ChoiceField(widget=forms.RadioSelect, choices=(('4 nmol','4 nmol'),('200 nmol', '200 nmol'),('1 µmol','1 µmol')))
+    purity = forms.ChoiceField(widget=forms.RadioSelect, choices=(('standard','Standard'),('desalted', 'Desalted'),('cartridge','Cartridge')))
+    modification = forms.CharField(required=False, max_length=150)
+
+
+class EasyOrderForm(forms.Form):
+    scale = forms.ChoiceField(widget=forms.RadioSelect, choices=(('4 nmol','4 nmol'),('200 nmol', '200 nmol'),('1 µmol','1 µmol')))
+    purity = forms.ChoiceField(widget=forms.RadioSelect, choices=(('standard','standard'),('desalted', 'desalted'),('cartridge','cartridge')))
+    modification = forms.CharField(required=False, max_length=150)
+    oligos = forms.CharField(max_length=5000, widget=forms.Textarea)
+

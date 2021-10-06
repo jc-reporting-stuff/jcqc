@@ -5,3 +5,30 @@ div.pointer-events-none > svg {
 .oligo-cell {
     padding: 5px;
 }
+
+.page-leader {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+
+.oligo-preview-table {
+    margin: 0.5rem auto;
+}
+
+.oligo-preview-table tr th {
+    border-bottom: 2px solid #010101;
+}
+
+.oligo-preview-table tr td {
+    text-align: center;
+    padding: 0.5rem 1rem;
+}
+
+.oligo-preview-table tr:nth-child(even) {
+    background-color: gainsboro;    
+}
+
+.asteriskField {
+    color: #C00;
+}

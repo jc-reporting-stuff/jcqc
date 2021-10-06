@@ -16,7 +16,6 @@
             <th class="px-4">Scale</th>
             <th class="px-4">Purity</th>
             <th class="px-4">Modification</th>
-            <th class="px-4">Quant.</th>
             <th class="px-4">Ordered</th>
             <th class="px-4">Delivered</th>
         </tr>
@@ -29,8 +28,7 @@
             <td class="text-center">{{ order.sequence }}</td>
             <td class="text-center">{{ order.scale }}</td>
             <td class="text-center">{{ order.purity }}</td>
-            <td class="text-center">{{ order.modification }}</td>
-            <td class="text-center">{{ order.quantity }}</td>
+            <td class="text-center">{% if order.modification %}{{ order.modification }}{% else %} - - {% endif %}</td>
             <td class="text-center">{{ order.created_at|date:'Y/m/d' }}</td>
             <td class="text-center">{{ order.delivery_date|date:'Y/m/d' }}</td>
 

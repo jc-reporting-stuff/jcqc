@@ -28,6 +28,8 @@
 
 {% endfor%}
 
+<input type="hidden" name="account_id" value="{{ account_id }}">
+
 <input type="submit" name="previewing" value="Proceed to Preview" class="my-4 border border-gray-400 rounded px-3 py-1">
 
 </div>
@@ -38,20 +40,30 @@
 
 <h1 class="text-2xl font-bold">Step 3 of 3: Verify your orders</h1>
 
-<table>
+<table class="oligo-preview-table">
     <tr>
-        <th class="p-4 text-center">Name</th>
-        <th class="py-1 px-2 text-center">Sequence</th>
+        <th>Name</th>
+        <th>Sequence</th>
+        <th>Length (bp)</th>
+        <th>Scale</th>
+        <th>Purity</th>
+        <th>Modification</th>
     </tr>
     {% for form in formset %}
-    <tr>
-        <td class="text-center">{{ form.name.value }}</td>
-        <td class="text-center">{{ form.sequence.value }}</td>
-    </tr>
+        {% if form.name %}
+            <tr>
+                <td class="text-center">{{ form.name.value }}</td>
+                <td class="text-center">{{ form.sequence.value }}</td>
+                <td class="text-center">{{ form.sequence.value|length }}</td>
+                <td class="text-center">{{ form.scale.value }}</td>
+                <td class="text-center">{{ form.purity.value }}</td>
+                <td class="text-center">{% if form.modification.value %}{{ form.modification.value }}{% else %} - - {% endif%}</td>
+            </tr>
+        {% endif %}
     {% endfor %}
 </table>
 
-<input type="submit" name="submitting" value="Place order"  class="my-4 border border-gray-400 rounded px-3 py-1">
+<input type="submit" name="submitting" value="Place order"  class="my-4 border border-gray-400 rounded px-3 py-1 mx-auto">
 
 </div>
 

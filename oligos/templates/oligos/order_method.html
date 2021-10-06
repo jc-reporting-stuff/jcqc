@@ -16,9 +16,18 @@
 
     <div class="py-4">Please select account to be used: {{ form.account_id }}</div>
 
+    <hr>
+
     <div class="py-4">How many different oligos are you ordering today: {{ form.oligo_count }}</div>
 
-    <input type="submit" name="creating" value="Proceed">
+    <input type="submit" name="creating" value="Proceed" class="border border-gray-300 py-1 px-3 rounded">
+
+
+    <div class="pt-8">If you have a large number of oligos to order you might prefer using
+        <input type="submit" class="py-1 px-3 border border-gray-300 bg-gray-100 rounded inline-block" value="Bulk Order" formaction="{% url 'oligos:easy_order' %}">
+    </div>
+
+</form>
 
 </form>
 

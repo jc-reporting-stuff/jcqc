@@ -13,13 +13,12 @@ class Oligo(models.Model):
     sequence = models.CharField(max_length=150)
     scale = models.CharField(max_length=20)
     purity = models.CharField(max_length=20)
-    modification = models.CharField(max_length=150, blank=True)
-    quantity = models.IntegerField()
+    modification = models.CharField(max_length=150, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     delivery_date = models.DateField(
         blank=True, null=True, auto_now_add=False, auto_now=False)
-    price = models.DecimalField(decimal_places=2, max_digits=7)
-    volume = models.IntegerField()
+    price = models.DecimalField(decimal_places=2, max_digits=7, blank=True, null=True)
+    volume = models.IntegerField(blank=True, null=True)
     OD_reading = models.DecimalField(
         decimal_places=2, max_digits=5, blank=True, null=True)
 

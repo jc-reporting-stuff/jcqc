@@ -1,0 +1,31 @@
+{% extends '_base.html' %}
+
+{% block title %}Number of oligos to order{% endblock title %}
+
+
+{% load crispy_forms_tags%}
+
+{% block content %}
+
+<div class="w-[800px] mx-auto">
+
+    <h1 class="text-2xl font-bold py-4">Order new oligos - Bulk Ordering</h1>
+
+    <div class="py-4 font-bold">Step 2 of 3:</div>
+
+
+    <form method="post">
+
+        {% csrf_token %}
+        {{ form|crispy }}
+
+        <input type="hidden" name="account_id" value="{{ account_id }}">
+
+        <input type="submit" value="Proceed to preview" class="border border-gray-300 rounded py-1 px-3 my-4">
+
+    </form>
+
+</div>
+
+
+{% endblock content %}
