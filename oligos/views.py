@@ -103,7 +103,7 @@ class OligoCreateView(CreateView):
 
         for oligo in cd:
             Oligo.objects.create(
-                    name=oligo['name'], sequence=oligo['sequence'], order_id=order_number, 
+                    name=oligo['name'], sequence=oligo['sequence'].upper(), order_id=order_number, 
                     account=account, submitter=submitter, modification=oligo['modification'],
                     scale=oligo['scale'], purity=oligo['purity']
                     )
@@ -170,7 +170,6 @@ class OligoEasySubmitView(TemplateView):
     template_name = 'oligos/easy_preview.html'
 
     def post(self, request):
-
         data = request.POST
         submitter = User.objects.get(id=self.request.user.id)
         account = Account.objects.get(id=data['account_id'])

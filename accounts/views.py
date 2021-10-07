@@ -39,6 +39,9 @@ class UpdateProfileView(UpdateView):
     ]
     template_name = 'update_profile.html'
 
+    def get_queryset(self):
+        return User.objects.filter(id=self.request.user.id)
+
     def get_success_url(self):
         messages.success(self.request, 'Profile update successful!')
         return reverse('edit_account')

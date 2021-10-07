@@ -48,6 +48,7 @@ p {
 
 li {
     a {
+        text-decoration: underline;
         color: $blue-600;
         &:visited {
             color: $blue-900;

@@ -7,9 +7,9 @@
 
 {% block content %}
 
-    <div class="container half-width">
+    <div class="container" style="max-width: 50rem;">
 
-        <form method="post">
+        <form method="post" style="margin: 0;">
 
             {% comment%} THIS IS THE FILLING OUT FORM SECTION -- PREVIEW SECTION IS BELOW {% endcomment %}
 
@@ -20,13 +20,15 @@
 
                 <h2>Step 2 of 3: Define New Oligos</h2>
 
-
                 {{ formset.management_form }}
                 {% csrf_token %}
 
                 {% for form in formset %}
+                <div class="new-oligo-box">
+                    <h2>Oligo number {{ forloop.counter }}</h2>
+                    <br>
                     {{ form|crispy }}
-                    <hr style="margin: 1rem 0;">
+                </div>
                 {% endfor%}
 
                 <input type="hidden" name="account_id" value="{{ account_id }}">
@@ -43,6 +45,7 @@
 
                 <table class="oligo-view">
                     <tr>
+                        <th>#</th>
                         <th>Name</th>
                         <th>Sequence</th>
                         <th>Length (bp)</th>
@@ -51,14 +54,15 @@
                         <th>Modification</th>
                     </tr>
                     {% for form in formset %}
-                        {% if form.name %}
+                        {% if form.name.value|length > 0 %}
                             <tr>
-                                <td class="text-center">{{ form.name.value }}</td>
-                                <td class="text-center">{{ form.sequence.value }}</td>
-                                <td class="text-center">{{ form.sequence.value|length }}</td>
-                                <td class="text-center">{{ form.scale.value }}</td>
-                                <td class="text-center">{{ form.purity.value }}</td>
-                                <td class="text-center">{% if form.modification.value %}{{ form.modification.value }}{% else %} - - {% endif%}</td>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ form.name.value }}</td>
+                                <td>{{ form.sequence.value|upper }}</td>
+                                <td>{{ form.sequence.value|length }}</td>
+                                <td>{{ form.scale.value }}</td>
+                                <td>{{ form.purity.value }}</td>
+                                <td>{% if form.modification.value %}{{ form.modification.value }}{% else %} - - {% endif%}</td>
                             </tr>
                         {% endif %}
                     {% endfor %}

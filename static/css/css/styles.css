@@ -68,6 +68,7 @@ p {
     font-weight: bold; }
 
 li a {
+  text-decoration: underline;
   color: #2563eb; }
   li a:visited {
     color: #1e3a8a; }
@@ -147,11 +148,12 @@ header .ugls-header-banner {
   position: absolute;
   top: 1rem;
   left: 1rem;
-  color: #f3f4f6;
   border: 1px dashed #d1d5db;
   border-radius: 0.25rem;
   padding: 0.25rem 0.75rem;
   background-color: #9ca3af; }
+  .admin-link a {
+    color: #d1d5db; }
   .admin-link:hover {
     background-color: #d1d5db; }
 
@@ -167,11 +169,10 @@ form {
     color: #1f2937;
     background-color: #e5e7eb; }
   form label {
-    color: #1d4ed8;
     font-weight: 600; }
   form input[type=number] {
     max-width: 4rem; }
-  form input[type=text], form input[type=password], form input[type=number], form select {
+  form input[type=text], form input[type=password], form input[type=number], form input[type=email], form select, form textarea {
     border: 1px solid #9ca3af;
     border-radius: 0.5rem;
     margin: 0.5rem 0.75rem;
@@ -180,6 +181,8 @@ form {
     font-size: 1rem; }
   form input[type=radio] {
     display: inline; }
+  form textarea {
+    width: 100%; }
 
 .login-container {
   width: 100%; }
@@ -220,6 +223,26 @@ form {
   .login-container .peace-div {
     max-width: 80rem; }
 
+.half-width h2 {
+  font-size: large;
+  font-weight: bold; }
+
+.half-width a {
+  color: #1d4ed8; }
+  .half-width a:visited {
+    color: #1e3a8a; }
+
+.new-oligo-box {
+  margin-top: 3rem;
+  border-top: 2px solid #d1d5db;
+  border-bottom: 2px solid #6b7280;
+  border-radius: 1rem;
+  padding: 0 1rem; }
+  .new-oligo-box h2 {
+    width: 100%;
+    border-bottom: 1px solid #6b7280;
+    padding-top: 0.5rem; }
+
 .oligo-view {
   margin: 1rem auto; }
   .oligo-view tr:nth-child(1) {
@@ -238,30 +261,5 @@ form {
     .oligo-view tr td a {
       color: #1d4ed8;
       text-decoration: underline; }
-
-.half-width h2 {
-  font-size: large;
-  font-weight: bold; }
-
-.half-width a {
-  color: #1d4ed8; }
-  .half-width a:visited {
-    color: #1e3a8a; }
-
-div.pointer-events-none > svg {
-  display: none; }
-
-.oligo-cell {
-  padding: 5px; }
-
-.oligo-preview-table {
-  margin: 0.5rem auto; }
-  .oligo-preview-table tr th {
-    border-bottom: 2px solid #010101; }
-  .oligo-preview-table tr td {
-    text-align: center;
-    padding: 0.5rem 1rem; }
-  .oligo-preview-table tr tr:nth-child(even) {
-    background-color: gainsboro; }
 
 /*# sourceMappingURL=styles.css.map */

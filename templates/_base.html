@@ -38,13 +38,15 @@
 
     {% if user.is_authenticated %} {% include '_nav.html' %} {% endif %}
 
-      <div class="messages-container">
-        {% if messages %}
-          {% for message in messages %}
-          <div>{{ message }}</div>
-          {% endfor %}
-        {% endif %}
-      </div>
+      {% if messages %}
+        <div class="messages-container">
+          {% if messages %}
+            {% for message in messages %}
+            <div>{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        </div>
+      {% endif %}
     
     <div class="container">
 

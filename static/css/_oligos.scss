@@ -1,3 +1,30 @@
+
+.half-width {
+    h2 {
+        font-size: large;
+        font-weight: bold;
+    }
+    a {
+        color: $blue-700;
+        &:visited {
+            color: $blue-900;
+        }
+    }
+}
+
+.new-oligo-box {
+    margin-top: 3rem;
+    border-top: 2px solid $gray-300;
+    border-bottom: 2px solid $gray-500;
+    border-radius: 1rem;
+    padding: 0 1rem;
+    h2 {
+        width: 100%;
+        border-bottom: 1px solid $gray-500;
+        padding-top: 0.5rem;
+    }
+}
+
 .oligo-view {
     margin: 1rem auto;
     tr {
@@ -22,19 +49,6 @@
                 color: $blue-700;
                 text-decoration: underline;
             }
-        }
-    }
-}
-
-.half-width {
-    h2 {
-        font-size: large;
-        font-weight: bold;
-    }
-    a {
-        color: $blue-700;
-        &:visited {
-            color: $blue-900;
         }
     }
 }

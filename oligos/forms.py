@@ -1,5 +1,10 @@
 from django import forms
+from django.core.exceptions import ValidationError
+
+from django.core.validators import RegexValidator
 from .models import Oligo
+
+import re
 
 class OligoInitialForm(forms.Form):
     account_id = forms.ChoiceField()
@@ -16,15 +21,33 @@ class OligoOrderForm(forms.ModelForm):
     class Meta:
         model = Oligo
         fields = ['scale', 'purity', 'modification', 'name', 'sequence',]
-        
+
     scale = forms.ChoiceField(widget=forms.RadioSelect, choices=(('4 nmol','4 nmol'),('200 nmol', '200 nmol'),('1 µmol','1 µmol')))
     purity = forms.ChoiceField(widget=forms.RadioSelect, choices=(('standard','Standard'),('desalted', 'Desalted'),('cartridge','Cartridge')))
     modification = forms.CharField(required=False, max_length=150)
+    sequence = forms.CharField(max_length=150, widget=forms.TextInput(attrs={'pattern': '[ACGTRYMWSKDHBVNIacgtrymwskdhbvni]+'}))
+
+
+class MultiOligoField(forms.CharField):
+    def to_python(self, value):
+        if not value:
+            return []
+        return value.split('\n')
+
+    def validate(self, value):
+        super().validate(value)
+        regex = r'(.+?)[\t;,] *([ACGTRYMWSKDHBVNIacgtrymwskdhbvni]+)'
+        for line in value:
+            try:
+                re.match(regex, line).groups()
+            except:
+                raise ValidationError('Check that input is comma, semicolon or tab delimited. One oligo per line.')
+
 
 
 class EasyOrderForm(forms.Form):
     scale = forms.ChoiceField(widget=forms.RadioSelect, choices=(('4 nmol','4 nmol'),('200 nmol', '200 nmol'),('1 µmol','1 µmol')))
-    purity = forms.ChoiceField(widget=forms.RadioSelect, choices=(('standard','standard'),('desalted', 'desalted'),('cartridge','cartridge')))
+    purity = forms.ChoiceField(widget=forms.RadioSelect, choices=(('standard','Standard'),('desalted', 'Desalted'),('cartridge','Cartridge')))
     modification = forms.CharField(required=False, max_length=150)
-    oligos = forms.CharField(max_length=5000, widget=forms.Textarea)
+    oligos = MultiOligoField(max_length=5000, widget=forms.Textarea)
 
