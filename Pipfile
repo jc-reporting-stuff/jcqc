@@ -10,6 +10,9 @@ django-tailwind = "*"
 django-crispy-forms = "*"
 crispy-tailwind = "*"
 django-allauth = "*"
+libsass = "*"
+django-compressor = "*"
+django-sass-processor = "*"
 
 [dev-packages]
 autopep8 = "*"

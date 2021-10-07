@@ -1,33 +1,38 @@
 {% load static %}
-<div class="bg-blue-800 py-2 px-4 flex-column w-screen flex flex-row justify-center items-center">
-    <div class="border border-blue-600 w-100 rounded-lg py-1 px-2  bg-blue-700 mx-2">
-        <div class="border-b-2 border-blue-600 text-center font-bold text-blue-100">Oligos</div>
-        <div class="flex-row">
-            <a href="{% url 'oligos:order_quantity' %}" class="text-yellow-300 px-3 hover:text-yellow-200">Order</a><span class="text-blue-500">|</span> 
-            <a href="{% url 'oligos:client_order_list' %}" class="text-yellow-300 hover:text-yellow-200 px-3">View</a>
+<div class="nav-container">
+    <div class="nav-box">
+        <div class="top-row">Oligos</div>
+        <div class="bottom-box">
+            <a href="{% url 'oligos:order_quantity' %}">Order</a>
+            <span>|</span> 
+            <a href="{% url 'oligos:client_order_list' %}">View</a>
         </div>
     </div>
 
-    <div class="border border-blue-600 w-42 rounded-lg py-1 px-2 bg-blue-700 mx-2">
-        <div class="border-b-2 border-blue-600 text-center font-bold text-blue-100">Sequencing</div>
-        <div class="flex-row">
-            <a href="#" class="text-yellow-300 hover:text-yellow-200 px-3">Order</a> <span class="text-blue-500">|</span> 
-            <a href="#" class="text-yellow-300 hover:text-yellow-200 px-3">View</a>
+    <div class="nav-box">
+        <div class="top-row">Sequencing</div>
+        <div class="bottom-box">
+            <a href="#">Order</a>
+            <span>|</span> 
+            <a href="#">View</a>
         </div>
     </div>
 
-    <div class="border border-blue-600 rounded-lg bg-blue-700 mx-2 py-1 px-3 hover:bg-blue-600">
-    <img src="{% static 'images/user-icon.svg' %}" class="w-4 inline" alt="user icon">
-        <a href="{% url 'edit_account' %}" class="font-bold text-blue-100">{{ user.username }}</a>
-    </div>
+    <a href="{% url 'edit_account' %}">
+        <div class="nav-box">
+            <img src="{% static 'images/user-icon.svg' %}" id="user-icon" alt="user icon">
+            {{ user.username }}
+        </div>
+    </a>
 
-    <div class="border border-blue-600 rounded-lg bg-blue-700 mx-2 py-1 px-3 hover:bg-blue-600">
-        <a href="{% url 'account_logout' %}" class="font-bold text-blue-100">Log out!</a>
-    </div>
-
+    <a href="{% url 'account_logout' %}" class="font-bold text-blue-100">
+        <div class="nav-box">
+            Log out!
+        </div>
+    </a>
     
     {% if user.is_superuser %}
-        <div class="text-blue-100 font-2xl border-dashed border-blue-200 border py-1 px-3 rounded-md hover:bg-blue-700">
+        <div class="admin-link">
             <a href="/admin">Admin Dashboard</a>
         </div>
     {% endif %}

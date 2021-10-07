@@ -7,13 +7,14 @@
 
 {% block content %}
 
-    <div class="w-6/12 mx-auto mt-8">
-        <h2 class="text-2xl font-bold">Create Account</h2>
+    <div class="container half-width">
+        <h1>Create Account</h1>
 
-        <form method="post" class="mt-8 ml-4">
+        <form method="post">
             {% csrf_token %}
             {{ form|crispy }}
-            <button type="submit" class="border border-gray-700 bg-gray-200 text-gray-900 px-2 py-1 mx-auto mt-6 rounded hover:bg-blue-100 ml-auto">Sign Up</button>
+            <button type="submit" class="button-primary">Sign Up</button>
         </form>
     </div>
+    
 {% endblock content %}

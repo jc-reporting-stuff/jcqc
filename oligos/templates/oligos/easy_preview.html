@@ -7,19 +7,21 @@
 
 {% block content %}
 
-<div class="w-[800px] mx-auto">
+<div class="container" style="max-width: 50rem;">
 
-    <h1 class="page-leader">Order new oligos - Bulk Ordering</h1>
+    <h1>Order new oligos - Bulk Ordering</h1>
 
-    <div class="py-4 font-bold">Step 3 of 3: Verify Order</div>
+    <h2>Step 3 of 3: Verify Order</h2>
 
 
     <form method="post" action="{% url 'oligos:easy_submit' %} ">
         {% csrf_token %}
 
-        <div class="text-md italic mb-4">- - Using account {{ account.code }} - {{ account.comment }} - -</div>
+        <p>&gt;&gt; Using account {{ account.code }} - {{ account.comment }}</p>
 
-        <table class="oligo-preview-table">
+        <br>
+
+        <table class="oligo-view">
             <tr>
                 <th>Name</th>
                 <th>Sequence</th>
@@ -30,7 +32,7 @@
             </tr>
 
             {% for oligo in oligos %}
-            <tr style="align: text-center">
+            <tr>
                 <td>{{ oligo.name }} <input type="hidden" name="oligo-{{forloop.counter0}}-name" value="{{oligo.name}}"></td>
                 <td>{{ oligo.sequence }} <input type="hidden" name="oligo-{{forloop.counter0}}-sequence" value="{{oligo.sequence}}"></td>
                 <td>{{ oligo.sequence|length}}</td>
@@ -47,8 +49,9 @@
             <input type="hidden" name="oligo_count" value="{{ oligos|length }}">
         </table>
 
-        <input type="submit" value="Place Order" class="border border-gray-300 rounded py-1 px-3 my-4 ml-16">
-        <div class="mt-8 inline ml-16"><a class="underline" href="javascript:history.back()">Go back</a> to make changes.</div>
+        <input type="submit" value="Place Order" class="button-primary">
+        <p style="display: inline; margin-left: 2rem;"><a href="javascript:history.back()">Go back</a> to make changes.</p>
+
 
     </form>
 

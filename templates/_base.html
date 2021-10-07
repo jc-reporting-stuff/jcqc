@@ -1,57 +1,52 @@
 {% load static %}
-{% load tailwind_tags %}
+{% load sass_tags %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    {% tailwind_css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{%  sass_src 'css/styles.scss' %}"
+    />
     <link
       rel="shortcut icon"
       type="image/png"
       href="{% static 'images/favicon.ico' %}"
     />
     <title>
-      {% block title %}Welcome{% endblock title %} - Oligo and Sequencing Website
+      {% block title %}Welcome{% endblock title %} - Oligo and Sequencing
+      Website
     </title>
   </head>
   <body>
     <header role="banner">
-      <div
-        id="ugls-header-banner"
-        style="background: #6b7478; border-color: #af272f; line-height: 24px"
-        class="border-b-2"
-      >
-        <div
-          id="ugls-header"
-          class="max-w-7xl text-right mx-auto"
-          style="padding: 0.55rem 1.55rem; padding-bottom: 0.25rem"
-        >
-          <div id="ugls-identifier">
+      <div id="ugls-header-banner" class="ugls-header-banner">
+        <div id="ugls-header" class="ugls-header">
+          <div class="ugls-identifier">
             <a href="https://www.uoguelph.ca">
               <img src="{% static "images/ugls-identifier.svg" %}"
-              alt="University of Guelph Logo" style="width: 175px; height:
-              auto;" class="ml-auto">
+              alt="University of Guelph Logo" style="width: 175px; height: auto;
+              margin-left: auto;">
             </a>
           </div>
         </div>
       </div>
     </header>
 
-    {% if user.is_authenticated %}
-      {% include '_nav.html' %}
-    {% endif %}
+    {% if user.is_authenticated %} {% include '_nav.html' %} {% endif %}
 
-    <div class="container mx-auto w-[1280px]">
-      {% if messages %}
-        <ul class="messages w-4/12">
+      <div class="messages-container">
+        {% if messages %}
           {% for message in messages %}
-          <li class="border border-gray-300 bg-gray-200 py-1 px-2">{{ message }}</li>
+          <div>{{ message }}</div>
           {% endfor %}
-        </ul>
-      {% endif %}
+        {% endif %}
+      </div>
+    
+    <div class="container">
 
       {% block content %} {% endblock content %}
     </div>

@@ -7,69 +7,69 @@
 
 {% block content %}
 
-<form method="post">
+    <div class="container half-width">
 
-{% comment%} THIS IS THE FILLING OUT FORM SECTION -- PREVIEW SECTION IS BELOW {% endcomment %}
+        <form method="post">
 
-
-<div {% if previewing %}style="display:none;"{% endif %}>
-
-<h1 class="text-2xl font-bold my-4">Step 2 of 3: Define New Oligos</h1>
+            {% comment%} THIS IS THE FILLING OUT FORM SECTION -- PREVIEW SECTION IS BELOW {% endcomment %}
 
 
-{{ formset.management_form }}
-{% csrf_token %}
+            <div {% if previewing %}style="display:none;"{% endif %}>
 
-{% for form in formset %}
+                <h1>Order new oligos</h1>
 
-    {{ form|crispy }}
-
-    <hr class="my-8">
-
-{% endfor%}
-
-<input type="hidden" name="account_id" value="{{ account_id }}">
-
-<input type="submit" name="previewing" value="Proceed to Preview" class="my-4 border border-gray-400 rounded px-3 py-1">
-
-</div>
-
-{% comment %} ABOVE THIS IS THE FORM TO BE SUBMITTED /// BELOW THIS LINE IS THE PREVIEW DIV{% endcomment %}
-
-<div {% if not previewing %}style="display:none;"{% endif %}>
-
-<h1 class="text-2xl font-bold">Step 3 of 3: Verify your orders</h1>
-
-<table class="oligo-preview-table">
-    <tr>
-        <th>Name</th>
-        <th>Sequence</th>
-        <th>Length (bp)</th>
-        <th>Scale</th>
-        <th>Purity</th>
-        <th>Modification</th>
-    </tr>
-    {% for form in formset %}
-        {% if form.name %}
-            <tr>
-                <td class="text-center">{{ form.name.value }}</td>
-                <td class="text-center">{{ form.sequence.value }}</td>
-                <td class="text-center">{{ form.sequence.value|length }}</td>
-                <td class="text-center">{{ form.scale.value }}</td>
-                <td class="text-center">{{ form.purity.value }}</td>
-                <td class="text-center">{% if form.modification.value %}{{ form.modification.value }}{% else %} - - {% endif%}</td>
-            </tr>
-        {% endif %}
-    {% endfor %}
-</table>
-
-<input type="submit" name="submitting" value="Place order"  class="my-4 border border-gray-400 rounded px-3 py-1 mx-auto">
-
-</div>
-
-</form>
+                <h2>Step 2 of 3: Define New Oligos</h2>
 
 
+                {{ formset.management_form }}
+                {% csrf_token %}
 
+                {% for form in formset %}
+                    {{ form|crispy }}
+                    <hr style="margin: 1rem 0;">
+                {% endfor%}
+
+                <input type="hidden" name="account_id" value="{{ account_id }}">
+
+                <input type="submit" name="previewing" value="Proceed to Preview" class="button-primary">
+
+            </div>
+
+            {% comment %} ABOVE THIS IS THE FORM TO BE SUBMITTED /// BELOW THIS LINE IS THE PREVIEW DIV{% endcomment %}
+
+            <div {% if not previewing %}style="display:none;"{% endif %}>
+
+                <h1>Step 3 of 3: Verify your orders</h1>
+
+                <table class="oligo-view">
+                    <tr>
+                        <th>Name</th>
+                        <th>Sequence</th>
+                        <th>Length (bp)</th>
+                        <th>Scale</th>
+                        <th>Purity</th>
+                        <th>Modification</th>
+                    </tr>
+                    {% for form in formset %}
+                        {% if form.name %}
+                            <tr>
+                                <td class="text-center">{{ form.name.value }}</td>
+                                <td class="text-center">{{ form.sequence.value }}</td>
+                                <td class="text-center">{{ form.sequence.value|length }}</td>
+                                <td class="text-center">{{ form.scale.value }}</td>
+                                <td class="text-center">{{ form.purity.value }}</td>
+                                <td class="text-center">{% if form.modification.value %}{{ form.modification.value }}{% else %} - - {% endif%}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+
+                <input type="submit" name="submitting" value="Place order"  class="button-primary">
+
+            </div>
+
+        </form>
+
+    </div>
 
 {% endblock content %}

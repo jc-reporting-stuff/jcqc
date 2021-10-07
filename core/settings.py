@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-import platform
+import platform, os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -42,10 +42,8 @@ INSTALLED_APPS = [
     # 3rd party
     'allauth',
     'allauth.account',
-    'tailwind',
-    'theme',
     'crispy_forms',
-    'crispy_tailwind',
+    'sass_processor',
 
     # local
     'accounts',
@@ -141,6 +139,7 @@ STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles'))
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "sass_processor.finders.CssFinder",
 ]
 
 # Default primary key field type
@@ -166,7 +165,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
-#ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_FORMS = {
     "login": "allauth.account.forms.LoginForm",
     "add_email": "allauth.account.forms.AddEmailForm",
@@ -179,16 +178,9 @@ ACCOUNT_FORMS = {
     "signup": "accounts.forms.UserSignupForm",
 }
 
-# Tailwind config
-TAILWIND_APP_NAME = 'theme'
-INTERNAL_IPS = ['127.0.0.1']
-if platform.system() == 'Windows':
-    NPM_BIN_PATH = r'C:\Program Files\nodejs\npm.cmd'
-
-# Crispy forms
-CRISPY_ALLOWED_TEMPLATE_PACKS = 'tailwind'
-CRISPY_TEMPLATE_PACK = 'tailwind'
-
 # Email
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_MAIL = 'DNAtest@uoguelph.ca'
+
+# Sass CSS
+SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, 'static/css')

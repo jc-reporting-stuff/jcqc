@@ -6,23 +6,27 @@
 
 {% block content %}
 
-    <div class="w-6/12 mx-auto py-4">
+    <div class="container half-width">
 
-        <h1 class="text-2xl font-bold py-4">List of students for {{ user.display_name }}</h1>
+        <h1>List of students for {{ user.display_name }}</h1>
 
         <p>Use dropdown list to choose account for each student.</p>
 
-        <form method="post" class="py-4">
+        <form method="post">
             {{ formset.management_form }}
 
                 {% for form in formset %}
                     {{form.as_p }}
                     <hr class="py-4">
+                {%empty %}
+                <p><strong>No students pending approval.</strong></p>
                 {% endfor %}
 
             {% csrf_token %}
 
-            <input type="submit" value="Save" class="my-4 py-1 px-3 border border-gray-500 bg-gray-100 text-gray-700 rounded">
+            {% if formset|length > 0 %}
+                <input type="submit" value="Save" class="button-primary">
+            {% endif %}
 
         </form>
 

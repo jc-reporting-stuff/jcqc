@@ -1,0 +1,102 @@
+body {
+    font-family: 'Segoe UI';
+}
+
+table {
+    padding: 0.5rem;
+    border-collapse: collapse;
+    th {
+        font-weight: bold;
+    }
+    td {
+        padding: 6px;
+    }
+}
+
+div { 
+    padding: 0.2rem;
+}
+
+
+a {
+    text-decoration: none;
+    color: $blue-700;
+    &:visited {
+        color: $blue-800;
+    }
+}
+
+h1 {
+    font-size: x-large;
+    font-weight: bold;
+    margin: 1rem 0;
+}
+
+p {
+    margin: 1rem 0;
+    a {
+        color: $blue-700;
+        text-decoration: underline;
+    }
+    &:visited {
+        color: $blue-800;
+    }
+    strong {
+        font-weight: bold;
+    }
+}
+
+li {
+    a {
+        color: $blue-600;
+        &:visited {
+            color: $blue-900;
+        }
+    }
+}
+
+.container {
+    max-width: 80rem;
+    margin: auto;
+    .half-width {
+        max-width: 40rem;
+    }
+    .page-container {
+        margin: auto;
+    }
+}
+
+
+.messages-container {
+    max-width: 30rem;
+    margin: auto;
+    margin-top: 0.5rem;
+    div {
+        border: 1px solid #999;
+        border-radius: 0.25rem;
+        margin: 0.25rem auto;
+        padding: 0.25rem 0.5rem;
+        background-color: #ddd;
+        font-family: monospace;
+        font-size: 0.9rem;
+    }
+}
+
+header {
+    .ugls-header-banner {
+        background: #6b7478;
+        border-bottom: 2px solid #af272f;
+        line-height: 24px;
+        .ugls-header {
+            max-width: 80rem;
+            margin: auto;
+            padding: 0;
+            .ugls-identifier {
+                width: 175px;
+                margin-left: auto;
+                margin-right: 0;
+                padding: 0;
+            }
+        }
+    }
+}

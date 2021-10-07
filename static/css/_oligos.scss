@@ -1,0 +1,40 @@
+.oligo-view {
+    margin: 1rem auto;
+    tr {
+        &:nth-child(1) {
+            border-top: 1px solid $gray-200;
+            border-bottom: 1px solid $gray-900;
+        }
+        &:nth-child(even) {
+            background-color: $gray-100;
+        }
+        &:last-child {
+            border-bottom: 1px solid $gray-700;
+        }
+        th {
+            padding: 0.5rem 1rem;
+            text-align: center;
+        }
+        td {
+            text-align: center;
+            padding: 0.3rem 1rem;
+            a { 
+                color: $blue-700;
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+.half-width {
+    h2 {
+        font-size: large;
+        font-weight: bold;
+    }
+    a {
+        color: $blue-700;
+        &:visited {
+            color: $blue-900;
+        }
+    }
+}

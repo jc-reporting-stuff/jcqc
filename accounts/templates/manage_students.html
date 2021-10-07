@@ -6,28 +6,38 @@
 
 {% block content %}
 
-    <div class="w-6/12 mx-auto py-4">
+    <div class="container half-width">
 
-        <h1 class="text-2xl font-bold py-4">List of students for {{ user.display_name }}</h1>
+        <h1>List of students for {{ user.display_name }}</h1>
 
         <p>Use dropdown list to choose account for each student. For privacy reasons, to add a new student, the student must request approval from their account.</p>
 
-        <form method="post" class="py-4">
-            {{ formset.management_form }}
+        {% if formset|length > 1 %}
+            <form method="post">
+                {{ formset.management_form }}
 
-                {% for form in formset %}
-                    {% if forloop.last %}
-                    <div>Use the following form to add an account to an existing student.</div>
-                    {% endif %}
-                    {{form|crispy }}
-                    <hr class="py-4">
-                {% endfor %}
+                    {% for form in formset %}
+                        {% if forloop.last %}
+                        <div style="">Use the following form to add an account to an existing student.</div>
+                        {% else %}
+                        <hr class="py-4">
+                        {% endif %}
+                        {{form|crispy }}
 
-            {% csrf_token %}
+                    {% endfor %}
 
-            <input type="submit" value="Save" class="my-4 py-1 px-3 border border-gray-500 bg-gray-100 text-gray-700 rounded">
+                {% csrf_token %}
 
-        </form>
+                <input type="submit" value="Save" class="button-primary">
+
+            </form>
+        
+        {% else %}
+            <p><strong>No linked student accounts</strong></p>
+
+             <p>Please advise students to use the Request Supervisor Approval link in their account settings.</p>
+
+        {% endif %}
 
     </div>
 

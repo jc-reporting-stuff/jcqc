@@ -1,17 +1,17 @@
 {% extends '_base.html' %}
 
-{% block title %}Number of oligos to order{% endblock title %}
+{% block title %}Bulk order oligos{% endblock title %}
 
 
 {% load crispy_forms_tags%}
 
 {% block content %}
 
-<div class="w-[800px] mx-auto">
+<div class="container half-width">
 
-    <h1 class="text-2xl font-bold py-4">Order new oligos - Bulk Ordering</h1>
+    <h1>Order new oligos - Bulk Ordering</h1>
 
-    <div class="py-4 font-bold">Step 2 of 3:</div>
+    <h2>Step 2 of 3: Define new oligos</h2>
 
 
     <form method="post">
@@ -21,7 +21,7 @@
 
         <input type="hidden" name="account_id" value="{{ account_id }}">
 
-        <input type="submit" value="Proceed to preview" class="border border-gray-300 rounded py-1 px-3 my-4">
+        <input type="submit" value="Proceed to preview" class="button-primary">
 
     </form>
 

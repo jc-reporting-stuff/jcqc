@@ -3,8 +3,8 @@
 {% block title %}Edit Account Settings{% endblock %}
 
 {% block content %}
-<div class="w-6/12 mx-auto my-4">
-    <h1 class="text-2xl font-bold ">Account settings for {{ user.display_name }}</h1>
+<div class="container half-width">
+    <h1>Account settings for {{ user.display_name }}</h1>
 
     <ul class="list-disc p-4">
         <li><a class="underline" href="{% url 'account_change_password' %}">Change password</a></li>

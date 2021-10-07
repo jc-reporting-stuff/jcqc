@@ -4,37 +4,45 @@
 
 {% block content %}
 
-<div>
+    <div class="container {% if not orders %}half-width{% endif %}">
 
-    <table class="p-2 m-4 oligo-view">
-        <tr>
-            <th class="px-4 text-center">Order ID</th>
-            <th class="px-4">Submitter</th>
-            <th class="px-4">Account</th>
-            <th class="px-4">Oligo Name</th>
-            <th class="px-4">Sequence</th>
-            <th class="px-4">Scale</th>
-            <th class="px-4">Purity</th>
-            <th class="px-4">Modification</th>
-            <th class="px-4">Ordered</th>
-            <th class="px-4">Delivered</th>
-        </tr>
-    {% for order in orders %}
-        <tr {% if forloop.counter|divisibleby:2 %}class="bg-gray-200"{% endif %}>
-            <td class="text-center">{{ order.order_id }}</td>
-            <td class="text-center">{{ order.submitter }}</td>
-            <td class="text-center">{{ order.account.code }}</td>
-            <td class="text-center">{{ order.name }}</td>
-            <td class="text-center">{{ order.sequence }}</td>
-            <td class="text-center">{{ order.scale }}</td>
-            <td class="text-center">{{ order.purity }}</td>
-            <td class="text-center">{% if order.modification %}{{ order.modification }}{% else %} - - {% endif %}</td>
-            <td class="text-center">{{ order.created_at|date:'Y/m/d' }}</td>
-            <td class="text-center">{{ order.delivery_date|date:'Y/m/d' }}</td>
+        <h1>Most recent oligo orders</h1>
 
-        </tr>
-    {% endfor %}
+        {% if not orders %}
 
-</div>
+            <p><strong>No orders.</strong></p>
+        
+        {% else %}
+
+            <table class="oligo-view">
+                <tr>
+                    <th>Order ID</th>
+                    <th>Submitter</th>
+                    <th>Account</th>
+                    <th>Oligo Name</th>
+                    <th>Sequence</th>
+                    <th>Scale</th>
+                    <th>Purity</th>
+                    <th>Ordered</th>
+                    <th>Delivered</th>
+                </tr>
+            {% for order in orders %}
+                <tr>
+                    <td>{{ order.order_id }}</td>
+                    <td>{{ order.submitter }}</td>
+                    <td>{{ order.account.code }}</td>
+                    <td><a href="#">{{ order.name }}</a></td>
+                    <td>{{ order.sequence }}</td>
+                    <td>{{ order.scale }}</td>
+                    <td>{{ order.purity }}</td>
+                    <td>{{ order.created_at|date:'Y/m/d' }}</td>
+                    <td>{{ order.delivery_date|date:'Y/m/d' }}</td>
+
+                </tr>
+            {% endfor %}
+
+        {% endif %}
+
+    </div>
 
 {% endblock content %}
