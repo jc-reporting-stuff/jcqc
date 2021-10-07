@@ -243,6 +243,9 @@ form {
     border-bottom: 1px solid #6b7280;
     padding-top: 0.5rem; }
 
+.oligo-detail {
+  padding-left: 1rem; }
+
 .oligo-view {
   margin: 1rem auto; }
   .oligo-view tr:nth-child(1) {

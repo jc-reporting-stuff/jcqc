@@ -1,8 +1,7 @@
-from django.forms.forms import Form
-from django.forms.models import formset_factory, modelformset_factory
-from django.http.response import HttpResponseGone, HttpResponseRedirect
+from django.forms.models import formset_factory
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
-from django.views.generic import ListView, CreateView, FormView, TemplateView
+from django.views.generic import ListView, CreateView, FormView, TemplateView, DetailView
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.db.models import Max
@@ -21,6 +20,17 @@ class ClientOrderListView(ListView):
     def get_queryset(self):
         qs = Oligo.objects.filter(submitter=self.request.user) | Oligo.objects.filter(account__owner__username=self.request.user)
         return qs
+
+
+class OligoDetailView(DetailView):
+    model = Oligo
+    context_object_name = 'oligo'
+
+    def get_queryset(self):
+        user = self.request.user
+        qs = super().get_queryset()
+        return qs.filter(submitter__id=user.id)|qs.filter(account__owner__id=user.id)
+    
 
 
 class OligoNewTypeView(FormView):

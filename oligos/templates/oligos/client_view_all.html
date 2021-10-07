@@ -31,7 +31,7 @@
                     <td>{{ order.order_id }}</td>
                     <td>{{ order.submitter }}</td>
                     <td>{{ order.account.code }}</td>
-                    <td><a href="#">{{ order.name }}</a></td>
+                    <td><a href="{% url 'oligos:detail_view' pk=order.id %}">{{ order.name }}</a></td>
                     <td>{{ order.sequence }}</td>
                     <td>{{ order.scale }}</td>
                     <td>{{ order.purity }}</td>
