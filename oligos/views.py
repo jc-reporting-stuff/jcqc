@@ -13,12 +13,14 @@ from accounts.models import Account, User
 
 import re
 
+
 class ClientOrderListView(ListView):
     template_name = 'oligos/client_view_all.html'
     context_object_name = 'orders'
 
     def get_queryset(self):
-        qs = Oligo.objects.filter(submitter=self.request.user) | Oligo.objects.filter(account__owner__username=self.request.user)
+        qs = Oligo.objects.filter(submitter=self.request.user) | Oligo.objects.filter(
+            account__owner__username=self.request.user)
         return qs
 
 
@@ -29,8 +31,7 @@ class OligoDetailView(DetailView):
     def get_queryset(self):
         user = self.request.user
         qs = super().get_queryset()
-        return qs.filter(submitter__id=user.id)|qs.filter(account__owner__id=user.id)
-    
+        return qs.filter(submitter__id=user.id) | qs.filter(account__owner__id=user.id)
 
 
 class OligoNewTypeView(FormView):
@@ -40,15 +41,14 @@ class OligoNewTypeView(FormView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        
+
         user = self.request.user
         approved_accounts = user.get_financial_accounts()
-        approved_choices = [((account.id), (': '.join([account.code, account.comment]))) for account in approved_accounts]
+        approved_choices = [((account.id), (': '.join(
+            [account.code, account.comment]))) for account in approved_accounts]
         kwargs['account_choices'] = approved_choices
         kwargs['initial_oligos'] = 1
         return kwargs
-
-
 
 
 class OligoCreateView(CreateView):
@@ -62,10 +62,12 @@ class OligoCreateView(CreateView):
             account_id = request.GET.get('account_id')
             oligo_count = request.GET.get('oligo_count')
 
-            NewOligoFormset = formset_factory(OligoOrderForm, extra=int(oligo_count))
+            NewOligoFormset = formset_factory(
+                OligoOrderForm, extra=int(oligo_count))
             formset = NewOligoFormset()
 
-            response = render(request, 'oligos/order_new.html', context={'formset': formset, 'account_id': account_id})
+            response = render(request, 'oligos/order_new.html',
+                              context={'formset': formset, 'account_id': account_id})
             return HttpResponse(response)
         return HttpResponseRedirect(reverse_lazy('oligos:order_quantity'))
 
@@ -76,7 +78,8 @@ class OligoCreateView(CreateView):
         # Make sure that all required fields are filled out.
         num_forms = 0
         for form in formset:
-            if form.has_changed(): num_forms += 1
+            if form.has_changed():
+                num_forms += 1
             if not form.is_valid():
                 return HttpResponse(render(request, 'oligos/order_new.html', context={'formset': formset}))
 
@@ -90,9 +93,9 @@ class OligoCreateView(CreateView):
         account_id = request.POST.get('account_id')
         if previewing:
             context = {
-            'formset': formset,
-            'previewing': True,
-            'account_id': account_id,
+                'formset': formset,
+                'previewing': True,
+                'account_id': account_id,
             }
             response = render(self.request, 'oligos/order_new.html', context)
             return HttpResponse(response)
@@ -103,7 +106,8 @@ class OligoCreateView(CreateView):
         cd = []
         for form in formset:
             cleaned_data = form.clean()
-            if cleaned_data: cd.append(cleaned_data)
+            if cleaned_data:
+                cd.append(cleaned_data)
 
         max_order = Oligo.objects.aggregate(Max('order_id'))
         order_number = max_order['order_id__max'] + 1
@@ -113,17 +117,15 @@ class OligoCreateView(CreateView):
 
         for oligo in cd:
             Oligo.objects.create(
-                    name=oligo['name'], sequence=oligo['sequence'].upper(), order_id=order_number, 
-                    account=account, submitter=submitter, modification=oligo['modification'],
-                    scale=oligo['scale'], purity=oligo['purity']
-                    )
-        
+                name=oligo['name'], sequence=oligo['sequence'].upper(), order_id=order_number,
+                account=account, submitter=submitter, modification=oligo['modification'],
+                scale=oligo['scale'], purity=oligo['purity']
+            )
+
         request = self.request
         messages.success(request, r'Ordered Successfully.')
 
         return HttpResponseRedirect(reverse_lazy('oligos:client_order_list'))
-
-
 
 
 class OligoEasyOrder(FormView):
@@ -137,7 +139,8 @@ class OligoEasyOrder(FormView):
         if request.GET.get('account_id'):
             account_id = request.GET.get('account_id')
 
-            response = render(request, 'oligos/easy_order.html', context={'form': EasyOrderForm, 'account_id': account_id})
+            response = render(request, 'oligos/easy_order.html',
+                              context={'form': EasyOrderForm, 'account_id': account_id})
             return HttpResponse(response)
         return HttpResponseRedirect(reverse_lazy('oligos:order_quantity'))
 
@@ -164,16 +167,15 @@ class OligoEasyOrder(FormView):
 
         context = {
             'account': account,
-            'data' : cd,
+            'data': cd,
             'oligos': oligo_groups,
             'previewing': True
         }
 
         # Pass everything along to the preview view.
-        response = render(self.request, 'oligos/easy_preview.html', context=context)
+        response = render(
+            self.request, 'oligos/easy_preview.html', context=context)
         return HttpResponse(response)
-
-
 
 
 class OligoEasySubmitView(TemplateView):
@@ -188,12 +190,11 @@ class OligoEasySubmitView(TemplateView):
         oligos = []
         for i in range(int(data['oligo_count'])):
             object = {}
-            form_oligo_name = 'oligo-' + str(i) +'-name'
-            form_sequence_name = 'oligo-' + str(i) +'-sequence'
+            form_oligo_name = 'oligo-' + str(i) + '-name'
+            form_sequence_name = 'oligo-' + str(i) + '-sequence'
             object['name'] = data[form_oligo_name]
             object['sequence'] = data[form_sequence_name]
             oligos.append(object)
-            
 
         # Cycle through list of oligos, add necessary fields and save.
         max_order = Oligo.objects.aggregate(Max('order_id'))
@@ -202,11 +203,12 @@ class OligoEasySubmitView(TemplateView):
         for oligo in oligos:
             try:
                 object = Oligo.objects.create(
-                    name=oligo['name'], sequence=oligo['sequence'], order_id=order_number, 
+                    name=oligo['name'], sequence=oligo['sequence'], order_id=order_number,
                     account=account, submitter=submitter, modification=data['modification'],
                     scale=data['scale'], purity=data['purity']
-                    )
+                )
             except:
-                messages.add_message(request, r'Saving oligo {oligo.name} failed! Check your values and try again.')
+                messages.add_message(
+                    request, r'Saving oligo {oligo.name} failed! Check your values and try again.')
 
         return HttpResponseRedirect(reverse_lazy('oligos:client_order_list'))

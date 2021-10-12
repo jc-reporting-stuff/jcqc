@@ -1,0 +1,54 @@
+{% load static %}
+{% load sass_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link
+      rel="stylesheet"
+      type="text/css"
+      href="{%  sass_src 'css/styles.scss' %}"
+    />
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="{% static 'images/favicon.ico' %}"
+    />
+
+    <title>Home - Near-Real Time Disease Survelliance</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Disease Surveillance Dashboards</h1>
+
+        <p>Welcome to the future home of animal disease surveillance at the University of Guelph.</p>
+
+        <div id="vizContainer1">&nbsp;</div>
+
+
+
+        <script src="https://public.tableau.com/javascripts/api/tableau-2.min.js"></script>
+        
+        <script>
+
+        /* Change the url to update the data being displayed in the corresponding div */
+        function initViz() {
+            var containerDiv1 = document.getElementById("vizContainer1");
+            var url1 = "https://public.tableau.com/views/StoryforDummyData/StoryforDummyData?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link";
+            var viz1 = new tableau.Viz(containerDiv1, url1);
+        }
+
+        
+        /* Add an event listener to the initDiv function gets called when the page is loaded */
+        /* This is roughly equivalent to <body onload="initViz> */
+        window.addEventListener('DOMContentLoaded', initViz, false);
+   
+
+        </script>
+
+    </div>
+
+</body>
+</html>
