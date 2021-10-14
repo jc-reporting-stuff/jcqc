@@ -1,0 +1,37 @@
+{% extends '_base.html' %}
+
+{% block title %}Primer {{ primer.name }} detail{% endblock %}
+
+{% block content %}
+
+    <div class="container half-width">
+
+        <h1 class="centered">Details for primer {{ primer.name }}</h1>
+
+
+        <div class="oligo-view">
+
+            <p><strong>Create date:</strong> {{ primer.create_date }}</p>
+            <p><strong>Type:</strong> {{ primer.get_type_display }}</p>
+            <p><strong>Template size:</strong> {{ primer.template_size }} bp</p>
+            <p><strong>Insert size:</strong> {{primer.insert_size }} bp</p>
+            <p><strong>Concentration:</strong> {{ primer.template_concentration }}</p>
+            <p><strong>Volume:</strong> {{ primer.template_volume }}</p>
+            <p><strong>PCR Purified?</strong> {{ primer.pcr_purify }}</p>
+
+            <hr>
+
+            <p>Sequenced with these primers:</p>
+            <ul style="list-style-type: disc; margin-left: 2rem;">
+                {% for primer in primer.primers.all %}
+                    <li>{{ primer.name }}</li>
+                {% empty %}
+                    <li>None!</li>
+                {% endfor %}
+            </ul>
+
+        </div>
+
+    </div>
+
+{% endblock content %}

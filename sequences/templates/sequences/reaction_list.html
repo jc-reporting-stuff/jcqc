@@ -21,7 +21,7 @@
         {% for reaction in reactions %}
             <tr>
                 <td>{{ reaction.submission_id }}</td>
-                <td>{{ reaction.template }}</td>
+                <td><a href="{% url 'sequencing:template_detail' reaction.template.id %}">{{ reaction.template }}</td>
                 <td>{{ reaction.primer }}</td>
                 <td>{{ reaction.account.code }}</td>
                 <td>{{ reaction.submit_date }}</td>

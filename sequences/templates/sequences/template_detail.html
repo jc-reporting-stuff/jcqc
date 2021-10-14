@@ -1,0 +1,37 @@
+{% extends '_base.html' %}
+
+{% block title %}Template {{ template.name }}{% endblock %}
+
+{% block content %}
+
+    <div class="container half-width">
+
+        <h1 class="centered">Details for template {{ template.name }}</h1>
+
+
+        <div class="oligo-view">
+
+            <p><strong>Create date:</strong> {{ template.create_date }}</p>
+            <p><strong>Type:</strong> {{ template.get_type_display }}</p>
+            <p><strong>Template size:</strong> {{ template.template_size }} bp</p>
+            <p><strong>Insert size:</strong> {{template.insert_size }} bp</p>
+            <p><strong>Concentration:</strong> {{ template.template_concentration }}</p>
+            <p><strong>Volume:</strong> {{ template.template_volume }}</p>
+            <p><strong>PCR Purified?</strong> {{ template.pcr_purify }}</p>
+
+            <hr>
+
+            <p>Sequenced with these primers:</p>
+            <ul style="list-style-type: disc; margin-left: 2rem;">
+                {% for primer in template.primers.all %}
+                    <li>{{ primer.name }}</li>
+                {% empty %}
+                    <li>None!</li>
+                {% endfor %}
+            </ul>
+
+        </div>
+
+    </div>
+
+{% endblock content %}

@@ -6,6 +6,7 @@ from django.forms import modelformset_factory, formset_factory
 from django.urls import reverse_lazy
 from django.db.models import Max
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 from sequences.forms import ReactionForm
 
 from sequences.models import Template, Primer, Reaction, Account
@@ -23,8 +24,19 @@ class ReactionListView(ListView):
         qs2 = Reaction.objects.filter(
             submitter=user).order_by('-submission_id', 'template', 'primer')
         qs = qs1 | qs2
-        print(qs)
         return qs
+
+
+class TemplateDetailView(DetailView):
+    model = Template
+    context_object_name = 'template'
+    template_name = 'sequences/template_detail.html'
+
+
+class TemplateDetailView(DetailView):
+    model = Primer
+    context_object_name = 'primer'
+    template_name = 'sequences/primer_detail.html'
 
 
 def MethodSelectView(request):
