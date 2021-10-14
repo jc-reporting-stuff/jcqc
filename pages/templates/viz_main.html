@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Trusted Ticket Requester</title>
+<title>Data Visualizations</title>
 <script type="text/javascript">
   function submitForm(){
     document.getElementById('form1').action =
@@ -15,9 +15,61 @@
 </head>
 <body>
 
-<iframe src="http://tabserver/trusted/{{ ticket }}/views/TestData/DummyData?:embed=yes" width="800" height="600"></iframe> 
+<div style="width:1140px;margin: auto;">
 
-{{ ticket }}
+  <h1>Disease Surveillance at the University of Guelph</h1>
+
+  <p>The Animal Health Laboratory, University of Guelph, functions as the provincial veterinary diagnostic laboratory in Ontario.  As such, it receives blood, tissue and whole animal samples for testing to confirm or rule out the presence of disease.  Its most critical mandate is to support the economic viability of livestock operations, and to ensure the provision of safe and wholesome animal-based food.  Summarized diagnostic data is provided to provincial epidemiologists who use the data to monitor for disease trends and emerging diseases.  However, the current AHL laboratory information system (LIMS) is not ideally suited for data extraction and manipulation in a user-friendly format.</p>
+
+  
+
+  <p>Recently, researchers in the US have developed a bio-informatics tool1 that has the capability to inform the US swine industry on the the macroepidemiological aspects of the most important swine virus infection (PRRSV)2.  This dynamic tool is capable of identifying patterns of disease occurrence over time, geographic regions, pig age and sample types. Aggregated data can be shared in near real-time with stakeholders that include producers, veterinarians, industry sectors and provincial regulatory agencies, thereby informing strategies to manage disease occurrences.</p>
+
+  
+
+  <p>We propose to develop similar tools to fulfill Food from Thought Digital Agriculture Fund's goal of supporting micro-scale transformative research that will enhance food safety and livestock health.  Our objectives are to:</p>
+
+  <ol>
+    <li>optimize the current Animal Health Laboratory data management system for efficient accessibility and aggregation of data;</li>
+
+    <li>develop dashboards for real-time visualization and description of disease trends over appropriate temporal and geographical resolution; and</li>
+
+    <li> develop forecasting tools for risk-based surveillance of highly relevant diseases, and integrate them with the dashboards.</li>
+  </ol>
+
+  
+
+  <p>Our plan is to focus on the 3 largest Ontario livestock industries for which AHL accumulates the most disease diagnostic data: swine, poultry and dairy. By integrating a big data approach into disease surveillance, we expect to greatly improve the analysis and formatting of aggregated disease diagnostic information, thereby facilitating its communication to those stakeholders who will use this information to detect and reduce disease transmission in the early phase of an emerging outbreak, or to declare freedom from infection. For endemic diseases, the purpose is to measure "normal" disease frequency and therefore more easily identify perturbations that would prompt more rapid implementation of control programs. In all these situations, it is indisputable that having a well-integrated system which provides accurate, real-time information at the appropriate level of aggregation (farm/clinic/region/province), organized for easy communication to a specific audience provides information of great value. This is also the expectation of livestock industries which provide diagnostic submissions to laboratories with increased sophistication to allow traceability, and which also expect outputs that could be linked or interpreted in the context of other surveillance components. </p>
+
+  <script type='text/javascript' src='http://131.104.184.6/javascripts/api/viz_v1.js'></script>
+  <div class='tableauPlaceholder' style='width: 1140px; height: 847px;'>
+    <object class='tableauViz' width='1140' height='847' style='display:none;'>
+      <param name='host_url' value='http%3A%2F%2F131.104.184.6%2F' />
+      <param name='embed_code_version' value='3' />
+      <param name='site_root' value='' />
+      <param name='name' value='TestPRRSData&#47;StoryforDummyData' />
+      <param name='tabs' value='no' />
+      <param name='toolbar' value='yes' />
+      <param name='showAppBanner' value='false' />
+      <param name='ticket' value="{{ticket}}" />
+    </object>
+  </div>
+
+
+  <div class='tableauPlaceholder' style='width: 1440px; height: 703px;'>
+    <object class='tableauViz' width='1440' height='703' style='display:none;'>
+      <param name='host_url' value='http%3A%2F%2F131.104.184.6%2F' />
+      <param name='embed_code_version' value='3' />
+      <param name='site_root' value='' />
+      <param name='name' value='TestData&#47;DummyData' />
+      <param name='tabs' value='no' />
+      <param name='toolbar' value='yes' />
+      <param name='showAppBanner' value='false' />
+      <param name='ticket' value="{{ticket2}}" />
+    </object>
+  </div>
+
+</div>
 
 </body>
 </html>
