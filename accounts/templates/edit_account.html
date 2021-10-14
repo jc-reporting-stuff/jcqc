@@ -6,27 +6,25 @@
 <div class="container half-width">
     <h1>Account settings for {{ user.display_name }}</h1>
 
-    <ul class="list-disc p-4">
-        <li><a class="underline" href="{% url 'account_change_password' %}">Change password</a></li>
+    <ul class="edit-accounts">
+        <li><a href="{% url 'account_change_password' %}">Change password</a></li>
 
-        <li><a class="underline" href="{% url 'update_profile' pk=user.pk %}">Update profile</a></li>
-
-        <ul class="list-disc ml-4"><li>Change address, phone number, etc.</li></ul>
+        <li><a href="{% url 'update_profile' pk=user.pk %}">Update profile</a></li>
 
         {% if user.is_student is not True %}
-            <li><a class="underline" href="{% url 'view_user_accounts' %}">View/Add financial accounts</a></li>
+            <li><a href="{% url 'view_user_accounts' %}">View/Add financial accounts</a></li>
         {% endif %}
 
         {% if user.is_student or user.is_superuser %}
-            <li><a class="underline" href="{% url 'student_supervisor_request' %}">Request supervisor pre-approval</a></li>
+            <li><a href="{% url 'student_supervisor_request' %}">Request supervisor pre-approval</a></li>
         {% endif %}
 
         {% if user.is_supervisor or user.is_superuser %}
-            <li><a href="{% url 'approve_students' %}" class="underline">{{ pending_approval|length }} student{{ pending_approval|pluralize }} pending approval</a></li>
+            <li><a href="{% url 'approve_students' %}">{{ pending_approval|length }} student{{ pending_approval|pluralize }} pending approval</a></li>
         {% endif %}
 
         {% if user.is_supervisor or user.is_superuser %}
-            <li><a href="{% url 'manage_students' %}" class="underline">Manage student account approvals</li>
+            <li><a href="{% url 'manage_students' %}">Manage student account approvals</li>
         {% endif %}
 
         

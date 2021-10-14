@@ -33,7 +33,7 @@ table {
   border-spacing: 0; }
 
 body {
-  font-family: 'Segoe UI'; }
+  font-family: "Segoe UI"; }
 
 table {
   padding: 0.5rem;
@@ -56,6 +56,8 @@ h1 {
   font-size: x-large;
   font-weight: bold;
   margin: 1rem 0; }
+  h1.centered {
+    text-align: center; }
 
 p {
   margin: 1rem 0; }
@@ -67,11 +69,24 @@ p {
   p strong {
     font-weight: bold; }
 
-li a {
-  text-decoration: underline;
-  color: #2563eb; }
-  li a:visited {
-    color: #1e3a8a; }
+ul li {
+  margin: 0.25rem 1rem; }
+  ul li a {
+    text-decoration: underline;
+    color: #2563eb; }
+    ul li a:visited {
+      color: #1e3a8a; }
+
+ul.edit-accounts li {
+  margin: 0.5rem 1rem; }
+  ul.edit-accounts li a {
+    display: block;
+    padding: 1rem;
+    border: 1px solid #9ca3af;
+    background-color: #e5e7eb;
+    border-radius: 1rem; }
+    ul.edit-accounts li a:hover {
+      background-color: #f3f4f6; }
 
 .container {
   max-width: 80rem;

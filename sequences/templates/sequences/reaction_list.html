@@ -1,0 +1,41 @@
+{% extends '_base.html' %}
+
+{% block title %}{{ user.username }}'s Sequences{% endblock %}
+
+{% block content %}
+
+<h1 class="centered">Sequencing reactions for {{ user.username }}</h1>
+
+{% if reactions %}
+    <table class="oligo-view">
+        <tr>
+            <th>Submission ID</th>
+            <th>Template</th>
+            <th>Primer</th>
+            <th>Account</th>
+            <th>Submitted</th>
+            <th>Status</th>
+            <th>Completed</th>
+            <th>Hardcopy</th>
+        </tr>
+        {% for reaction in reactions %}
+            <tr>
+                <td>{{ reaction.submission_id }}</td>
+                <td>{{ reaction.template }}</td>
+                <td>{{ reaction.primer }}</td>
+                <td>{{ reaction.account.code }}</td>
+                <td>{{ reaction.submit_date }}</td>
+                <td>{{ reaction.get_status_display }}</td>
+                <td>{% if reaction.complete_date %}{{ reaction.complete_date }}{% else %} - - {% endif %}</td>
+                <td>{% if reaction.hardcopy %}Yes{% else %}No{% endif %}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% else %}
+
+    <p>Nothing here!</p>
+
+{% endif %}
+
+{% endblock content %}

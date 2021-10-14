@@ -1,0 +1,27 @@
+{% extends '_base.html' %}
+
+{% block title %}Select sumission method{% endblock title %}
+
+{% block content %}
+
+    <div class="container half-width">
+        <h1>Submitting samples for sequencing</h1>
+
+        <p>There are three steps to the process: to add templates and primers, then to choose reactions.</p>
+
+        <form method="get" action="{% url 'sequencing:add_templates' %}">
+
+            <p><strong>How many templates are you submitting:</strong>
+
+            <input type="number" min="0" max="50" name="template-count">
+
+            <input type="submit" name="submit" value="Proceed" class="button-primary">
+
+        <form>
+
+        <hr>
+
+        <p><strong>Alternatively,</strong> if you have many samples it may be easier to use <a href="#">Bulk Ordering</a>.
+    </div>
+
+{% endblock content %}

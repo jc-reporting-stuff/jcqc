@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Primer, Template
+from .models import Primer, Template, Reaction
 
 
 @admin.register(Primer)
@@ -21,12 +21,16 @@ class PrimerAdmin(admin.ModelAdmin):
 @admin.register(Template)
 class SequenceAdmin(admin.ModelAdmin):
     fieldsets = (
-        (None, {'fields': ('submission_id', 'submitter', 'account')}),
+        (None, {'fields': ('name', 'owner',)}),
         ('Details', {'fields': (
-            'name', 'template_size', 'plate_name', 'well', 'status', 'completed_date', 'insert_size', 'pcr_purify', 'template_concentration', 'template_volume', 'primer',
+            'template_size', 'insert_size', 'pcr_purify', 'template_concentration', 'template_volume',
         )}),
-        ('Analysis', {'fields': ('filename',)}),
     )
 
     list_display = ['name', 'owner',
                     'create_date']
+
+
+@admin.register(Reaction)
+class ReactionAdmin(admin.ModelAdmin):
+    list_display = ['submission_id', 'template', 'primer', 'status']

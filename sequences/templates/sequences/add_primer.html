@@ -1,0 +1,61 @@
+{% extends '_base.html' %}
+
+{% block title %}Add Primers{% endblock title %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <div class="container" style="width: 1000px;">
+        <h1>Primers to submit</h1>
+
+        <p>This is <strong>Step 2 of 3.</strong></p>
+
+        <form method="post" action="">
+
+            {% if previewing %}
+                <table class="oligo-view">
+                    <tr>
+                        <th>Name</th>
+                        <th>Concentration</th>
+                        <th>Volume</th>
+                        <th>Melting Temperature</th>
+                        <th>Sequence</th>
+                    </tr>
+                    
+                    {% for p in primers %}
+                        <tr>
+                            <td>{{ p.name }}</td>
+                            <td>{{ p.concentration }}</td>
+                            <td>{{ p.volume }}</td>
+                            <td>{{ p.melting_temperature }}</td>
+                            <td>{{ p.sequence }}</td>
+                        </tr>
+                    {% endfor %}
+
+                </table>
+
+                <input type="submit" name="submit" value="Proceed to Step 3" class="button-primary">
+            {% endif %}
+
+
+            <div {% if previewing %}style="display:none"{% endif %}>
+
+                {% csrf_token %}
+                {{ formset.management_form }}
+
+                {% for form in formset %}
+                    <h2>Primer #{{ forloop.counter}}</h2>
+                    {{ form|crispy }}
+                    <hr>
+                {% endfor %}
+
+                <input type="submit" name="previewing" value="Proceed to Preview" class="button-primary">
+                
+            </div>
+
+        </form>
+
+    </div>
+
+{% endblock content %}

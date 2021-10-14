@@ -27,6 +27,9 @@ urlpatterns = [
     # Oligos orders
     path('oligos/', include('oligos.urls')),
 
+    # Sequencing submissions
+    path('sequences/', include('sequences.urls')),
+
     # Local apps
     path('', include('pages.urls')),
 ]

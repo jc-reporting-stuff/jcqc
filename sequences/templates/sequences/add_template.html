@@ -1,0 +1,67 @@
+{% extends '_base.html' %}
+
+{% block title %}Add Templates{% endblock title %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <div class="container" style="width: 1000px;">
+        <h1>Templates to submit</h1>
+
+        <p>This is <strong>Step 1 of 3.</strong></p>
+
+        <form method="post" action="">
+
+            {% if previewing %}
+                <table class="oligo-view">
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Template Size</th>
+                        <th>Insertion Size</th>
+                        <th>Concentration</th>
+                        <th>Volume</th>
+                        <th>PCR Purify?</th>
+                        <th>Comment</th>
+                    </tr>
+                    
+                    {% for t in templates %}
+                        <tr>
+                            <td>{{ t.name }}</td>
+                            <td>{{ t.get_type_display }}</td>
+                            <td>{{ t.template_size }}</td>
+                            <td>{{ t.insert_size }}</td>
+                            <td>{{ t.template_concentration }}</td>
+                            <td>{{ t.template_volume }}</td>
+                            <td>{% if t.pcr_purify %}Yes{% else %}No{% endif %}</td>
+                            <td>{{ t.get_comment_display }}</td>
+                        </tr>
+                    {% endfor %}
+
+                </table>
+
+                <input type="submit" name="submit" value="Proceed to Step 2" class="button-primary">
+            {% endif %}
+
+
+            <div {% if previewing %}style="display:none"{% endif %}>
+
+                {% csrf_token %}
+                {{ formset.management_form }}
+
+                {% for form in formset %}
+                    <h2>Template #{{ forloop.counter}}</h2>
+                    {{ form|crispy }}
+                    <hr>
+                {% endfor %}
+
+                <input type="submit" name="previewing" value="Proceed to Preview" class="button-primary">
+                
+            </div>
+
+        </form>
+
+    </div>
+
+{% endblock content %}

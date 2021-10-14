@@ -1,0 +1,68 @@
+{% extends '_base.html' %}
+
+{% block title %}Reaction ordering{% endblock title %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <div class="container" style="width: 1000px;">
+        <h1>Sequencing Orders</h1>
+
+        <p>This is <strong>Step 3 of 3.</strong></p>
+
+        <form method="post" action="">
+
+            {% if previewing %}
+                <table class="oligo-view">
+                    <tr>
+                        <th>Template</th>
+                        <th>Primer</th>
+                        <th>Hardcopy</th>
+                    </tr>
+                    
+                    {% for r in reactions %}
+                        <tr>
+                            <td>{{ r.template.name }}</td>
+                            <td>{{ r.primer.name }}</td>
+                            <td>{% if r.hardcopy %}Yes{% else %}No{% endif %}</td>
+                        </tr>
+                    {% endfor %}
+
+                </table>
+
+                <hr>
+
+                What financial account will this order be using: <select name="account">
+                    {% for account in user.get_financial_accounts %}
+                        <option value="{{ account.id }}">{{ account.code }}</option>
+                    {% endfor %}
+                </select>
+
+                <p><input type="submit" name="submit" value="Place Order" class="button-primary">
+                    <a href="javascript:history.back()" style="margin-left: 3rem;">Go back</a> to make changes.
+
+                
+            {% endif %}
+
+
+            <div {% if previewing %}style="display:none"{% endif %}>
+
+                {% csrf_token %}
+                {{ formset.management_form }}
+
+                {% for form in formset %}
+                    <h2>Reaction #{{ forloop.counter}}</h2>
+                    {{ form|crispy }}
+                    <hr>
+                {% endfor %}
+
+                <input type="submit" name="previewing" value="Proceed to Preview" class="button-primary">
+                
+            </div>
+
+        </form>
+
+    </div>
+
+{% endblock content %}

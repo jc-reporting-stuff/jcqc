@@ -6,8 +6,8 @@ from accounts.models import Account, User
 
 class Primer(models.Model):
     name = models.CharField(max_length=50)
-    concentration = models.IntegerField(null=True, blank=True)
-    volume = models.IntegerField(null=True, blank=True)
+    concentration = models.IntegerField()
+    volume = models.IntegerField()
     melting_temperature = models.IntegerField(blank=True, null=True)
     common = models.BooleanField(
         "Is an LSD common primer", blank=True, null=True)
@@ -15,6 +15,7 @@ class Primer(models.Model):
         max_length=150, null=True, blank=True)
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, blank=True)
+    create_date = models.DateTimeField(auto_now=False, auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -46,7 +47,8 @@ class Template (models.Model):
     name = models.CharField(max_length=150)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     create_date = models.DateTimeField(auto_now=False, auto_now_add=True)
-    comment = models.CharField(max_length=2, choices=COMMENT_CHOICES)
+    comment = models.CharField(
+        max_length=2, choices=COMMENT_CHOICES, blank=True, null=True, default='no')
     type = models.CharField(max_length=2, choices=TEMPLATE_TYPES)
     template_size = models.IntegerField()
     insert_size = models.IntegerField(blank=True, null=True)
@@ -57,7 +59,7 @@ class Template (models.Model):
         Primer, related_name='sequences', through='Reaction')
 
     def __str__(self):
-        return self.template_name + ': ' + self.primer.name
+        return self.name
 
 
 class Reaction(models.Model):
@@ -68,6 +70,7 @@ class Reaction(models.Model):
         ('c', 'Completed')
     ]
 
+    submitter = models.ForeignKey(User, on_delete=models.CASCADE)
     template = models.ForeignKey(Template, on_delete=models.CASCADE)
     primer = models.ForeignKey(Primer, on_delete=models.CASCADE)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
@@ -80,7 +83,7 @@ class Reaction(models.Model):
     complete_date = models.DateField(
         auto_now=False, auto_now_add=False, blank=True, null=True)
     filename = models.CharField(max_length=150, null=True, blank=True)
-    hardcopy = models.BooleanField(null=True, blank=True)
+    hardcopy = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.template} with {self.primer}'
