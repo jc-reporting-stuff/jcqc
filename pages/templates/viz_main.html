@@ -14,31 +14,10 @@
 </style>
 </head>
 <body>
-<h3>Trusted Ticketer</h3>
-<form method="POST" id="form1" onSubmit="submitForm()">
-  <table class="style1">
-    <tr>
-      <td class="style2">Username</td>
-      <td><input type="text" name="username" value="" /></td>
-    </tr>
-    <tr>
-      <td class="style2">Server</td>
-      <td><input type="text" id="server" name="server" value="https://" /></td>
-    </tr>
-    <tr>
-      <td class="style2">Client IP (optional)</td>
-      <td><input type="text" id="client_ip" name="client_ip" value="" /></td>
-    </tr>
-    <tr>
-      <td class="style2">Site (leave blank for Default site; otherwise enter the site name)</td>
-      <td><input type="text" id="target_site" name="target_site" value="" /></td>
-    </tr>
-    <tr>
-      <td class="style2"><input type="submit" name="submittable" value="Get Ticket" /></td>
-      <td>&#160;</td>
-    </tr>
-  </table>
-</form>
-<h4>Be sure to add your IP as a Trusted IP address to the server</h4>
+
+<iframe src="http://tabserver/trusted/{{ ticket }}/views/TestData/DummyData?:embed=yes" width="800" height="600"></iframe> 
+
+{{ ticket }}
+
 </body>
 </html>
