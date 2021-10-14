@@ -1,54 +1,44 @@
-{% load static %}
-{% load sass_tags %}
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link
-      rel="stylesheet"
-      type="text/css"
-      href="{%  sass_src 'css/styles.scss' %}"
-    />
-    <link
-      rel="shortcut icon"
-      type="image/png"
-      href="{% static 'images/favicon.ico' %}"
-    />
-
-    <title>Home - Near-Real Time Disease Survelliance</title>
+<title>Trusted Ticket Requester</title>
+<script type="text/javascript">
+  function submitForm(){
+    document.getElementById('form1').action =
+    document.getElementById('server').value + "/trusted";
+  }
+</script>
+<style type="text/css">
+  .style1 {width: 100%;}
+  .style2 {width: 429px;}
+  #server {width: 254px;}
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>Disease Surveillance Dashboards</h1>
-
-        <p>Welcome to the future home of animal disease surveillance at the University of Guelph.</p>
-
-        <div id="vizContainer1">&nbsp;</div>
-
-
-
-        <script src="https://public.tableau.com/javascripts/api/tableau-2.min.js"></script>
-        
-        <script>
-
-        /* Change the url to update the data being displayed in the corresponding div */
-        function initViz() {
-            var containerDiv1 = document.getElementById("vizContainer1");
-            var url1 = "https://public.tableau.com/views/StoryforDummyData/StoryforDummyData?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link";
-            var viz1 = new tableau.Viz(containerDiv1, url1);
-        }
-
-        
-        /* Add an event listener to the initDiv function gets called when the page is loaded */
-        /* This is roughly equivalent to <body onload="initViz> */
-        window.addEventListener('DOMContentLoaded', initViz, false);
-   
-
-        </script>
-
-    </div>
-
+<h3>Trusted Ticketer</h3>
+<form method="POST" id="form1" onSubmit="submitForm()">
+  <table class="style1">
+    <tr>
+      <td class="style2">Username</td>
+      <td><input type="text" name="username" value="" /></td>
+    </tr>
+    <tr>
+      <td class="style2">Server</td>
+      <td><input type="text" id="server" name="server" value="https://" /></td>
+    </tr>
+    <tr>
+      <td class="style2">Client IP (optional)</td>
+      <td><input type="text" id="client_ip" name="client_ip" value="" /></td>
+    </tr>
+    <tr>
+      <td class="style2">Site (leave blank for Default site; otherwise enter the site name)</td>
+      <td><input type="text" id="target_site" name="target_site" value="" /></td>
+    </tr>
+    <tr>
+      <td class="style2"><input type="submit" name="submittable" value="Get Ticket" /></td>
+      <td>&#160;</td>
+    </tr>
+  </table>
+</form>
+<h4>Be sure to add your IP as a Trusted IP address to the server</h4>
 </body>
 </html>
