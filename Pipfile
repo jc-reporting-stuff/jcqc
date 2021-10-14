@@ -11,6 +11,7 @@ django-allauth = "*"
 libsass = "*"
 django-compressor = "*"
 django-sass-processor = "*"
+requests = "*"
 
 [dev-packages]
 autopep8 = "*"
