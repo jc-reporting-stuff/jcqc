@@ -131,6 +131,8 @@ header .ugls-header-banner {
   width: 100%;
   justify-content: center;
   align-items: center; }
+  .nav-container a .nav-box:hover {
+    background-color: #3b82f6; }
   .nav-container .nav-box {
     border: 1px solid #2563eb;
     border-radius: 0.5rem;
@@ -209,15 +211,18 @@ form {
   .login-container .panel {
     margin: 2.5rem auto;
     padding: 0.75rem;
-    box-shadow: 1px 1px #d1d5db;
-    border-radius: 0.5rem;
-    background-color: #f3f4f6;
     max-width: 800px; }
     .login-container .panel .form-div {
       width: 50%;
-      margin: 0.5rem auto; }
+      margin: 2rem auto;
+      box-shadow: 1px 1px #d1d5db;
+      border-radius: 0.5rem;
+      background-color: #f3f4f6;
+      padding-left: 4rem; }
       .login-container .panel .form-div .asteriskField {
         display: none; }
+      .login-container .panel .form-div form {
+        margin: 0.25rem 0; }
   .login-container h1 {
     font-size: xx-large;
     color: #AF272F;

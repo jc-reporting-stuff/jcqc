@@ -1,61 +1,65 @@
-
 .nav-container {
-    background: $blue-800;
-    padding: 0.5rem 1rem;
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    .nav-box {
-        border: 1px solid $blue-600;
-        border-radius: 0.5rem;
-        padding: 0.25rem 0.75rem;
-        background-color: $blue-700;
-        margin: auto 0.3rem;
-        color: $blue-100;
-        font-weight: bold;
-        .top-row {
-            border-bottom: 1px solid $blue-500;
-            text-align: center;
-        }
-        img {
-            vertical-align: middle;
-        }
-        .bottom-box {
-            display: flex;
-            flex-direction: row;
-            a {
-                color: $yellow-300;
-                padding: 0 0.75rem;
-                font-weight: normal;
-                &:hover {
-                    color: $yellow-200;
-                }
-            }
-            span {
-                color: $blue-500;
-            }
-        }
-        #user-icon {
-            width: 1rem;
-            display: inline;
-        }
+  background: $blue-800;
+  padding: 0.5rem 1rem;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  a {
+    .nav-box:hover {
+      background-color: $blue-500;
     }
+  }
+  .nav-box {
+    border: 1px solid $blue-600;
+    border-radius: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    background-color: $blue-700;
+    margin: auto 0.3rem;
+    color: $blue-100;
+    font-weight: bold;
+    .top-row {
+      border-bottom: 1px solid $blue-500;
+      text-align: center;
+    }
+    img {
+      vertical-align: middle;
+    }
+    .bottom-box {
+      display: flex;
+      flex-direction: row;
+      a {
+        color: $yellow-300;
+        padding: 0 0.75rem;
+        font-weight: normal;
+        &:hover {
+          color: $yellow-200;
+        }
+      }
+      span {
+        color: $blue-500;
+      }
+    }
+    #user-icon {
+      width: 1rem;
+      display: inline;
+    }
+  }
 }
 
 .admin-link {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    border: 1px dashed $gray-300;
-    border-radius: 0.25rem;
-    padding: 0.25rem 0.75rem;
-    background-color: $gray-400;
-    a {
-        color: $gray-300;
-    }
-    &:hover {
-        background-color: $gray-300;
-    }
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  border: 1px dashed $gray-300;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  background-color: $gray-400;
+  a {
+    color: $gray-300;
+  }
+  &:hover {
+    background-color: $gray-300;
+  }
 }
