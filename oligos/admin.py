@@ -2,7 +2,6 @@ from django.contrib import admin
 from .models import Oligo
 
 
-
 @admin.register(Oligo)
 class OligoAdmin(admin.ModelAdmin):
     fieldsets = (
