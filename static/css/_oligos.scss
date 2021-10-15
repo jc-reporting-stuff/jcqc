@@ -1,58 +1,70 @@
-
 .half-width {
-    h2 {
-        font-size: large;
-        font-weight: bold;
+  h2 {
+    font-size: large;
+    font-weight: bold;
+  }
+  a {
+    color: $blue-700;
+    &:visited {
+      color: $blue-900;
     }
-    a {
-        color: $blue-700;
-        &:visited {
-            color: $blue-900;
-        }
-    }
+  }
 }
 
 .new-oligo-box {
-    margin-top: 3rem;
-    border-top: 2px solid $gray-300;
-    border-bottom: 2px solid $gray-500;
-    border-radius: 1rem;
-    padding: 0 1rem;
-    h2 {
-        width: 100%;
-        border-bottom: 1px solid $gray-500;
-        padding-top: 0.5rem;
-    }
+  margin-top: 1rem;
+  border-top: 2px solid $gray-300;
+  border-bottom: 2px solid $gray-500;
+  border-radius: 1rem;
+  h2 {
+    font-size: large;
+    font-weight: 600;
+    width: 100%;
+    border-bottom: 1px solid $gray-500;
+    padding: 0.5rem;
+  }
+  .control-group,
+  .controls,
+  .control-label {
+    display: inline;
+    margin: 0;
+    padding: 0;
+  }
+  .display-box {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 0;
+  }
 }
 
 .oligo-detail {
-    padding-left: 1rem;
+  padding-left: 1rem;
 }
 
 .oligo-view {
-    margin: 1rem auto;
-    tr {
-        &:nth-child(1) {
-            border-top: 1px solid $gray-200;
-            border-bottom: 1px solid $gray-900;
-        }
-        &:nth-child(even) {
-            background-color: $gray-100;
-        }
-        &:last-child {
-            border-bottom: 1px solid $gray-700;
-        }
-        th {
-            padding: 0.5rem 1rem;
-            text-align: center;
-        }
-        td {
-            text-align: center;
-            padding: 0.3rem 1rem;
-            a { 
-                color: $blue-700;
-                text-decoration: underline;
-            }
-        }
+  margin: 1rem auto;
+  tr {
+    &:nth-child(1) {
+      border-top: 1px solid $gray-200;
+      border-bottom: 1px solid $gray-900;
     }
+    &:nth-child(even) {
+      background-color: $gray-100;
+    }
+    &:last-child {
+      border-bottom: 1px solid $gray-700;
+    }
+    th {
+      padding: 0.5rem 1rem;
+      text-align: center;
+    }
+    td {
+      text-align: center;
+      padding: 0.3rem 1rem;
+      a {
+        color: $blue-700;
+        text-decoration: underline;
+      }
+    }
+  }
 }

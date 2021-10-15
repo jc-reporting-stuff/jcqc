@@ -33,7 +33,7 @@ class TemplateDetailView(DetailView):
     template_name = 'sequences/template_detail.html'
 
 
-class TemplateDetailView(DetailView):
+class PrimerDetailView(DetailView):
     model = Primer
     context_object_name = 'primer'
     template_name = 'sequences/primer_detail.html'
@@ -194,6 +194,8 @@ def ReactionAddView(request):
                     reaction.account = account
                     reaction.submission_id = submission_id
                     reaction.status = 's'
+                    reaction.sequence_id = int(Reaction.objects.aggregate(
+                        Max('sequence_id'))['sequence_id__max']) + 1
                     reaction.save()
 
                 messages.success(request, r'Reactions successfully ordered.')

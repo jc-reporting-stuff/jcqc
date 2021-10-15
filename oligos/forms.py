@@ -22,7 +22,7 @@ class OligoInitialForm(forms.Form):
 class OligoOrderForm(forms.ModelForm):
     class Meta:
         model = Oligo
-        fields = ['scale', 'purity', 'modification', 'name', 'sequence', ]
+        fields = ['name', 'sequence', 'scale', 'purity', 'modification', ]
 
     scale = forms.ChoiceField(widget=forms.RadioSelect, choices=(
         ('4 nmol', '4 nmol'), ('200 nmol', '200 nmol'), ('1 µmol', '1 µmol')))

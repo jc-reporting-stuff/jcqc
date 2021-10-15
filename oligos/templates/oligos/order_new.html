@@ -7,7 +7,7 @@
 
 {% block content %}
 
-    <div class="container" style="max-width: 50rem;">
+    <div class="container" style="width: 65rem;">
 
         <form method="post" style="margin: 0;">
 
@@ -27,7 +27,20 @@
                 <div class="new-oligo-box">
                     <h2>Oligo number {{ forloop.counter }}</h2>
                     <br>
-                    {{ form|crispy }}
+
+                    <div class="display-box">
+                        {{ form.name|as_crispy_field }}
+                        {{ form.sequence|as_crispy_field }}
+                        {{ form.modification|as_crispy_field}}
+                    </div>
+
+                    <br>
+
+                    <div class="display-box">
+                        {{ form.scale|as_crispy_field}}
+                        {{ form.purity|as_crispy_field}}
+                    </div>
+                    
                 </div>
                 {% endfor%}
 

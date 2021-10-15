@@ -84,6 +84,7 @@ class Reaction(models.Model):
         auto_now=False, auto_now_add=False, blank=True, null=True)
     filename = models.CharField(max_length=150, null=True, blank=True)
     hardcopy = models.BooleanField(default=False)
+    sequence_id = models.IntegerField()
 
     def __str__(self):
         return f'{self.template} with {self.primer}'

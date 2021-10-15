@@ -10,24 +10,31 @@
     <table class="oligo-view">
         <tr>
             <th>Submission ID</th>
+            <th>Sequence ID</th>
             <th>Template</th>
             <th>Primer</th>
-            <th>Account</th>
-            <th>Submitted</th>
             <th>Status</th>
-            <th>Completed</th>
-            <th>Hardcopy</th>
+            <th>Submission Date</th>
+            <th>Download</th>
+
         </tr>
         {% for reaction in reactions %}
             <tr>
                 <td>{{ reaction.submission_id }}</td>
+                <td>{{ reaction.sequence_id }}</td>
                 <td><a href="{% url 'sequencing:template_detail' reaction.template.id %}">{{ reaction.template }}</td>
-                <td>{{ reaction.primer }}</td>
-                <td>{{ reaction.account.code }}</td>
-                <td>{{ reaction.submit_date }}</td>
+                <td><a href="{% url 'sequencing:primer_detail' reaction.primer.id %}">{{ reaction.primer }}</a></td>
                 <td>{{ reaction.get_status_display }}</td>
-                <td>{% if reaction.complete_date %}{{ reaction.complete_date }}{% else %} - - {% endif %}</td>
-                <td>{% if reaction.hardcopy %}Yes{% else %}No{% endif %}</td>
+                <td>{{ reaction.submit_date }}</td>
+                <td>
+                    {% if not reaction.status == 'c' %}
+                        Not available
+                    {% else %}
+                        <a href="#">Trace</a>
+                        <a href="#">Text</a>
+                    {% endif %}
+                </td>
+
             </tr>
         {% endfor %}
     </table>

@@ -33,4 +33,5 @@ class SequenceAdmin(admin.ModelAdmin):
 
 @admin.register(Reaction)
 class ReactionAdmin(admin.ModelAdmin):
-    list_display = ['submission_id', 'template', 'primer', 'status']
+    list_display = ['submission_id', 'template',
+                    'primer', 'status', 'sequence_id']

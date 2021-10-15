@@ -248,15 +248,26 @@ form {
     color: #1e3a8a; }
 
 .new-oligo-box {
-  margin-top: 3rem;
+  margin-top: 1rem;
   border-top: 2px solid #d1d5db;
   border-bottom: 2px solid #6b7280;
-  border-radius: 1rem;
-  padding: 0 1rem; }
+  border-radius: 1rem; }
   .new-oligo-box h2 {
+    font-size: large;
+    font-weight: 600;
     width: 100%;
     border-bottom: 1px solid #6b7280;
-    padding-top: 0.5rem; }
+    padding: 0.5rem; }
+  .new-oligo-box .control-group,
+  .new-oligo-box .controls,
+  .new-oligo-box .control-label {
+    display: inline;
+    margin: 0;
+    padding: 0; }
+  .new-oligo-box .display-box {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 0; }
 
 .oligo-detail {
   padding-left: 1rem; }
