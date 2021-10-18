@@ -12,16 +12,33 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import platform
 import os
 from pathlib import Path
+import json
+
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+print(BASE_DIR)
+
+
+with open('secrets.json') as f:
+    secrets = json.load(f)
+
+
+def get_secret(setting, secrets=secrets):
+    ''' Get the secret variable or return an explicit exception '''
+    try:
+        return secrets[setting]
+    except KeyError:
+        error_msg = f'Set the {setting} environment variable'
+        raise ImproperlyConfigured(error_msg)
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-1mg084as#$!e_$&jlr5_^io3z_632ceo2jhc)9o95x1mf#zcff'
+SECRET_KEY = get_secret('SECRET_KEY')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -90,11 +107,11 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'oliseq',
-        'USER': 'dev',
-        'PASSWORD': 'grapefruit-slender',
-        'HOST': '131.104.184.155',
-        'PORT': '5432',
+        'NAME': get_secret('DATABASE_NAME'),
+        'USER': get_secret('DATABASE_USER'),
+        'PASSWORD': get_secret('DATABASE_PASSWORD'),
+        'HOST': get_secret('DATABASE_HOST'),
+        'PORT': get_secret('DATABASE_PORT')
     }
 }
 
