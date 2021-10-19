@@ -2,6 +2,9 @@
 # SECRETS #
 secrets.json
 
+# static files #
+staticfiles
+
 # Django #
 *.log
 *.pot
