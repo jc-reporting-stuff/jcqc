@@ -6,10 +6,12 @@ from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.db.models import Max
 from django.contrib import messages
+from django.utils.decorators import method_decorator
 
 from oligos.forms import EasyOrderForm, OligoInitialForm, OligoOrderForm
 from .models import Oligo
 from accounts.models import Account, User
+from core.decorators import user_has_accounts
 
 import re
 
@@ -34,6 +36,7 @@ class OligoDetailView(DetailView):
         return qs.filter(submitter__id=user.id) | qs.filter(account__owner__id=user.id)
 
 
+@method_decorator(user_has_accounts, name='dispatch')
 class OligoNewTypeView(FormView):
     form_class = OligoInitialForm
     template_name = 'oligos/order_method.html'

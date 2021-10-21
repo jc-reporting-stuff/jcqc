@@ -50,7 +50,7 @@ a {
   text-decoration: none;
   color: #1d4ed8; }
   a:visited {
-    color: #1e40af; }
+    color: #1e3a8a; }
 
 h1 {
   font-size: x-large;
@@ -65,7 +65,7 @@ p {
     color: #1d4ed8;
     text-decoration: underline; }
   p:visited {
-    color: #1e40af; }
+    color: #1e3a8a; }
   p strong {
     font-weight: bold; }
 
@@ -301,6 +301,8 @@ form {
     .oligo-view tr td a {
       color: #1d4ed8;
       text-decoration: underline; }
+      .oligo-view tr td a:visited {
+        color: #1e3a8a; }
 
 .sequencing-question {
   border: 1px solid #9ca3af;

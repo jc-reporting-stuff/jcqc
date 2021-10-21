@@ -10,6 +10,7 @@ from django.views.generic.detail import DetailView
 from sequences.forms import ReactionForm
 
 from sequences.models import Template, Primer, Reaction, Account
+from core.decorators import user_has_accounts
 import datetime
 
 
@@ -59,6 +60,7 @@ class PrimerDetailView(DetailView):
     template_name = 'sequences/primer_detail.html'
 
 
+@user_has_accounts
 def MethodSelectView(request):
     return render(request, 'sequences/method_select.html')
 
@@ -210,3 +212,8 @@ def ReactionAddView(request):
                 request, r'Reactions successfully ordered! Be sure to follow instructions on this page.')
 
             return HttpResponseRedirect(reverse_lazy('sequencing:submission_detail', kwargs={'submission_id': submission_id}))
+
+
+def BulkReactionAddView(request):
+    if request.method == 'GET':
+        return render(request, 'sequences/bulk_add.html')

@@ -21,7 +21,7 @@ a {
   text-decoration: none;
   color: $blue-700;
   &:visited {
-    color: $blue-800;
+    color: $blue-900;
   }
 }
 
@@ -41,7 +41,7 @@ p {
     text-decoration: underline;
   }
   &:visited {
-    color: $blue-800;
+    color: $blue-900;
   }
   strong {
     font-weight: bold;
