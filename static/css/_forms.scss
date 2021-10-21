@@ -1,35 +1,42 @@
-
 form {
-    margin: 2rem auto;
-    .asteriskField {
-        color: $blood-red;
-    }
-    .button-primary {
-        padding: 0.25rem 1rem;
-        margin: 1rem 0.25rem;
-        border: 1px solid $gray-500;
-        border-radius: 0.25rem;
-        color: $gray-800;
-        background-color: $gray-200;
-    }
-    label {
-        font-weight: 600;
-    }
-    input[type=number] {
-        max-width: 4rem;
-    }
-    input[type=text], input[type=password], input[type=number], input[type=email], select, textarea {
-        border: 1px solid $gray-400;
-        border-radius: 0.5rem;
-        margin: 0.5rem 0.75rem;
-        padding: 0.35rem 0.75rem;
-        letter-spacing: 0.01rem;
-        font-size: 1rem;
-    }
-    input[type=radio] {
-        display: inline;
-    }
-    textarea {
-        width: 100%;
-    }
+  margin: 2rem auto;
+  .asteriskField {
+    color: $blood-red;
+  }
+  .button-primary {
+    padding: 0.25rem 1rem;
+    margin: 1rem 0.25rem;
+    border: 1px solid $gray-500;
+    border-radius: 0.25rem;
+    color: $gray-800;
+    background-color: $gray-200;
+  }
+  .control-group {
+    display: inline-block;
+  }
+  label {
+    font-weight: 600;
+  }
+  input[type="number"] {
+    max-width: 4rem;
+  }
+  input[type="text"],
+  input[type="password"],
+  input[type="number"],
+  input[type="email"],
+  select,
+  textarea {
+    border: 1px solid $gray-400;
+    border-radius: 0.5rem;
+    margin: 0.5rem 0.75rem;
+    padding: 0.35rem 0.75rem;
+    letter-spacing: 0.01rem;
+    font-size: 1rem;
+  }
+  input[type="radio"] {
+    display: inline;
+  }
+  textarea {
+    width: 100%;
+  }
 }

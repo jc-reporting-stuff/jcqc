@@ -9,13 +9,38 @@
 
         <p>There are three steps to the process: to add templates and primers, then to choose reactions.</p>
 
-        <form method="get" action="{% url 'sequencing:add_templates' %}">
+        <form method="post" action="{% url 'sequencing:add_reactions' %}" autocomplete="off">
+            {% csrf_token %}
 
-            <p><strong>How many templates are you submitting:</strong>
+            <div class="sequencing-question">
+                <p>How many <strong>templates</strong> are you submitting:
+                <input type="text" style="width: 4rem;" name="template-count" value="1" pattern="[1-9]|[1-4]\d|50"
+                    oninvalid="this.setCustomValidity('Please enter a value between 1 and 50')" oninput="this.setCustomValidity('')">
+                </p>
+            </div>
 
-            <input type="number" min="0" max="50" name="template-count">
+            <div class="sequencing-question">
+                <p>How many <strong>primers</strong> are you submitting:
+                <input type="text" style="width: 4rem;" name="primer-count" value="0" pattern="0|0?\d|[1-4]\d|50"
+                    oninvalid="this.setCustomValidity('Please enter a value between 0 and 50')" oninput="this.setCustomValidity('')"/>
+                </p>
+            </div>
 
-            <input type="submit" name="submit" value="Proceed" class="button-primary">
+            <p>
+                <strong>Note:</strong> Lab Services provides <a href="#">these common primers</a> which
+                do not need to be submitted.
+            </p>
+
+            <div class="sequencing-question">
+                <p>How many <strong>reactions</strong> are you ordering in total:
+                <input type="text" style="width: 4rem;" name="reaction-count" value="1" pattern="[1-9]|[1-9]\d|100"
+                    oninvalid="this.setCustomValidity('Please enter a value between 1 and 100')" oninput="this.setCustomValidity('')">
+                </p>
+            </div>
+
+            <div style="text-align:center; width: 100%">
+                <input type="submit" name="template-primer-add" value="Proceed" class="button-primary">
+            </div>
 
         <form>
 

@@ -20,10 +20,10 @@
         </tr>
         {% for reaction in reactions %}
             <tr>
-                <td>{{ reaction.submission_id }}</td>
-                <td>{{ reaction.sequence_id }}</td>
-                <td><a href="{% url 'sequencing:template_detail' reaction.template.id %}">{{ reaction.template }}</td>
-                <td><a href="{% url 'sequencing:primer_detail' reaction.primer.id %}">{{ reaction.primer }}</a></td>
+                <td><a href="{% url 'sequencing:submission_detail' reaction.submission_id %}">{{ reaction.submission_id }}</a></td>
+                <td>{{ reaction.id }}</td>
+                <td style="text-align: left;"><a href="{% url 'sequencing:template_detail' reaction.template.id %}">{{ reaction.template }}</td>
+                <td style="text-align: left;"><a href="{% url 'sequencing:primer_detail' reaction.primer.id %}">{{ reaction.primer }}</a></td>
                 <td>{{ reaction.get_status_display }}</td>
                 <td>{{ reaction.submit_date }}</td>
                 <td>

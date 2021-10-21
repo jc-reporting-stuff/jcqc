@@ -43,16 +43,14 @@
 
 .oligo-view {
   margin: 1rem auto;
+  border-bottom: 1px solid $gray-700;
   tr {
     &:nth-child(1) {
       border-top: 1px solid $gray-200;
       border-bottom: 1px solid $gray-900;
     }
     &:nth-child(even) {
-      background-color: $gray-100;
-    }
-    &:last-child {
-      border-bottom: 1px solid $gray-700;
+      background-color: $gray-200;
     }
     th {
       padding: 0.5rem 1rem;

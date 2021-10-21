@@ -1,0 +1,212 @@
+{% extends '_base.html' %}
+
+{% block title %}Submission {{ submission_id }}{% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+    <style>
+        @media print {
+            @page {
+                margin: 0;
+            }
+            header, .nav-container, .messages-container {
+                display: none;
+            }
+        }
+        td {
+            font: normal 12pt Times New Roman;
+            padding: 0.125rem !important;
+            color: black;
+        }
+        strong {
+            font-weight: bold;
+        }
+        .black-border-bottom {
+            border-bottom: 1px solid black;
+        }
+        .light-bottom-border {
+           border: 1px solid gray; 
+        }
+        .lighter-bottom-border {
+            border-bottom: 1px solid lightgray;
+        }
+        .bordered .inner-table td, .bordered .inner-table th {
+            border: 1px solid lightgray;
+            padding: 1px;
+            text-align: center;
+        }
+    </style>
+
+    <div style="text-align: center;">
+        <p style="font: bold 18pt Times New Roman; letter-spacing: 1px; margin-bottom: 0px; color: black;">
+            <img src="{% static '/images/lsd_logo.jpg' %}">
+            Sequencing Request Form
+        </p>
+
+        <br>
+        <table style="margin: auto;" cellpadding="0" cellspacing="0" border="0" width="660" class="tableformatting">
+            <tr>
+                <td>
+                    <strong>Please submit this form with your samples to:</strong> Lab Services,
+            University of Guelph<br> 95 Stone Road West, Guelph, ON, Canada N1H 8J7
+            <br>
+            Tel: (519) 823-1268, ext 57223;  Email: <a href="mailto:sequence@uoguelph.ca">sequence@uoguelph.ca</a>.</td>
+            </tr>
+        </table>
+        </p>
+            
+
+            <table cellpadding="0" cellspacing="0" border="0" width="660" style="margin: auto;">
+                <tr>
+                    <td align="left" valign="middle" colspan="2" width="60%">
+                        <strong>Submitted by:</strong><br>
+                        {{ submitter.display_name }}<br>
+                        {{ submitter.department }}<br>
+                        {{ submitter.phone }} {% if submitter.extension %}(ext. {{ submitter.extension }}){% endif %}<br>
+                        {{ submitter.email }}</td>	
+                    <td valign="middle" colspan="2" align="left" width="40%" style="font-size: 0.75rem; background-color: #eee; margin: 0.5rem;">
+                        LABORATORY USE ONLY (MOL-013.1)<br>
+                        Rec'd by:___________ <br>
+                        Date Received:___________<br>
+                        Delivered by: ☐ Mail ☐ Courier ☐ In-person<br>
+                        Seq sample No:______to______<br>
+                        Payment Rec'd: $___________<br>
+                        Receipt #: ___________<br>
+                        P.O. or GL code:&nbsp;<font style="text-decoration: underline;">{{ reactions.first.account.code }}</font></FONT></td>
+                </tr>
+                <tr>
+                    <td align="left" colspan="2" width="60%" style="font-size: 1.25rem; font-weight: bold;">
+                        <h3>Submission ID: {{ submission_id }}</h3>
+                    </td>
+                    <td align="right" colspan="2" width="40%">
+                        <form>
+                            <input type="button" value=" Print this page " onclick="window.print();return false;" />
+                        </form>
+                    </td>
+                </tr>
+            </table>
+            
+
+        <table cellpadding="0" cellspacing="0" border="0" width="660" style="margin: auto;" class="bordered">
+            <tr>
+                <td class="inner-table">	
+                    <table cellpadding="0" cellspacing="0" border="1" width="660" class="tableformatting">
+                        <tr class="black-border-bottom">
+                            <th align="center" colspan="9" style="font-size: 1.2rem;">Template Description</th>
+                        </tr>
+                        <tr class="light-bottom-border">
+                            <th align="left">DNA name</th>
+                            <th align="left">DNA type</th>
+                            <th align="left">DNA size (bp)</th>
+                            <th align="left">Insert size (bp)</th>
+                            <th align="left">Conc. (ng/&micro;l)</th>
+                            <th align="left">Vol. (&micro;l)</th>
+                            <th align="left">Purify</th>
+                            <th align="left">Comment</th>
+                        </tr>
+                        
+                        {% for template in templates %}
+                            <tr class="lighter-bottom-border">
+                                <td>{{ template.name }}</td>
+                                <td>{{ template.get_type_display }}</td>
+                                <td>{{ template.template_size }}</td>
+                                <td>{% if template.insert_size %}{{ template.insert_size }}{% else %} - -{% endif %}</td>
+                                <td>{{ template.template_concentration }}</td>
+                                <td>{{ template.template_volume }}</td>
+                                <td>{% if template.pcr_purify %}Yes{% else %}No{% endif %}</td>
+                                <td>{{ template.get_comment_display }}</td>
+                            </tr>
+                        {% endfor %}
+                        
+                    </table>
+                </td>
+            </tr>
+
+            {% if client_primers_exist %}
+                <tr>	
+                    <td class="inner-table">
+                        <table cellpadding="0" cellspacing="0" border="1" width="660" class="tableformatting" style="margin-top: 3px;">
+                            <tr>
+                                <th align="center" colspan="8" class="black-border-bottom;" style="font-size: 1.2rem;">Primer Description</th>
+                            </tr>
+                            <tr>
+                                <th align="left">No.</th>
+                                <th align="left">Primer name</th>
+                                <th align="left">Conc. (pmol/&micro;l)</th>
+                                <th align="left" style="border-right: 1px solid black;">Vol. (&micro;l)</th>
+                                <th align="left">No.</th>
+                                <th align="left">Primer name</th>
+                                <th align="left">Conc. (pmol/&micro;l)</th>
+                                <th align="left">Vol. (&micro;l)</th>
+                            </tr>
+                            
+                            <tr>
+                                {% for primer in primers %}
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ primer.name }}</td>
+                                    <td>{{ primer.concentration }}</td>
+                                    <td {% if not forloop.counter|divisibleby:2 %}style="border-right: 1px solid black;"{% endif %}>{{ primer.volume }}</td>
+
+                                    {% if forloop.counter|divisibleby:2 %}
+                                        </tr><tr>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if not primers|length|divisibleby:2 %}
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                {% endif %}
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            {% endif %}
+
+
+
+            <tr>
+                <td colspan="2" class="inner-table">
+                    <table cellpadding="0" cellspacing="0" border="1" width="660" class="tableformatting"  style="margin-top: 3px;">
+                        <tr>
+                            <th align="center" colspan="7" style="font-size: 1.2rem;">Sequencing Reactions Requested</th>
+                        </tr>
+                        <tr>
+                            <th align="left">Item.</th>
+                            <th align="left">Seq ID</th>
+                            <th align="left">Template name</th>
+                            <th align="left">Primer name</th>
+                            <th align="left">Primer source</th>
+                            <th align="left">Hardcopy</th>
+                            <th align="left">Comment</th>
+                        </tr>
+                
+                        {% for reaction in reactions %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ reaction.id }}</td>
+                                <td>{{ reaction.template.name }}</td>
+                                <td>{{ reaction.primer.name }}</td>
+                                <td>{% if reaction.primer.common %}Lab Services{% else %}Client{% endif %}</td>
+                                <td>{% if reaction.hardcopy %}Yes{% else %}No{% endif %}</td>
+                                <td>{% if reaction.comment %}{{ reaction.comment }}{% else %} - - {% endif %}</td>
+                            </tr>
+                        {% endfor %}
+                        
+                    </table>	
+                </td>
+            </tr>
+        </table>
+
+        <br><br>
+        <table align="center" cellpadding="0" cellspacing="0" border="0" width="660" class="tableformatting" style="margin: auto;">
+            <tr>
+                <td align="center">Your submission has gone through successfully. Please include the <A HREF="clientHome.cfm">Sequencing Request Form</A> with your samples, and label your sample bag/box with the <A HREF="clientHome.cfm">Submission ID</A>. Thank you!</td>
+            </tr>
+        </table>
+
+    </div>
+
+{% endblock content %}

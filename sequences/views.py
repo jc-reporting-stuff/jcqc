@@ -1,5 +1,5 @@
 from django.forms.formsets import formset_factory
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.shortcuts import render
 from django.forms import modelformset_factory, formset_factory
@@ -33,6 +33,26 @@ class TemplateDetailView(DetailView):
     template_name = 'sequences/template_detail.html'
 
 
+class SubmissionDetailView(ListView):
+    model = Reaction
+
+    def get(self, request, submission_id):
+        qs = Reaction.objects.filter(submission_id=submission_id)
+        templates = list(set([x.template for x in qs]))
+        primers = list(set([x.primer for x in qs]))
+        client_primers_exist = True if len(
+            [x for x in primers if x.common == False]) >= 1 else False
+        context = {
+            'templates': templates,
+            'primers': primers,
+            'reactions': qs,
+            'submission_id': submission_id,
+            'submitter': qs.first().submitter,
+            'client_primers_exist': client_primers_exist
+        }
+        return render(request, 'sequences/submission_detail.html', context=context)
+
+
 class PrimerDetailView(DetailView):
     model = Primer
     context_object_name = 'primer'
@@ -43,162 +63,150 @@ def MethodSelectView(request):
     return render(request, 'sequences/method_select.html')
 
 
-def TemplateAddView(request):
-    if request.method == 'GET':
+def ReactionAddView(request):
+    if request.method == 'POST':
+        template_count = int(request.POST.get('template-count'))
+        primer_count = int(request.POST.get('primer-count'))
+        reaction_count = int(request.POST.get('reaction-count'))
 
-        template_count = int(request.GET.get('template-count'))
-        if template_count == 0:
-            return HttpResponseRedirect(reverse_lazy('sequencing:add_primers'))
+      # Check and make sure the data from the last form are all valid to create new formsets #
+        valid_data = True if template_count >= 1 and primer_count >= 0 and reaction_count >= 1 else False
+        if not valid_data:
+            messages.info(
+                request, r'You need to order at least 1 template and 1 reaction.')
+            return HttpResponseRedirect(reverse_lazy('sequencing:method_select'))
 
+        # Create formsets to pass to page #
         TemplateFormset = modelformset_factory(Template, fields=(
             'name', 'type', 'template_size', 'insert_size', 'template_concentration', 'template_volume', 'pcr_purify', 'comment'),
             extra=template_count)
-        formset = TemplateFormset(
-            queryset=Template.objects.none())
-
-        return render(request, 'sequences/add_template.html', context={'formset': formset})
-
-    if request.method == 'POST':
-        TemplateFormset = modelformset_factory(Template, fields=(
-            'name', 'type', 'template_size', 'insert_size', 'template_concentration', 'template_volume', 'pcr_purify', 'comment'))
-        formset = TemplateFormset(request.POST)
-
-        previewing = True if request.POST.get('previewing') else False
-
-        if formset.is_valid() and previewing:
-            templates = formset.save(commit=False)
-            context = {
-                'formset': formset,
-                'templates': templates,
-                'previewing': previewing
-            }
-            return render(request, 'sequences/add_template.html', context=context)
-
-        if formset.is_valid():
-            templates = formset.save(commit=False)
-            for template in templates:
-                template.owner = request.user
-                template.save()
-            return HttpResponseRedirect(reverse_lazy('sequencing:add_primers'))
-
-        return render(request, 'sequences/add_template.html', context={'formset': formset})
-
-
-def PrimerAddView(request):
-    if request.method == 'GET':
-        primer_count = request.GET.get('primer-count')
-
-        if not primer_count:
-            return render(request, 'sequences/primer_count.html')
-        elif int(primer_count) == 0:
-            return HttpResponseRedirect(reverse_lazy('sequencing:add_reactions'))
 
         PrimerFormset = modelformset_factory(Primer, fields=(
             'name', 'concentration', 'volume', 'melting_temperature', 'sequence'),
-            extra=int(primer_count))
-        formset = PrimerFormset(
-            queryset=Primer.objects.none())
-        return render(request, 'sequences/add_primer.html', context={'formset': formset})
+            extra=primer_count)
 
-    if request.method == 'POST':
-        PrimerFormset = modelformset_factory(Primer, fields=(
-            'name', 'concentration', 'volume', 'melting_temperature', 'sequence'))
-        formset = PrimerFormset(request.POST)
+        ReactionFormset = formset_factory(ReactionForm, extra=reaction_count)
 
-        previewing = True if request.POST.get('previewing') else False
+        if request.POST.get('template-primer-add'):
+            template_formset = TemplateFormset(
+                queryset=Template.objects.none(), prefix="template")
+            primer_formset = PrimerFormset(
+                queryset=Primer.objects.none(), prefix="primer")
+        else:
+            template_formset = TemplateFormset(
+                request.POST, prefix="template")
+            primer_formset = PrimerFormset(
+                request.POST, prefix="primer")
 
-        if formset.is_valid() and previewing:
-            primers = formset.save(commit=False)
-            context = {
-                'formset': formset,
-                'primers': primers,
-                'previewing': previewing
-            }
-            return render(request, 'sequences/add_primer.html', context=context)
+        context = {
+            'template_count': template_count,
+            'primer_count': primer_count,
+            'reaction_count': reaction_count,
+            'template_formset': template_formset,
+            'primer_formset': primer_formset,
+        }
 
-        if formset.is_valid():
-            primers = formset.save(commit=False)
+        if request.POST.get('template-primer-add'):
+            return render(request, 'sequences/add_template.html', context=context)
+
+        adding_reactions = request.POST.get('proceed-reactions')
+
+        if template_formset.is_valid() and primer_formset.is_valid() and adding_reactions:
+            templates = template_formset.save(commit=False)
+            primers = primer_formset.save(commit=False)
+            reaction_formset = ReactionFormset(
+                form_kwargs={'templates': templates, 'primers': primers})
+            context['reaction_formset'] = reaction_formset
+            return render(request, 'sequences/add_reaction.html', context=context)
+        elif adding_reactions:
+            return render(request, 'sequences/add_template.html', context=context)
+
+        previewing_reactions = request.POST.get('previewing-reactions')
+
+        if previewing_reactions:
+            templates = template_formset.save(commit=False)
+            primers = primer_formset.save(commit=False)
+            reaction_formset = ReactionFormset(request.POST,
+                                               form_kwargs={'templates': templates, 'primers': primers})
+            reactions = []
+            for form in reaction_formset:
+                reaction = {
+                    'template': form['template'].value(),
+                    'primer': form['primer'].value(),
+                    'hardcopy': form['hardcopy'].value(),
+                    'comment': form['comment'].value(),
+                }
+                reactions.append(reaction)
+
+            context['reaction_formset'] = reaction_formset
+            context['previewing'] = True
+            context['reactions'] = reactions
+            return HttpResponse(render(request, 'sequences/preview.html', context=context))
+
+        finalize_order = request.POST.get('finalize-order')
+        if finalize_order:
+            # Set the Reaction submission number
+            submission_id = 0
+            latest_submission = Reaction.objects.aggregate(
+                Max('submit_date'), Max('submission_id'))
+            latest_submission_date = latest_submission['submit_date__max']
+            max_submission_id = latest_submission['submission_id__max']
+
+            if latest_submission_date == datetime.date.today():
+                submission_id = int(max_submission_id) + 1
+            else:
+                d = datetime.datetime.now()
+                submission_id = int(
+                    str(d.year) + str(d.month) + str(d.day) + '01')
+
+            # Get the templates and primers
+            template_formset = TemplateFormset(request.POST, prefix="template")
+            templates = template_formset.save(commit=False)
+            for template in templates:
+                template.owner = request.user
+                template.save()
+
+            primer_formset = PrimerFormset(request.POST, prefix="primer")
+            primers = primer_formset.save(commit=False)
             for primer in primers:
                 primer.owner = request.user
-                primer.common = False
                 primer.save()
-            return HttpResponseRedirect(reverse_lazy('sequencing:add_reactions'))
 
-        return render(request, 'sequences/add_primer.html', context={'formset': formset})
+            reaction_formset = ReactionFormset(request.POST, form_kwargs={
+                'templates': templates, 'primers': primers})
 
+            account_to_save = Account.objects.get(
+                id=request.POST.get('account'))
 
-def ReactionAddView(request):
-    if request.method == 'GET':
-        reaction_count = request.GET.get('reaction-count')
+            for form in reaction_formset:
+                ## Filter out the template and primer that we want from the saved instances ##
+                template_name = form['template'].value()
+                template_to_save = next(
+                    (template for template in templates if template.name == template_name))
 
-        if not reaction_count:
-            return render(request, 'sequences/reaction_count.html')
-        elif int(reaction_count) == 0:
-            return HttpResponseRedirect(reverse_lazy('sequencing:add_reactions'))
-
-        ReactionFormset = formset_factory(
-            ReactionForm, extra=int(reaction_count))
-        formset = ReactionFormset(form_kwargs={'user': request.user})
-        return render(request, 'sequences/add_reaction.html', context={'formset': formset})
-
-    if request.method == 'POST':
-
-        ReactionFormset = formset_factory(ReactionForm)
-        formset = ReactionFormset(request.POST, form_kwargs={
-            'user': request.user})
-
-        previewing = True if request.POST.get('previewing') else False
-
-        if formset.is_valid():
-            reactions = []
-            for form in formset:
-                template_id = form['template'].value()
-                template = Template.objects.get(id=template_id)
-
-                primer_id = form['primer'].value()
-                primer = Primer.objects.get(id=primer_id)
+                primer_name = form['primer'].value()
+                primer_to_save = None
+                try:
+                    primer_to_save = next(
+                        (primer for primer in primers if primer.name == primer_name))
+                except:
+                    primer_to_save = Primer.objects.get(
+                        name=primer_name, common=True)
 
                 hardcopy = form['hardcopy'].value()
 
-                reaction = Reaction(template=template,
-                                    primer=primer, hardcopy=hardcopy)
-                reactions.append(reaction)
+                reaction = Reaction(
+                    submitter=request.user,
+                    template=template_to_save,
+                    primer=primer_to_save,
+                    account=account_to_save,
+                    submission_id=submission_id,
+                    status='s',
+                    hardcopy=hardcopy
+                )
+                reaction.save()
 
-            if previewing:
-                context = {
-                    'formset': formset,
-                    'reactions': reactions,
-                    'previewing': previewing
-                }
-                return render(request, 'sequences/add_reaction.html', context=context)
+            messages.success(
+                request, r'Reactions successfully ordered! Be sure to follow instructions on this page.')
 
-            else:
-                account_id = request.POST.get('account')
-                account = Account.objects.get(id=account_id)
-
-                submission_id = 0
-                latest_submission = Reaction.objects.aggregate(
-                    Max('submit_date'), Max('submission_id'))
-                latest_submission_date = latest_submission['submit_date__max']
-                max_submission_id = latest_submission['submission_id__max']
-
-                if latest_submission_date == datetime.date.today():
-                    submission_id = int(max_submission_id) + 1
-                else:
-                    d = datetime.datetime.now()
-                    submission_id = int(
-                        str(d.year) + str(d.month) + str(d.day) + '01')
-
-                for reaction in reactions:
-                    reaction.submitter = request.user
-                    reaction.account = account
-                    reaction.submission_id = submission_id
-                    reaction.status = 's'
-                    reaction.sequence_id = int(Reaction.objects.aggregate(
-                        Max('sequence_id'))['sequence_id__max']) + 1
-                    reaction.save()
-
-                messages.success(request, r'Reactions successfully ordered.')
-                return HttpResponseRedirect(reverse_lazy('sequencing:list_reactions'))
-
-        return render(request, 'sequences/add_reaction.html', context={'formset': formset})
+            return HttpResponseRedirect(reverse_lazy('sequencing:submission_detail', kwargs={'submission_id': submission_id}))

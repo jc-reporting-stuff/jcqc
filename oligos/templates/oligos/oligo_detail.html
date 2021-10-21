@@ -9,6 +9,7 @@
         <h1>Details for {{ oligo.name }}</h1>
 
         <div class="oligo-detail">
+            {{ request.path }}
             <p><strong>Sequence:</strong> {{ oligo.sequence }} ({{ oligo.sequence|length }} bp)</p>
             <p><strong>Molecular weight:</strong> {{ oligo.molecular_weight }} g/mol</p>
             <p><strong>Submitted by:</strong> {{ oligo.submitter.display_name }}</p>
@@ -19,10 +20,9 @@
             <p><strong>Scale:</strong> {{ oligo.scale }}</p>
             <p><strong>Purity:</strong> {{ oligo.purity }}</p>
             <p><strong>Modification:</strong> {% if oligo.modification %}{{ oligo.modification }}{% else %}None{% endif %}</p>
-            <p><strong>Volume:</strong> {% if oligo.volume %}{{ oligo.volume }}{% else %} - -{% endif %}</p>
             <p><strong>Order date:</strong> {{ oligo.created_at }}</p>
             <p><strong>Delivery date:</strong> {% if oligo.delivery_date %}{{ oligo.delivery_date }}{% else %}Pending{% endif %}</p>
-            <p><strong>Price:</strong> {% if oligo.price %}{{ oligo.price }}{% else %}Pending{% endif %}</p>
+
         </div>
 
     </div>

@@ -4,15 +4,15 @@ from .models import Template, Primer
 
 
 class ReactionForm(forms.Form):
-    def __init__(self, *args, user, **kwargs):
+    def __init__(self, *args, templates, primers, ** kwargs):
         super().__init__(*args, **kwargs)
-        templates_available = Template.objects.filter(
-            owner=user).order_by('-create_date')
-        primers_available = Primer.objects.filter(common=True) | Primer.objects.filter(
-            owner=user).order_by('-create_date')
-        template_choices = [(t.id, t.name)
-                            for t in templates_available]
-        primer_choices = [(p.id, p.name) for p in primers_available]
+        template_choices = [(t.name, t.name)
+                            for t in templates]
+        common_primers = list(Primer.objects.filter(common=True))
+        all_primers = primers + common_primers
+        primer_choices = [
+            (p.name, p.name) for p in all_primers]
         self.fields['template'] = forms.ChoiceField(choices=template_choices)
         self.fields['primer'] = forms.ChoiceField(choices=primer_choices)
         self.fields['hardcopy'] = forms.BooleanField(required=False)
+        self.fields['comment'] = forms.CharField(required=False)

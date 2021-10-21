@@ -7,58 +7,47 @@
 {% block content %}
 
     <div class="container" style="width: 1000px;">
-        <h1>Templates to submit</h1>
-
-        <p>This is <strong>Step 1 of 3.</strong></p>
+        <p>This is <strong>Step 2 of 3.</strong></p>
 
         <form method="post" action="">
 
-            {% if previewing %}
-                <table class="oligo-view">
-                    <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Template Size</th>
-                        <th>Insertion Size</th>
-                        <th>Concentration</th>
-                        <th>Volume</th>
-                        <th>PCR Purify?</th>
-                        <th>Comment</th>
-                    </tr>
-                    
-                    {% for t in templates %}
-                        <tr>
-                            <td>{{ t.name }}</td>
-                            <td>{{ t.get_type_display }}</td>
-                            <td>{{ t.template_size }}</td>
-                            <td>{{ t.insert_size }}</td>
-                            <td>{{ t.template_concentration }}</td>
-                            <td>{{ t.template_volume }}</td>
-                            <td>{% if t.pcr_purify %}Yes{% else %}No{% endif %}</td>
-                            <td>{{ t.get_comment_display }}</td>
-                        </tr>
-                    {% endfor %}
 
-                </table>
+            <div>
 
-                <input type="submit" name="submit" value="Proceed to Step 2" class="button-primary">
-            {% endif %}
-
-
-            <div {% if previewing %}style="display:none"{% endif %}>
+            <h1>Templates</h1>
 
                 {% csrf_token %}
-                {{ formset.management_form }}
+                {{ template_formset.management_form }}
 
-                {% for form in formset %}
+                {% for form in template_formset %}
                     <h2>Template #{{ forloop.counter}}</h2>
                     {{ form|crispy }}
                     <hr>
                 {% endfor %}
-
-                <input type="submit" name="previewing" value="Proceed to Preview" class="button-primary">
-                
+            
             </div>
+
+            <div>
+
+            <h1>Primers</h1>
+
+                {% csrf_token %}
+                {{ primer_formset.management_form }}
+
+                {% for form in primer_formset %}
+                    <h2>Primer #{{ forloop.counter}}</h2>
+                    {{ form|crispy }}
+                    <hr>
+                {% endfor %}
+            
+            </div>
+
+            <input type="hidden" name="template-count" value="{{ template_count }}">
+            <input type="hidden" name="primer-count" value="{{ primer_count }}">
+            <input type="hidden" name="reaction-count" value="{{ reaction_count }}">
+
+            <input type="submit" name="proceed-reactions" value="Proceed to reactions" class="button-primary">
+                
 
         </form>
 

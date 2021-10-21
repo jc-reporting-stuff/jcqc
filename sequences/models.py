@@ -73,6 +73,7 @@ class Reaction(models.Model):
     submitter = models.ForeignKey(User, on_delete=models.CASCADE)
     template = models.ForeignKey(Template, on_delete=models.CASCADE)
     primer = models.ForeignKey(Primer, on_delete=models.CASCADE)
+    comment = models.CharField(max_length=150, blank=True, null=True)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     submission_id = models.IntegerField()
     status = models.CharField(max_length=1, choices=STATUS_CHOICES)
@@ -84,7 +85,6 @@ class Reaction(models.Model):
         auto_now=False, auto_now_add=False, blank=True, null=True)
     filename = models.CharField(max_length=150, null=True, blank=True)
     hardcopy = models.BooleanField(default=False)
-    sequence_id = models.IntegerField()
 
     def __str__(self):
         return f'{self.template} with {self.primer}'
