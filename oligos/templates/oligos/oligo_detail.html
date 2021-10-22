@@ -9,7 +9,6 @@
         <h1>Details for {{ oligo.name }}</h1>
 
         <div class="oligo-detail">
-            {{ request.path }}
             <p><strong>Sequence:</strong> {{ oligo.sequence }} ({{ oligo.sequence|length }} bp)</p>
             <p><strong>Molecular weight:</strong> {{ oligo.molecular_weight }} g/mol</p>
             <p><strong>Submitted by:</strong> {{ oligo.submitter.display_name }}</p>

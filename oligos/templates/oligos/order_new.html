@@ -1,13 +1,14 @@
 {% extends '_base.html' %}
 
-{% block title %}Number of oligos to order{% endblock title %}
+{% block title %}Oligo Order{% endblock title %}
 
 
 {% load crispy_forms_tags%}
+{% load index %}
 
 {% block content %}
 
-    <div class="container" style="width: 65rem;">
+    <div class="container" style="width: 1200px;">
 
         <form method="post" style="margin: 0;">
 
@@ -51,39 +52,44 @@
             </div>
 
             {% comment %} ABOVE THIS IS THE FORM TO BE SUBMITTED /// BELOW THIS LINE IS THE PREVIEW DIV{% endcomment %}
+            {% if previewing %}
 
-            <div {% if not previewing %}style="display:none;"{% endif %}>
+                <div>
 
-                <h1>Step 3 of 3: Verify your orders</h1>
+                    <h1>Step 3 of 3: Verify your orders</h1>
 
-                <table class="oligo-view">
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Sequence</th>
-                        <th>Length (bp)</th>
-                        <th>Scale</th>
-                        <th>Purity</th>
-                        <th>Modification</th>
-                    </tr>
-                    {% for form in formset %}
-                        {% if form.name.value|length > 0 %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td>{{ form.name.value }}</td>
-                                <td>{{ form.sequence.value|upper }}</td>
-                                <td>{{ form.sequence.value|length }}</td>
-                                <td>{{ form.scale.value }}</td>
-                                <td>{{ form.purity.value }}</td>
-                                <td>{% if form.modification.value %}{{ form.modification.value }}{% else %} - - {% endif%}</td>
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
-                </table>
+                    <p>&gt;&gt; Using account {{ account.code }} - {{ account.comment }}</p>
 
-                <input type="submit" name="submitting" value="Place order"  class="button-primary">
+                    <table class="oligo-view">
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Scale</th>
+                            <th>Purity</th>
+                            <th>Modification</th>
+                            <th>Length (bp)</th>
+                            <th>Sequence</th>
+                        </tr>
+                        {% for form in formset %}
+                            {% if form.name.value|length > 0 %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td style="text-align:left;">{{ form.name.value }}</td>
+                                    <td>{{ form.scale.value }}</td>
+                                    <td>{{ form.purity.value|capfirst }}</td>
+                                    <td>{% if form.modification.value %}{{ form.modification.value }}{% else %} - - {% endif%}</td>
+                                    <td>{{ form.sequence.value|length }}</td>
+                                    <td style="text-align:left;">{{ sequences|index:forloop.counter0  }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </table>
 
-            </div>
+                    <input type="submit" name="submitting" value="Place order"  class="button-primary">
+
+                </div>
+            
+            {% endif %}
 
         </form>
 

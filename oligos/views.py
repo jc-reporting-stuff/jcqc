@@ -94,11 +94,22 @@ class OligoCreateView(CreateView):
         previewing = request.POST.get('previewing')
 
         account_id = request.POST.get('account_id')
+
         if previewing:
+            account = Account.objects.get(id=account_id)
+            sequences = []
+
+            for form in formset:
+                spaced_sequence = ' '.join(form['sequence'].value()[i:i+3]
+                                           for i in range(0, len(form['sequence'].value()), 3))
+                sequences.append(spaced_sequence)
+
             context = {
                 'formset': formset,
                 'previewing': True,
                 'account_id': account_id,
+                'sequences': sequences,
+                'account': account
             }
             response = render(self.request, 'oligos/order_new.html', context)
             return HttpResponse(response)

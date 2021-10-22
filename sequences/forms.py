@@ -66,7 +66,7 @@ class ReactionEasyOrderForm(forms.Form):
     primer_source = forms.ChoiceField(widget=forms.RadioSelect, choices=(
         ('cl', 'Client'),
         ('ls', 'Lab Services')
-    ))
+    ), initial='cl')
     hardcopy = forms.BooleanField(label='Hardcopy?', required=False)
     primer_concentration = forms.IntegerField(
         widget=forms.TextInput(attrs={'class': 'form-number'}), label='Primer Conc (ng/µL)')

@@ -25,9 +25,11 @@ class OligoOrderForm(forms.ModelForm):
         fields = ['name', 'sequence', 'scale', 'purity', 'modification', ]
 
     scale = forms.ChoiceField(widget=forms.RadioSelect, choices=(
-        ('4 nmol', '4 nmol'), ('200 nmol', '200 nmol'), ('1 µmol', '1 µmol')))
+        ('40 nmol', '40 nmol'), ('200 nmol', '200 nmol'), ('1 µmol', '1 µmol')),
+        initial='40 nmol')
     purity = forms.ChoiceField(widget=forms.RadioSelect, choices=(
-        ('standard', 'Standard'), ('desalted', 'Desalted'), ('cartridge', 'Cartridge')))
+        ('standard', 'Standard'), ('desalted', 'Desalted'), ('cartridge', 'Cartridge')),
+        initial='standard')
     modification = forms.CharField(required=False, max_length=150)
     sequence = forms.CharField(max_length=150, widget=forms.TextInput(
         attrs={'pattern': '[ACGTRYMWSKDHBVNIacgtrymwskdhbvni]+'}))
@@ -53,8 +55,10 @@ class MultiOligoField(forms.CharField):
 
 class EasyOrderForm(forms.Form):
     scale = forms.ChoiceField(widget=forms.RadioSelect, choices=(
-        ('4 nmol', '4 nmol'), ('200 nmol', '200 nmol'), ('1 µmol', '1 µmol')))
+        ('40 nmol', '40 nmol'), ('200 nmol', '200 nmol'), ('1 µmol', '1 µmol')),
+        initial='40 nmol')
     purity = forms.ChoiceField(widget=forms.RadioSelect, choices=(
-        ('standard', 'Standard'), ('desalted', 'Desalted'), ('cartridge', 'Cartridge')))
+        ('standard', 'Standard'), ('desalted', 'Desalted'), ('cartridge', 'Cartridge')),
+        initial='standard')
     modification = forms.CharField(required=False, max_length=150)
     oligos = MultiOligoField(max_length=5000, widget=forms.Textarea)

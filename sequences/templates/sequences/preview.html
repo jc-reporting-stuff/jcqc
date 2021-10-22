@@ -1,63 +1,63 @@
-{% extends '_base.html' %}
+{% extends '_base.html' %} {% block title %}Reaction ordering{% endblock title %}
 
-{% block title %}Reaction ordering{% endblock title %}
+ {% load crispy_forms_tags %} {% block content %}
 
-{% load crispy_forms_tags %}
+<div class="container" style="width: 1000px">
+  <h1>Order Preview/Verification</h1>
 
-{% block content %}
+  <form method="post" action="">
+    {% csrf_token %}
 
-    <div class="container" style="width: 1000px;">
-        <h1>Order Preview/Verification</h1>
-
-        <form method="post" action="">
-            {% csrf_token %}
-
-            <div style="display:none;">
-                {{ template_formset }}
-                {{ primer_formset }}
-                {{ reaction_formset }}
-            </div>
-
-            <table class="oligo-view">
-                <tr>
-                    <th>Template</th>
-                    <th>Primer</th>
-                    <th>Hardcopy</th>
-                    <th>Comment</th>
-                </tr>
-                
-                {% for r in reactions %}
-                    <tr>
-                        <td>{{ r.template }}</td>
-                        <td>{{ r.primer }}</td>
-                        <td>{% if r.hardcopy %}Yes{% else %}No{% endif %}</td>
-                        <td>{{ r.comment }}</td>
-                    </tr>
-                {% endfor %}
-
-            </table>
-
-                <hr>
-
-                What financial account will this order be using: <select name="account">
-                    {% for account in user.get_financial_accounts %}
-                        <option value="{{ account.id }}">{{ account.code }}</option>
-                    {% endfor %}
-                </select>
-
-                <input type="hidden" name="template-count" value="{{ template_count }}">
-                <input type="hidden" name="primer-count" value="{{ primer_count }}">
-                <input type="hidden" name="reaction-count" value="{{ reaction_count }}">
-
-                <p>
-                    <input type="submit" name="finalize-order" value="Place Order" class="button-primary">
-                    <a href="javascript:history.back()" style="margin-left: 3rem;">Go back</a> to make changes.
-                </p>
-
-
-
-        </form>
-
+    <div style="display: none">
+      {{ template_formset }} {{ primer_formset }} {{ reaction_formset }}
     </div>
+
+    <table class="oligo-view">
+      <tr>
+        <th>Count</th>
+        <th>Template</th>
+        <th>Primer</th>
+        <th>Primer Source</th>
+        <th>Hardcopy</th>
+        <th>Comment</th>
+      </tr>
+
+      {% for r in reactions %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ r.template }}</td>
+        <td>{{ r.primer }}</td>
+        <td>{% if r.primer in common_primers %}Lab Services{% else %}Client{% endif %}</td>
+        <td>{% if r.hardcopy %}Yes{% else %}No{% endif %}</td>
+        <td>{{ r.comment }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+
+    <hr />
+
+    What financial account will this order be using:
+    <select name="account">
+      {% for account in user.get_financial_accounts %}
+      <option value="{{ account.id }}">{{ account.code }}</option>
+      {% endfor %}
+    </select>
+
+    <input type="hidden" name="template-count" value="{{ template_count }}" />
+    <input type="hidden" name="primer-count" value="{{ primer_count }}" />
+    <input type="hidden" name="reaction-count" value="{{ reaction_count }}" />
+
+    <p>
+      <input
+        type="submit"
+        name="finalize-order"
+        value="Place Order"
+        class="button-primary"
+      />
+      <a href="javascript:history.back()" style="margin-left: 3rem">Go back</a>
+      to make changes.
+    </p>
+  </form>
+</div>
 
 {% endblock content %}

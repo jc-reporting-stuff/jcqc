@@ -1,13 +1,13 @@
 {% extends '_base.html' %}
 
-{% block title %}Number of oligos to order{% endblock title %}
+{% block title %}Oligo Order{% endblock title %}
 
 
 {% load crispy_forms_tags%}
 
 {% block content %}
 
-<div class="container" style="max-width: 50rem;">
+<div class="container">
 
     <h1>Order new oligos - Bulk Ordering</h1>
 
@@ -24,21 +24,21 @@
         <table class="oligo-view">
             <tr>
                 <th>Name</th>
-                <th>Sequence</th>
                 <th>Length (bp)</th>
                 <th>Scale</th>
                 <th>Purity</th>
                 <th>Modification</th>
+                <th>Sequence</th>
             </tr>
 
             {% for oligo in oligos %}
             <tr>
                 <td>{{ oligo.name }} <input type="hidden" name="oligo-{{forloop.counter0}}-name" value="{{oligo.name}}"></td>
-                <td>{{ oligo.sequence }} <input type="hidden" name="oligo-{{forloop.counter0}}-sequence" value="{{oligo.sequence}}"></td>
                 <td>{{ oligo.sequence|length}}</td>
                 <td>{{ data.scale }}</td>
-                <td>{{ data.purity }}</td>
+                <td>{{ data.purity|capfirst }}</td>
                 <td>{% if data.modification %}{{ data.modification }}{% else %} - - {% endif %}</td>
+                <td>{{ oligo.sequence }} <input type="hidden" name="oligo-{{forloop.counter0}}-sequence" value="{{oligo.sequence}}"></td>
             </tr>
             {% endfor %}
 

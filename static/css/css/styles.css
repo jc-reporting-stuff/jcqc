@@ -297,6 +297,8 @@ form {
   padding-left: 1rem; }
 
 .oligo-view {
+  width: 100%;
+  font-size: 0.92rem;
   margin: 1rem auto;
   border-bottom: 1px solid #374151; }
   .oligo-view tr:nth-child(1) {

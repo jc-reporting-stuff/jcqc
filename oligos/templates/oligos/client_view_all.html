@@ -4,7 +4,7 @@
 
 {% block content %}
 
-    <div class="container {% if not orders %}half-width{% endif %}">
+    <div {% if not orders %}class="container half-width"{% endif %}>
 
         <h1>Most recent oligo orders</h1>
 
@@ -24,8 +24,8 @@
                     <th>µg/µL</th>
                     <th>pmol/µL</th>
                     <th>Modification</th>
-                    <th>Sequence</th>
                     <th>Length</th>
+                    <th>Sequence</th>
                 </tr>
             {% for order in orders %}
                 <tr>
@@ -37,8 +37,8 @@
                     <td>- -</td>
                     <td>- -</td>
                     <td>{{ order.modification }}</td>
-                    <td style="text-align: left;">{{ order.dna_sequence }}</td>
                     <td>{{ order.sequence|length }}</td>
+                    <td style="text-align: left;">{{ order.dna_sequence }}</td>
 
                 </tr>
             {% endfor %}

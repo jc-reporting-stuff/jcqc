@@ -150,6 +150,7 @@ def ReactionAddView(request):
             primers = primer_formset.save(commit=False)
             reaction_formset = ReactionFormset(request.POST,
                                                form_kwargs={'templates': templates, 'primers': primers})
+
             reactions = []
             for form in reaction_formset:
                 reaction = {
@@ -160,6 +161,8 @@ def ReactionAddView(request):
                 }
                 reactions.append(reaction)
 
+            context['common_primers'] = list(Primer.objects.filter(
+                common=True).values_list('name', flat=True))
             context['reaction_formset'] = reaction_formset
             context['previewing'] = True
             context['reactions'] = reactions
