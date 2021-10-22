@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.forms import modelformset_factory, formset_factory
 from django.urls import reverse_lazy
 from django.db.models import Max
+from django.views.generic.base import View
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -344,3 +345,8 @@ class BulkReactionAddView(FormView):
         }
 
         return render(request, 'sequences/bulk_add.html', context=context)
+
+
+class SequencingAdminHomeView(View):
+    def get(self, request):
+        return render(request, 'sequences/admin-home.html')

@@ -1,0 +1,48 @@
+{% extends '_base.html' %}
+
+{% block title %}Oligo Search Results{% endblock title %}
+
+{% block content %}
+
+    <div>
+
+    <h1>{{ title }}</h1>
+
+
+        <table class="oligo-view">
+            <tr>
+                <th>Oligo ID</th>
+                <th>Client Name</th>
+                <th>Oligo Name</th>
+                <th>Sequence</th>
+                <th>Size</th>
+                <th>Scale</th>
+                <th>Purity</th>
+                <th>Modify</th>
+                <th>Order Date</th>
+                <th>Delivery Date</th>
+                <th>Billed</th>
+                <th>Receiver Signature</th>
+            </tr>
+
+            {% for oligo in oligos %}
+                <tr>
+                    <td>{{ oligo.id }}</td>
+                    <td>{{ oligo.submitter.display_name }}</td>
+                    <td>{{ oligo.name }}</td>
+                    <td>{{ oligo.dna_sequence }}</td>
+                    <td>{{ oligo.sequence|length }}</td>
+                    <td>{{ oligo.scale }}</td>
+                    <td>{{ oligo.purity }}</td>
+                    <td>{{ oligo.modification }}</td>
+                    <td>{{ oligo.created_at|date:'d M Y' }}</td>
+                    <td>make input</td>
+                    <td>???</td>
+                    <td>???</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+
+{% endblock content %}

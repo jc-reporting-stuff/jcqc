@@ -1,0 +1,22 @@
+.admin-list {
+  li {
+    display: block;
+    margin: 0.5rem 1rem;
+    font-size: 1.2rem;
+    strong {
+      font-weight: 700;
+    }
+    a {
+      display: block;
+      padding: 1rem;
+      color: $blue-700;
+      text-decoration: none;
+      border: 1px solid $blue-500;
+      border-radius: 0.5rem;
+      background-color: $blue-100;
+      &:hover {
+        background-color: $blue-50;
+      }
+    }
+  }
+}

@@ -77,9 +77,9 @@ ul {
 }
 
 .container {
-  max-width: 80rem;
+  max-width: $container-width;
   margin: auto;
-  .half-width {
+  &.half-width {
     max-width: 40rem;
   }
   .page-container {

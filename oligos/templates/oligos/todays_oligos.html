@@ -1,0 +1,39 @@
+{% extends '_base.html' %}
+
+{% block title %}Oligo Search Results{% endblock title %}
+
+{% block content %}
+
+    <div style="width: 98vw; margin: auto;">
+
+    <h1>{{ title }}</h1>
+
+        <table class="oligo-view">
+            <tr>
+                <th>Oligo ID</th>
+                <th>Client Name</th>
+                <th>Oligo Name</th>
+                <th>Sequence</th>
+                <th>Size</th>
+                <th>Scale</th>
+                <th>Purity</th>
+                <th>Modification</th>
+            </tr>
+
+            {% for oligo in oligos %}
+                <tr>
+                    <td>{{ oligo.id }}</td>
+                    <td>{{ oligo.submitter.display_name }}</td>
+                    <td>{{ oligo.name }}</td>
+                    <td>{{ oligo.dna_sequence }}</td>
+                    <td>{{ oligo.sequence|length }}</td>
+                    <td>{{ oligo.scale }}</td>
+                    <td>{{ oligo.purity }}</td>
+                    <td>{% if oligo.modification %}{{ oligo.modification }}{% else %} - -{% endif %}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+
+{% endblock content %}

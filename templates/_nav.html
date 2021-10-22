@@ -1,49 +1,81 @@
 {% load static %}
 <div class="nav-container">
 
-    <a href="{% url 'home' %}">
-        <div class="nav-box">
-            Home
-        </div>
-    </a>
+    <div class="nav-group-container">
 
-    <div class="nav-box">
-        <div class="top-row">Oligos</div>
-        <div class="bottom-box">
-            <a href="{% url 'oligos:order_quantity' %}">Order</a>
-            <span>|</span> 
-            <a href="{% url 'oligos:client_order_list' %}">View</a>
-        </div>
-    </div>
+        <div class="nav-group">
 
-    <div class="nav-box">
-        <div class="top-row">Sequencing</div>
-        <div class="bottom-box">
-            <a href="{% url 'sequencing:method_select' %}">Order</a>
-            <span>|</span> 
-            <a href="{% url 'sequencing:list_reactions' %}">View</a>
-        </div>
-    </div>
+            <a href="{% url 'home' %}">
+                <div class="nav-box">
+                    Home
+                </div>
+            </a>
 
-    <a href="{% url 'edit_account' %}">
-        <div class="nav-box">
-            <img src="{% static 'images/user-icon.svg' %}" id="user-icon" alt="user icon">
-            {{ user.username }}
         </div>
-    </a>
 
-    <a href="{% url 'account_logout' %}" class="font-bold text-blue-100">
-        <div class="nav-box">
-            Log out!
+        <div class="nav-group">
+
+            <div class="nav-box">
+                <div class="top-row">Oligos</div>
+                <div class="bottom-box">
+                    <a href="{% url 'oligos:order_quantity' %}">Order</a>
+                    <span>|</span> 
+                    <a href="{% url 'oligos:client_order_list' %}">View</a>
+                </div>
+            </div>
+
+            <div class="nav-box">
+                <div class="top-row">Sequencing</div>
+                <div class="bottom-box">
+                    <a href="{% url 'sequencing:method_select' %}">Order</a>
+                    <span>|</span> 
+                    <a href="{% url 'sequencing:list_reactions' %}">View</a>
+                </div>
+            </div>
+        
         </div>
-    </a>
+
+        {% if user.is_superuser or user.is_staff %}
+
+        <div class="nav-group">
+            <a href="{% url 'oligos:admin_home' %}">
+                <div class="nav-box">
+                    Oligo<br>Admin
+                </div>
+            </a>
+
+            <a href="{% url 'sequencing:admin_home' %}">
+                <div class="nav-box">
+                    Sequencing<br>Admin
+                </div>
+            </a>
+        </div>
+
+        {% endif %}
+
+        <div class="nav-group">
+
+            <a href="{% url 'edit_account' %}">
+                <div class="nav-box">
+                    <img src="{% static 'images/user-icon.svg' %}" id="user-icon" alt="user icon">
+                    {{ user.username }}
+                </div>
+            </a>
+
+            <a href="{% url 'account_logout' %}" class="font-bold text-blue-100">
+                <div class="nav-box">
+                    Log out!
+                </div>
+            </a>
+            
+            {% if user.is_superuser %}
+                <div class="admin-link">
+                    <a href="/admin">Admin Dashboard</a>
+                </div>
+            {% endif %}
+
+        </div>
     
-    {% if user.is_superuser %}
-        <div class="admin-link">
-            <a href="/admin">Admin Dashboard</a>
-        </div>
-    {% endif %}
-
-
+    </div>
 
 </div>

@@ -7,12 +7,14 @@ from django.http import HttpResponse
 from django.db.models import Max
 from django.contrib import messages
 from django.utils.decorators import method_decorator
+from django.views.generic.base import View
 
 from oligos.forms import EasyOrderForm, OligoInitialForm, OligoOrderForm
 from .models import Oligo
 from accounts.models import Account, User
 from core.decorators import user_has_accounts
 
+import datetime
 import re
 
 
@@ -226,3 +228,22 @@ class OligoEasySubmitView(TemplateView):
                     request, r'Saving oligo {oligo.name} failed! Check your values and try again.')
 
         return HttpResponseRedirect(reverse_lazy('oligos:client_order_list'))
+
+
+class OligoAdminHomeView(View):
+    def get(self, request):
+        return render(request, 'oligos/admin-home.html')
+
+
+class OligoTodayListView(ListView):
+    model = Oligo
+    context_object_name = 'oligos'
+    template_name = 'oligos/todays_oligos.html'
+
+    def get_queryset(self, *args, **kwargs):
+        return Oligo.objects.filter(created_at__gte=datetime.date.today()).order_by('id')
+
+    def get_context_data(self, **kwargs):
+        context = super(OligoTodayListView, self).get_context_data(**kwargs)
+        context['title'] = "Today's Oligos"
+        return context

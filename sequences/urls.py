@@ -16,4 +16,6 @@ urlpatterns = [
     path('reaction/list/', views.ReactionListView.as_view(), name='list_reactions'),
     path('submission/<int:submission_id>', views.SubmissionDetailView.as_view(),
          name='submission_detail'),
+    path('sequencing-admin/',
+         views.SequencingAdminHomeView.as_view(), name='admin_home')
 ]
