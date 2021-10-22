@@ -92,13 +92,26 @@ ul {
   margin: auto;
   margin-top: 0.5rem;
   div {
-    border: 1px solid #999;
-    border-radius: 0.25rem;
     margin: 0.25rem auto;
-    padding: 0.25rem 0.5rem;
-    background-color: #ddd;
+    padding: 0.5rem 0.75rem;
     font-family: monospace;
     font-size: 0.9rem;
+    border-radius: 0.5rem;
+  }
+  .success {
+    border: 1px solid $green-border;
+    background-color: $green-background;
+    color: $green-text;
+  }
+  .info {
+    border: 1px solid $cyan-border;
+    background-color: $cyan-background;
+    color: $cyan-text;
+  }
+  .warning {
+    border: 1px solid $red-border;
+    background-color: $red-background;
+    color: $red-text;
   }
 }
 

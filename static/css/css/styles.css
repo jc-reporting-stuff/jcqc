@@ -101,13 +101,23 @@ ul.edit-accounts li {
   margin: auto;
   margin-top: 0.5rem; }
   .messages-container div {
-    border: 1px solid #999;
-    border-radius: 0.25rem;
     margin: 0.25rem auto;
-    padding: 0.25rem 0.5rem;
-    background-color: #ddd;
+    padding: 0.5rem 0.75rem;
     font-family: monospace;
-    font-size: 0.9rem; }
+    font-size: 0.9rem;
+    border-radius: 0.5rem; }
+  .messages-container .success {
+    border: 1px solid #047857;
+    background-color: #d1fae5;
+    color: #065f46; }
+  .messages-container .info {
+    border: 1px solid #0e7490;
+    background-color: #cffafe;
+    color: #155e75; }
+  .messages-container .warning {
+    border: 1px solid #9f1239;
+    background-color: #ffe4e6;
+    color: #9f1239; }
 
 header .ugls-header-banner {
   background: #6b7478;
@@ -177,7 +187,7 @@ header .ugls-header-banner {
 form {
   margin: 2rem auto; }
   form .asteriskField {
-    color: #AF272F; }
+    color: #af272f; }
   form .button-primary {
     padding: 0.25rem 1rem;
     margin: 1rem 0.25rem;
@@ -187,6 +197,8 @@ form {
     background-color: #e5e7eb; }
   form .control-group {
     display: inline-block; }
+  form .form-number {
+    width: 4rem; }
   form label {
     font-weight: 600; }
   form input[type="number"] {
@@ -232,7 +244,7 @@ form {
         margin: 0.25rem 0; }
   .login-container h1 {
     font-size: xx-large;
-    color: #AF272F;
+    color: #af272f;
     margin: auto;
     text-align: center; }
   .login-container h2 {

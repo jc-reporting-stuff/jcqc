@@ -5,13 +5,16 @@ from django.shortcuts import render
 from django.forms import modelformset_factory, formset_factory
 from django.urls import reverse_lazy
 from django.db.models import Max
+from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from sequences.forms import ReactionForm
+from accounts.models import Preapproval
+from sequences.forms import ReactionEasyOrderForm
 
 from sequences.models import Template, Primer, Reaction, Account
 from core.decorators import user_has_accounts
 import datetime
+import re
 
 
 class ReactionListView(ListView):
@@ -63,6 +66,23 @@ class PrimerDetailView(DetailView):
 @user_has_accounts
 def MethodSelectView(request):
     return render(request, 'sequences/method_select.html')
+
+
+def get_submission_id():
+    submission_id = 0
+    latest_submission = Reaction.objects.aggregate(
+        Max('submit_date'), Max('submission_id'))
+    latest_submission_date = latest_submission['submit_date__max']
+    max_submission_id = latest_submission['submission_id__max']
+
+    if latest_submission_date == datetime.date.today():
+        submission_id = int(max_submission_id) + 1
+    else:
+        d = datetime.datetime.now()
+        submission_id = int(
+            str(d.year) + str(d.month) + str(d.day) + '01')
+
+    return submission_id
 
 
 def ReactionAddView(request):
@@ -148,18 +168,7 @@ def ReactionAddView(request):
         finalize_order = request.POST.get('finalize-order')
         if finalize_order:
             # Set the Reaction submission number
-            submission_id = 0
-            latest_submission = Reaction.objects.aggregate(
-                Max('submit_date'), Max('submission_id'))
-            latest_submission_date = latest_submission['submit_date__max']
-            max_submission_id = latest_submission['submission_id__max']
-
-            if latest_submission_date == datetime.date.today():
-                submission_id = int(max_submission_id) + 1
-            else:
-                d = datetime.datetime.now()
-                submission_id = int(
-                    str(d.year) + str(d.month) + str(d.day) + '01')
+            submission_id = get_submission_id()
 
             # Get the templates and primers
             template_formset = TemplateFormset(request.POST, prefix="template")
@@ -214,6 +223,109 @@ def ReactionAddView(request):
             return HttpResponseRedirect(reverse_lazy('sequencing:submission_detail', kwargs={'submission_id': submission_id}))
 
 
-def BulkReactionAddView(request):
-    if request.method == 'GET':
-        return render(request, 'sequences/bulk_add.html')
+class BulkReactionAddView(FormView):
+    template_name = 'sequences/bulk_add.html'
+    form_class = ReactionEasyOrderForm
+
+    def post(self, request):
+        form = ReactionEasyOrderForm(request.POST or None)
+
+        if not form.is_valid():
+            return render(request, 'sequences/bulk_add.html', context={'form': form})
+
+        data = form.cleaned_data
+
+        reactions = []
+        for reaction in data['reactions']:
+            ex = r'^(.+?)[\t;,]\s*(.+?)[\t;,]\s*(.*?)\r$'
+            groups = re.match(ex, reaction).groups()
+            reactions.append(groups)
+
+        primer_names = set([p[1] for p in reactions])
+        primers = []
+        if data['primer_source'] == 'ls':
+            common_primers = Primer.objects.filter(
+                common=True).values_list('name', flat=True)
+            all_primers_are_common = True
+            for primer_name in primer_names:
+                if not primer_name in common_primers:
+                    all_primers_are_common = False
+                    messages.warning(
+                        request, f'Primer {primer_name} not found as common primer. Check spelling and try again.')
+
+            if not all_primers_are_common:
+                return render(request, 'sequences/bulk_add.html', context={'form': form})
+
+        if request.POST.get('finalize'):
+            template_names = set([t[0] for t in reactions])
+            templates = []
+            for template_name in template_names:
+                t = Template(
+                    name=template_name,
+                    owner=request.user,
+                    comment=data['template_comment'],
+                    type=data['template_type'],
+                    template_size=data['template_size'],
+                    insert_size=data['insert_size'],
+                    pcr_purify=data['pcr_purify'],
+                    template_concentration=data['template_concentration'],
+                    template_volume=data['template_volume'],
+                )
+                templates.append(t)
+                t.save()
+
+            primers = []
+            if data['primer_source'] == 'cl':
+                for primer_name in primer_names:
+                    p = Primer(
+                        name=primer_name,
+                        concentration=data['primer_concentration'],
+                        volume=data['primer_volume'],
+                        common=False,
+                        owner=request.user
+                    )
+                    primers.append(p)
+                    p.save()
+            else:
+                primers = list(Primer.objects.filter(common=True))
+
+            submission_id = get_submission_id()
+
+            for reaction in reactions:
+                reaction_template = next(
+                    (t for t in templates if t.name == reaction[0]))
+                reaction_primer = next(
+                    p for p in primers if p.name == reaction[1])
+                account = Account.objects.get(id=request.POST.get('account'))
+                r = Reaction(
+                    submitter=request.user,
+                    template=reaction_template,
+                    primer=reaction_primer,
+                    account=account,
+                    submission_id=submission_id,
+                    status='s',
+                    hardcopy=data['hardcopy']
+                )
+                r.save()
+            order_count = len(reactions)
+            messages.success(
+                request, f'Successfully ordered {order_count} sequencing reactions. Be sure to follow instructions on this page.')
+            return HttpResponseRedirect(reverse_lazy('sequencing:submission_detail', kwargs={'submission_id': submission_id}))
+
+        data['template_type_display'] = dict(
+            form.fields['template_type'].choices)[data['template_type']]
+
+        data['primer_source_display'] = dict(
+            form.fields['primer_source'].choices)[data['primer_source']]
+
+        accounts = request.user.get_financial_accounts()
+
+        context = {
+            'form': form,
+            'reactions': reactions,
+            'previewing': True,
+            'reaction_meta': data,
+            'accounts': accounts
+        }
+
+        return render(request, 'sequences/bulk_add.html', context=context)

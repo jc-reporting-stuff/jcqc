@@ -6,9 +6,73 @@
 
 {% block content %}
 
-    <div class="container half-width">
+    <div class="container {% if not previewing %}half-width{% endif %}">
 
         <h1>Sequencing - Bulk Order</h1>
+
+        <form method="post" action="">
+            {% csrf_token %}
+
+            <div {% if previewing %}style="display:none;"{% endif%}>
+                {{ form|crispy }}
+                
+                <br>
+
+                <input type="submit" name="preview" value="Proceed to preview" class="button-primary">
+        
+            </div>
+
+            {% if previewing %}
+                <div>
+                    <h2>Please verify these sequences before ordering.</h2>
+
+                    <table class="oligo-view">
+                        <tr style="font-size: 0.9rem;">
+                            <th>Item</th>
+                            <th>Template Name</th>
+                            <th>Template Type</th>
+                            <th>Template Size</th>
+                            <th>Insert Size</th>
+                            <th>Concentration (ng/µL)</th>
+                            <th>Volume (µL)</th>
+                            <th>Primer Name</th>
+                            <th>Concentration (pmol/µL)</th>
+                            <th>Volume (µL)</th>
+                            <th>Primer Source</th>
+                            <th>Comment?</th>
+                        </tr>
+                        {% for reaction in reactions %}
+                            <tr>
+                             <td>{{ forloop.counter }}</td>
+                             <td>{{ reaction.0 }}</td>
+                             <td>{{ reaction_meta.template_type_display }}</td>
+                             <td>{{ reaction_meta.template_size }}</td>
+                             <td>{{ reaction_meta.insert_size }}</td>
+                             <td>{{ reaction_meta.template_concentration }}</td>
+                             <td>{{ reaction_meta.template_volume }}</td>
+                             <td>{{ reaction.1 }}</td>
+                             <td>{{ reaction_meta.primer_concentration }}</td>
+                             <td>{{ reaction_meta.primer_volume }}</td>
+                             <td>{{ reaction_meta.primer_source_display }}</td>
+                             <td>{% if reaction.2 %}Yes{% else %}No{% endif %}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+
+                    <p>
+                        Choose account will you be using for this order:
+                        <select name="account">
+                            {% for account in accounts %}
+                            <option value="{{ account.id }}">{{ account.code }}: {{ account.comment }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="submit" name="finalize" value="Place order" class="button-primary">
+                    </p>
+
+                </div>
+            {% endif %}
+
+        </form>
     
     </div>
 
