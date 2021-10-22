@@ -9,7 +9,7 @@ from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from accounts.models import Preapproval
-from sequences.forms import ReactionEasyOrderForm
+from sequences.forms import ReactionEasyOrderForm, ReactionForm
 
 from sequences.models import Template, Primer, Reaction, Account
 from core.decorators import user_has_accounts
