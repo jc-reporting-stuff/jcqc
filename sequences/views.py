@@ -241,7 +241,13 @@ class BulkReactionAddView(FormView):
             groups = re.match(ex, reaction).groups()
             reactions.append(groups)
 
-        primer_names = set([p[1] for p in reactions])
+        primer_names = []
+        for reaction in reactions:
+            primer = reaction[1]
+            if primer in primer_names:
+                continue
+            primer_names.append(primer)
+
         primers = []
         if data['primer_source'] == 'ls':
             common_primers = Primer.objects.filter(
@@ -257,7 +263,13 @@ class BulkReactionAddView(FormView):
                 return render(request, 'sequences/bulk_add.html', context={'form': form})
 
         if request.POST.get('finalize'):
-            template_names = set([t[0] for t in reactions])
+            template_names = []
+            for reaction in reactions:
+                template = reaction[0]
+                if template in template_names:
+                    continue
+                template_names.append(template)
+
             templates = []
             for template_name in template_names:
                 t = Template(
