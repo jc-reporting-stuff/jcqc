@@ -15,7 +15,8 @@ from django.shortcuts import render
 from .models import Account
 
 from .models import Preapproval, User
-from .forms import  AccountsFormset, RequestSupervisorForm, ManageStudentsForm, ApproveStudentsForm
+from .forms import AccountsFormset, RequestSupervisorForm, ManageStudentsForm, ApproveStudentsForm
+
 
 class AccountSignupView(SignupView):
     template_name = 'custom_signup.html'
@@ -26,14 +27,15 @@ class EditAccountView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(EditAccountView, self).get_context_data(**kwargs)
-        context['pending_approval'] = Preapproval.objects.filter(supervisor=self.request.user, approved=False)
+        context['pending_approval'] = Preapproval.objects.filter(
+            supervisor=self.request.user, approved=False)
         return context
 
 
 class UpdateProfileView(UpdateView):
     model = get_user_model()
     fields = [
-        'email', 'display_name', 'phone', 'extension', 'fax_number',
+        'email', 'first_name', 'last_name', 'phone', 'extension', 'fax_number',
         'institution', 'department', 'room_number', 'address', 'city', 'province',
         'country', 'postal_code', 'is_student', 'is_supervisor',
     ]
@@ -61,7 +63,7 @@ class UserAccountsView(TemplateResponseMixin, View):
     def get(self, request, *args, **kwargs):
         formset = self.get_formset()
         return render(request, 'account_list.html', {'user': self.user, 'formset': formset})
-    
+
     def post(self, request, *args, **kwargs):
         formset = self.get_formset(data=request.POST)
         if formset.is_valid():
@@ -72,6 +74,7 @@ class UserAccountsView(TemplateResponseMixin, View):
 
 def add_sent_message(request):
     return messages.info(request, r"Pre-approval requested. If your supervisor can't see you on their page in a few minutes, verify their email address, make sure their profile lists them as a supervisor, and try again.")
+
 
 class RequestSupervisorView(FormView):
     form_class = RequestSupervisorForm
@@ -89,15 +92,17 @@ class RequestSupervisorView(FormView):
                 add_sent_message(request)
                 return HttpResponseRedirect(reverse('edit_account'))
 
-            student_supervisor_pair_exists = Preapproval.objects.filter(student=self.request.user, supervisor=supervisor)
+            student_supervisor_pair_exists = Preapproval.objects.filter(
+                student=self.request.user, supervisor=supervisor)
 
             if not student_supervisor_pair_exists:
                 # This line creates the preapproval in the model, with no account and not approved.
-                Preapproval.add_new(student=self.request.user, supervisor=supervisor, approved=False)
-
+                Preapproval.add_new(student=self.request.user,
+                                    supervisor=supervisor, approved=False)
 
             subject = render_to_string('request_supervisor_email_subject.txt')
-            body = render_to_string('request_supervisor_email_body.txt', {'user': self.request.user.display_name, 'site_domain': request.get_host })
+            body = render_to_string('request_supervisor_email_body.txt', {
+                                    'user': self.request.user.display_name, 'site_domain': request.get_host})
             send_mail(
                 subject,
                 body,
@@ -108,24 +113,30 @@ class RequestSupervisorView(FormView):
             add_sent_message(request)
             return self.form_valid(form)
         else:
-             return self.form_invalid(form)
+            return self.form_invalid(form)
 
 
 class ApproveStudentsView(FormView):
     template_name = 'approve_students.html'
 
     def get(self, request, *args, **kwargs):
-        ManageStudentsFormset = formset_factory(ApproveStudentsForm, extra=0, can_delete=True)
-        objects_awaiting_approval = Preapproval.objects.filter(supervisor_id=request.user.id, approved=False)
+        ManageStudentsFormset = formset_factory(
+            ApproveStudentsForm, extra=0, can_delete=True)
+        objects_awaiting_approval = Preapproval.objects.filter(
+            supervisor_id=request.user.id, approved=False)
         initial_values = []
         for object in objects_awaiting_approval:
-            initial_values.append({'student': str(object.student.id), 'account': '', 'student_id': str(object.student.id) })
-        formset = ManageStudentsFormset(initial=initial_values, form_kwargs={'user': request.user})
+            initial_values.append({'student': str(
+                object.student.id), 'account': '', 'student_id': str(object.student.id)})
+        formset = ManageStudentsFormset(
+            initial=initial_values, form_kwargs={'user': request.user})
         return render(request, 'approve_students.html', {'formset': formset})
 
     def post(self, request, *args, **kwargs):
-        ApproveStudentsFormset = formset_factory(ApproveStudentsForm, can_delete=True)
-        formset = ApproveStudentsFormset(request.POST, form_kwargs={'user': request.user})
+        ApproveStudentsFormset = formset_factory(
+            ApproveStudentsForm, can_delete=True)
+        formset = ApproveStudentsFormset(
+            request.POST, form_kwargs={'user': request.user})
         if formset.is_valid():
 
             # If the form needs to be deleted, delete it.
@@ -135,7 +146,8 @@ class ApproveStudentsView(FormView):
                 supervisor = User.objects.get(id=request.user.id)
                 account = Account.objects.get(id=cd['account'])
                 try:
-                    p = Preapproval.objects.get(supervisor=supervisor, student=student, approved=False)
+                    p = Preapproval.objects.get(
+                        supervisor=supervisor, student=student, approved=False)
                     p.delete()
                 except:
                     print('Do better errorchecking please')
@@ -150,7 +162,8 @@ class ApproveStudentsView(FormView):
                 supervisor = User.objects.get(id=request.user.id)
                 account = Account.objects.get(id=cd['account'])
                 try:
-                    p = Preapproval.objects.get(supervisor=supervisor, student=student, approved=False)
+                    p = Preapproval.objects.get(
+                        supervisor=supervisor, student=student, approved=False)
                     p.approved = True
                     p.account = account
                     p.save()
@@ -166,17 +179,23 @@ class ManageStudentsView(TemplateView):
     template_name = 'manage_students.html'
 
     def get(self, request, *args, **kwargs):
-        ManageStudentsFormset = formset_factory(ManageStudentsForm, extra=1, can_delete=True)
-        objects = Preapproval.objects.filter(supervisor_id=request.user.id, approved=True)
+        ManageStudentsFormset = formset_factory(
+            ManageStudentsForm, extra=1, can_delete=True)
+        objects = Preapproval.objects.filter(
+            supervisor_id=request.user.id, approved=True)
         initial_values = []
         for object in objects:
-            initial_values.append({'student': str(object.student.id), 'account': object.account.id, 'preapproval_id': object.id or '' })
-        formset = ManageStudentsFormset(initial=initial_values, form_kwargs={'user': request.user})
+            initial_values.append({'student': str(
+                object.student.id), 'account': object.account.id, 'preapproval_id': object.id or ''})
+        formset = ManageStudentsFormset(
+            initial=initial_values, form_kwargs={'user': request.user})
         return render(request, 'manage_students.html', {'formset': formset})
-    
+
     def post(self, request, *args, **kwargs):
-        ManageStudentsFormset = formset_factory(ManageStudentsForm, can_delete=True)
-        formset = ManageStudentsFormset(request.POST, form_kwargs={'user': request.user})
+        ManageStudentsFormset = formset_factory(
+            ManageStudentsForm, can_delete=True)
+        formset = ManageStudentsFormset(
+            request.POST, form_kwargs={'user': request.user})
         if formset.is_valid():
 
             # If the form needs to be deleted, delete it.
@@ -186,22 +205,22 @@ class ManageStudentsView(TemplateView):
                 student = User.objects.get(id=cd['student'])
                 account = Account.objects.get(id=cd['account'])
                 try:
-                     p = Preapproval.objects.get(id=cd['preapproval_id'])
-                     p.delete()
+                    p = Preapproval.objects.get(id=cd['preapproval_id'])
+                    p.delete()
                 except:
-                     print('Do better errorchecking please')
+                    print('Do better errorchecking please')
 
             # if the forms needs saved, save it.
             for form in formset:
                 if form in formset.deleted_forms:
                     continue
-                
+
                 cd = form.cleaned_data
                 if not cd:
                     continue
                 student = User.objects.get(id=cd['student'])
                 supervisor = User.objects.get(id=request.user.id)
-                account = Account.objects.get(id=cd['account'])                
+                account = Account.objects.get(id=cd['account'])
 
                 try:
                     p = Preapproval.objects.get(id=cd['preapproval_id'])
@@ -210,7 +229,8 @@ class ManageStudentsView(TemplateView):
                     p.approved = True
                     p.save()
                 except:
-                    p = Preapproval.objects.create(student=student, supervisor=supervisor, account=account, approved=True)
+                    p = Preapproval.objects.create(
+                        student=student, supervisor=supervisor, account=account, approved=True)
                     # if there is an addition to the form - add a student.
                     print('Created new preapproval.')
             messages.success(self.request, 'Changes applied successfully.')

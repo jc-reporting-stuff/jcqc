@@ -12,30 +12,42 @@ class UserSignupForm(SignupForm):
     def __init__(self, *args, **kwargs):
         super(UserSignupForm, self).__init__(*args, **kwargs)
         for field_name in self.fields:
-            field = self.fields.get(field_name)  
+            field = self.fields.get(field_name)
             if field:
                 if type(field.widget) in (forms.TextInput, forms.DateInput):
-                    field.widget = forms.TextInput(attrs={'placeholder': field.label})
+                    field.widget = forms.TextInput(
+                        attrs={'placeholder': field.label})
 
-    username = forms.CharField(label='Username', max_length=150, required=False)
-    display_name = forms.CharField(max_length=150, label='Full name')
+    username = forms.CharField(
+        label='Username', max_length=150, required=False)
+    first_name = forms.CharField(max_length=150)
+    last_name = forms.CharField(max_length=150)
     phone = forms.CharField(max_length=30, required=True)
-    extension = forms.CharField(max_length=40, label='Phone Extension', required=False)
-    fax_number = forms.CharField(max_length=30, required=False, label='Fax number')
-    institution = forms.CharField(max_length=150, required=False, label='Company or Institution')
-    department = forms.CharField(max_length=150, required=False, label='Department')
-    room_number = forms.CharField(max_length=150, required=False, label='Room number')
+    extension = forms.CharField(
+        max_length=40, label='Phone Extension', required=False)
+    fax_number = forms.CharField(
+        max_length=30, required=False, label='Fax number')
+    institution = forms.CharField(
+        max_length=150, required=False, label='Company or Institution')
+    department = forms.CharField(
+        max_length=150, required=False, label='Department')
+    room_number = forms.CharField(
+        max_length=150, required=False, label='Room number')
     address = forms.CharField(max_length=250, required=True, label='Address')
     city = forms.CharField(max_length=150, required=True, label='City')
-    province = forms.CharField(max_length=100, required=True, label='Province/State')
+    province = forms.CharField(
+        max_length=100, required=True, label='Province/State')
     country = forms.CharField(max_length=150, required=True, label='Country')
-    postal_code = forms.CharField(max_length=150, required=True, label='Postal or zip code')
+    postal_code = forms.CharField(
+        max_length=150, required=True, label='Postal or zip code')
     is_student = forms.BooleanField(label='Are you a student?', required=False)
-    is_supervisor = forms.BooleanField(label='Are you UofG faculty or staff?', required=False)
+    is_supervisor = forms.BooleanField(
+        label='Are you UofG faculty or staff?', required=False)
 
     def save(self, request):
         user = super(UserSignupForm, self).save(request)
-        user.display_name = self.cleaned_data['display_name']
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
         user.phone = self.cleaned_data['phone']
         user.extension = self.cleaned_data['extension']
         user.fax_number = self.cleaned_data['fax_number']
@@ -56,29 +68,40 @@ class UserSignupForm(SignupForm):
         return reverse('edit_account')
 
 
-AccountsFormset = inlineformset_factory(User, Account, fields=['code','comment','is_active'], extra=1, can_delete=False)
+AccountsFormset = inlineformset_factory(User, Account, fields=[
+                                        'code', 'comment', 'is_active'], extra=1, can_delete=False)
+
 
 class RequestSupervisorForm(forms.Form):
-    email = forms.EmailField(max_length=130, required=True, label='Supervisor email')
+    email = forms.EmailField(
+        max_length=130, required=True, label='Supervisor email')
 
 
 class ApproveStudentsForm(forms.Form):
     def __init__(self, *args, user, **kwargs):
         super(ApproveStudentsForm, self).__init__(*args, **kwargs)
-        student_choices = set(((approval_request.student.id, str(approval_request.student.display_name)) for approval_request in Preapproval.objects.filter(supervisor_id=user.id, approved=False)))
-        account_choices = ((account.id, str(account.code)) for account in user.accounts.all())
-        self.fields['student'] = forms.ChoiceField(choices=student_choices, widget=forms.Select(attrs={'disabled':'disabled'}), required=False)
-        self.fields['student_id'] = forms.CharField(max_length=10, widget=forms.widgets.HiddenInput())
+        student_choices = set(((approval_request.student.id, str(approval_request.student.display_name))
+                              for approval_request in Preapproval.objects.filter(supervisor_id=user.id, approved=False)))
+        account_choices = ((account.id, str(account.code))
+                           for account in user.accounts.all())
+        self.fields['student'] = forms.ChoiceField(choices=student_choices, widget=forms.Select(
+            attrs={'disabled': 'disabled'}), required=False)
+        self.fields['student_id'] = forms.CharField(
+            max_length=10, widget=forms.widgets.HiddenInput())
         self.fields['account'] = forms.ChoiceField(choices=account_choices)
 
 
 class ManageStudentsForm(forms.Form):
     def __init__(self, *args, user, **kwargs):
         super(ManageStudentsForm, self).__init__(*args, **kwargs)
-        student_choices = list(set([(approval_request.student.id, str(approval_request.student.display_name)) for approval_request in Preapproval.objects.filter(supervisor_id=user.id, approved=True)]))
+        student_choices = list(set([(approval_request.student.id, str(approval_request.student.display_name))
+                               for approval_request in Preapproval.objects.filter(supervisor_id=user.id, approved=True)]))
         student_choices.append(('', '- - - - - - - - - - '))
-        account_choices = [(account.id, str(account.code)) for account in user.accounts.all()]
+        account_choices = [(account.id, str(account.code))
+                           for account in user.accounts.all()]
         account_choices.append(('', '- - - - - - - - '))
-        self.fields['student'] = forms.ChoiceField(choices=student_choices, required=False)
+        self.fields['student'] = forms.ChoiceField(
+            choices=student_choices, required=False)
         self.fields['account'] = forms.ChoiceField(choices=account_choices)
-        self.fields['preapproval_id'] = forms.CharField(initial='-1', max_length=10, widget=forms.widgets.HiddenInput())
+        self.fields['preapproval_id'] = forms.CharField(
+            initial='-1', max_length=10, widget=forms.widgets.HiddenInput())

@@ -30,7 +30,8 @@ class CustomAccountManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=150, unique=True)
-    display_name = models.CharField(max_length=150)
+    first_name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150)
     phone = models.CharField(max_length=30)
     extension = models.CharField(max_length=40, blank=True)
     fax_number = models.CharField(max_length=30, blank=True)
@@ -63,6 +64,9 @@ class User(AbstractBaseUser, PermissionsMixin):
             return Account.objects.filter(owner__linked_students__student=self, owner__linked_students__approved=True, is_active=True)
         else:
             return Account.objects.filter(owner=self, is_active=True)
+
+    def display_name(self):
+        return f'{self.first_name} {self.last_name}'
 
     def __str__(self):
         return self.username
