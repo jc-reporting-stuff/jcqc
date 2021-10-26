@@ -1,7 +1,8 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from django.contrib.auth import get_user_model
+from django.test import client
 
-from django.core.validators import RegexValidator
 from .models import Oligo
 
 import re
@@ -62,3 +63,33 @@ class EasyOrderForm(forms.Form):
         initial='standard')
     modification = forms.CharField(required=False, max_length=150)
     oligos = MultiOligoField(max_length=5000, widget=forms.Textarea)
+
+
+class IdRangeForm(forms.Form):
+    low = forms.IntegerField(
+        widget=forms.TextInput, max_value=1000000, min_value=1, label="From", required=False)
+    high = forms.IntegerField(
+        widget=forms.TextInput, max_value=1000000, min_value=1, label="To",
+        required=False)
+
+
+class DateRangeForm(forms.Form):
+    low = forms.DateField(widget=forms.DateTimeInput(
+        attrs={'type': 'date'}), required=False, label="Start Date")
+    high = forms.DateField(widget=forms.DateTimeInput(
+        attrs={'type': 'date'}), required=False, label="End Date")
+    client = forms.ChoiceField()
+
+    def __init__(self, *args, **kwargs):
+        super(DateRangeForm, self).__init__(*args, **kwargs)
+        all_clients = get_user_model().objects.all().order_by('last_name')
+        client_choices = [
+            ('0', f'All Clients (Count: {len(all_clients)})'), ]
+        for client in all_clients:
+            client_choices.append(
+                (client.id, f'{client.display_name()} ({client.id})'),)
+        self.fields['client'].choices = client_choices
+
+
+class OligoTextSearch(forms.Form):
+    text = forms.CharField(max_length=150, required=False)

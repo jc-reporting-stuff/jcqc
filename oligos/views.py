@@ -1,19 +1,21 @@
 from django.forms.models import formset_factory
 from django.http.response import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views.generic import ListView, CreateView, FormView, TemplateView, DetailView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.http import HttpResponse
 from django.db.models import Max
 from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.views.generic.base import View
+from django.utils.timezone import localtime, now, make_aware
 
-from oligos.forms import EasyOrderForm, OligoInitialForm, OligoOrderForm
+from oligos.forms import EasyOrderForm, OligoInitialForm, OligoOrderForm, IdRangeForm, DateRangeForm, OligoTextSearch
 from .models import Oligo
 from accounts.models import Account, User
 from core.decorators import user_has_accounts
 
+import pytz
 import datetime
 import re
 
@@ -241,9 +243,130 @@ class OligoTodayListView(ListView):
     template_name = 'oligos/todays_oligos.html'
 
     def get_queryset(self, *args, **kwargs):
-        return Oligo.objects.filter(created_at__gte=datetime.date.today()).order_by('id')
+        today = localtime(now()).date()
+        return Oligo.objects.filter(created_at__gte=today).order_by('id')
 
     def get_context_data(self, **kwargs):
         context = super(OligoTodayListView, self).get_context_data(**kwargs)
         context['title'] = "Today's Oligos"
         return context
+
+
+def get_redirect_url(search, low=None, high=None, text='', client=''):
+    base_url = reverse_lazy('oligos:search_results')
+    low_str = f'&low={low}' if low else ''
+    high_str = f'&high={high}' if high else ''
+    text_str = f'&text={text}' if text else ''
+    client_str = f'&client={client}' if client else ''
+    return f'{base_url}?query={search}{low_str}{high_str}{text_str}{client_str}'
+
+
+def get_search_queries(search_type):
+    if search_type == 'range':
+        return ['oligo', 'date', 'order']
+    elif search_type == 'text':
+        return ['name', 'sequence']
+    else:
+        return []
+
+
+class OligoSearchView(View):
+    def get(self, request):
+        if request.GET.get('search'):
+            args = request.GET
+            search = args.get('search')
+            range_searches = get_search_queries('range')
+            text_searches = get_search_queries('text')
+            if search in range_searches:
+                low = args.get(f'{search}-low')
+                high = args.get(f'{search}-high')
+                client = args.get(f'{search}-client')
+                return redirect(get_redirect_url(search=search, low=low, high=high, client=client))
+            elif search in text_searches:
+                text = args.get(f'{search}-text')
+                return redirect(get_redirect_url(search=search, text=text))
+
+        max_oligo = Oligo.objects.all().order_by('-id').first()
+        id_range_form = IdRangeForm(
+            prefix="oligo", initial={'high': max_oligo.id})
+        date_range_form = DateRangeForm(prefix="date")
+        order_range_form = IdRangeForm(
+            prefix="order", initial={'high': max_oligo.order_id})
+        oligo_name_form = OligoTextSearch(prefix="name")
+        oligo_sequence_form = OligoTextSearch(prefix="sequence")
+
+        context = {
+            'id_range_form': id_range_form,
+            'date_range_form': date_range_form,
+            'order_range_form': order_range_form,
+            'oligo_name_form': oligo_name_form,
+            'oligo_sequence_form': oligo_sequence_form
+        }
+        return render(request, 'oligos/searches.html', context=context)
+
+
+class OligoListView(View):
+    def get(self, request):
+        args = request.GET
+
+        ### Error-checking -- make sure all necessary search params exist and are valid ###
+        params = ['query', 'low', 'high', 'text', 'client']
+        data = {}
+        for param in params:
+            data[param] = args.get(param) if args.get(param) else None
+        if not (data['query'] and ((data['low'] and data['high']) or data['text'])):
+            messages.warning(
+                request, 'Missing search parameter(s), try again please.')
+            return redirect(reverse('oligos:search'))
+
+        if data['low'] and data['high']:
+            if data['low'] > data['high']:
+                temp = data['low']
+                data['low'] = data['high']
+                data['high'] = temp
+                messages.info(
+                    request, 'Low value greater than high value: Values were swapped.')
+
+        queryset = None
+
+        if data['query'] == 'oligo':
+            queryset = Oligo.objects.filter(
+                id__gte=data['low'], id__lte=data['high'])
+
+        elif data['query'] == 'date':
+            time_zone = pytz.timezone('Canada/Eastern')
+
+            split_start = data['low'].split('-')
+            start_date = datetime.datetime(
+                int(split_start[0]), int(split_start[1]), int(split_start[2]))
+            start_date = make_aware(start_date, time_zone)
+            split_end = data['high'].split('-')
+
+            end_date = datetime.datetime(
+                int(split_end[0]), int(split_end[1]), int(split_end[2]))
+            end_date = make_aware(end_date, time_zone)
+            print(end_date)
+            client = data['client'] or False
+            queryset = Oligo.objects.filter(
+                created_at__gte=start_date, created_at__lte=end_date)
+            if client != '0':
+                queryset = queryset.filter(submitter__id=int(data['client']))
+
+        elif data['query'] == 'order':
+            queryset = Oligo.objects.filter(
+                order_id__gte=data['low'], order_id__lte=data['high'])
+
+        elif data['query'] == 'name':
+            queryset = Oligo.objects.filter(name__icontains=data['text'])
+
+        elif data['query'] == 'sequence':
+            stripped_sequence = data['text'].strip().replace(' ', '')
+            queryset = Oligo.objects.filter(
+                sequence__icontains=stripped_sequence)
+
+        context = {
+            'oligos': queryset,
+            'data': data,
+        }
+
+        return render(request, 'oligos/admin_list.html', context=context)

@@ -1,0 +1,63 @@
+{% extends '_base.html' %}
+
+{% block title %}Search for Oligos{% endblock title %}
+
+{% block content %}
+
+    <div>
+
+        <h1 style="text-align: center;">Search Oligos</h1>
+
+        <form method="get" action="" style="margin-top: 0.5rem;">
+
+        <div class="searches-container">
+
+            <div class="search-box">
+                <h2>Search by ID Range</h2>
+                <p>Max ID is already in the form.</p>
+                {{ id_range_form.as_p }}
+                <button type="submit" name="search" value="oligo" class="button-primary">Search by ID range</button>
+            </div>
+
+            <div class="search-box">
+                <h2>Search by Date Range</h2>
+                <p>Select client to only search their orders.</p>
+                {{ date_range_form.as_p }}
+                <button type="submit" name="search" value="date" class="button-primary">Search by Date range</button>
+            </div>
+
+            <div class="search-box">
+                <h2>Search by Order ID Range</h2>
+                <p><strong>Not</strong> the same as Oligo ID range.</p>
+                {{ order_range_form.as_p }}
+                <button type="submit" name="search" value="order" class="button-primary">Search by Order ID range</button>
+            </div>
+
+            <div class="search-box">
+                <h2>Search by Oligo name</h2>
+                <p>Enter whole or partial oligo name.</p>
+                {{ oligo_name_form.as_p }}
+                <button type="submit" name="search" value="name" class="button-primary">Search by Name</button>
+            </div>
+
+            <div class="search-box">
+                <h2>Search by Oligo sequence</h2>
+                <p>Enter whole or partial oligo sequence.</p>
+                {{ oligo_sequence_form.as_p }}
+                <button type="submit" name="search" value="sequence" class="button-primary">Search by Sequence</button>
+            </div>
+        
+        </div>
+
+        </form>
+
+    </div>
+
+    <script>
+        document.addEventListener("onkeyup", function(e) {
+            // TODO: Make this press the correct enter button. //
+        });
+
+    </script>
+
+{% endblock content %}

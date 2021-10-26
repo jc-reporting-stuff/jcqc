@@ -330,6 +330,30 @@ form {
       .oligo-view tr td a:visited {
         color: #1e3a8a; }
 
+.searches-container {
+  max-width: 1280px;
+  min-width: 25%;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: flex-start; }
+  .searches-container form {
+    margin: 0.5rem; }
+  .searches-container .search-box {
+    border: 1px solid #1e40af;
+    border-radius: 0.5rem;
+    background-color: #eff6ff;
+    padding: 1rem;
+    margin: 1rem 2rem; }
+    .searches-container .search-box h2 {
+      display: inline;
+      font-weight: 700; }
+    .searches-container .search-box input[type="text"] {
+      margin: 0.125rem;
+      padding: 0.25rem 0.5rem; }
+
 .sequencing-question {
   border: 1px solid #9ca3af;
   border-radius: 1rem;

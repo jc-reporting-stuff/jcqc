@@ -12,5 +12,7 @@ urlpatterns = [
     path('easy-order/', views.OligoEasyOrder.as_view(), name='easy_order'),
     path('easy-submit/', views.OligoEasySubmitView.as_view(), name='easy_submit'),
     path('admin/today/', views.OligoTodayListView.as_view(), name='today_listview'),
-    path('admin', views.OligoAdminHomeView.as_view(), name='admin_home')
+    path('admin', views.OligoAdminHomeView.as_view(), name='admin_home'),
+    path('search', views.OligoSearchView.as_view(), name='search'),
+    path('search-results', views.OligoListView.as_view(), name='search_results')
 ]

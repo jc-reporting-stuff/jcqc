@@ -1,0 +1,73 @@
+{% extends '_base.html' %}
+
+{% block title %}Search for Oligos{% endblock title %}
+
+{% block content %}
+
+    <div>
+
+        <h1 style="text-align: center;">Oligo Search Results</h1>
+
+        <p style="width: 50%; margin: auto; text-align:center;">Searching by <strong>
+            {% if data.query == 'oligo' %}
+                Oligo ID
+            {% elif data.query == 'date' %}
+                date range
+            {% elif data.query == 'order' %}
+                Oligo order ID
+            {% elif data.query == 'name' %}
+                Oligo name
+            {% elif data.query == 'sequence' %}
+                Oligo sequence
+            {%endif %}
+            </strong>
+
+            {% if data.query in 'oligo date order' %}
+                from <strong>{{data.low}}<strong/> to <strong>{{ data.high }}</strong>
+            {% else %}
+                using <strong>"{{ data.text }}"</strong> as the search term
+            {% endif %}
+
+        <form method="get" action="" style="margin-top: 0.5rem;">
+
+        <table class="oligo-view">
+            <tr>
+                <th>Oligo ID</th>
+                <th>Client Name</th>
+                <th>Oligo Name</th>
+                <th>Sequence</th>
+                <th>Size</th>
+                <th>Scale</th>
+                <th>Purity</th>
+                <th>Modify</th>
+                <th>Order Date</th>
+                <th>Delivery Date</th>
+                <th>Billed</th>
+                <th>Receiver Signature</th>
+            </tr>
+
+            {% for oligo in oligos %}
+                <tr>
+                    <td><input type="checkbox" id="{{ oligo.id }}-checkbox">{{ oligo.id }}</td>
+                    <td>{{ oligo.submitter.display_name }}</td>
+                    <td style="text-align: left">{{ oligo.name }}</td>
+                    <td style="text-align: left;">{{ oligo.dna_sequence }}</td>
+                    <td>{{ oligo.sequence|length }}</td>
+                    <td>{{ oligo.scale }}</td>
+                    <td>{{ oligo.purity|title }}</td>
+                    <td>{% if oligo.modification %}{{ oligo.modification }}{% else %} - - {% endif %}</td>
+                    <td>{{ oligo.created_at|date:"M-d-Y" }}</td>
+                    <td>{% if oligo.delivery_date %}{{ oligo.delivery_date|date:"M-d-Y" }}{% else %} - - {% endif %}</td>
+                    <td>{% if oligo.billed %}{{ oligo.billed }}{% else %} - - {% endif %}</td>
+                    <td>???</td>
+                </tr>
+            {% endfor %}
+
+        </table>
+
+
+        </form>
+
+    </div>
+
+{% endblock content %}
