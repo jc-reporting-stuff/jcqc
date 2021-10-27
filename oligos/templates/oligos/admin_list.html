@@ -27,12 +27,16 @@
             {% else %}
                 using <strong>"{{ data.text }}"</strong> as the search term
             {% endif %}
+        </p>
 
-        <form method="get" action="" style="margin-top: 0.5rem;">
+        <form method="post" action="{% url 'oligos:list_actions' %}">
+        {% csrf_token %}
+
+        <input type="hidden" name="return-url" value="{{ current_path }}">
 
         <table class="oligo-view">
             <tr>
-                <th>Oligo ID</th>
+                <th><input type="checkbox" onchange="selectAll(event)" id="top-checkbox">Oligo ID</th>
                 <th>Client Name</th>
                 <th>Oligo Name</th>
                 <th>Sequence</th>
@@ -46,18 +50,22 @@
                 <th>Receiver Signature</th>
             </tr>
 
-            {% for oligo in oligos %}
+            {% for oligo in page_obj %}
                 <tr>
-                    <td><input type="checkbox" id="{{ oligo.id }}-checkbox">{{ oligo.id }}</td>
+                    <td><input type="checkbox" name="{{ oligo.id }}-checkbox">{{ oligo.id }}</td>
                     <td>{{ oligo.submitter.display_name }}</td>
                     <td style="text-align: left">{{ oligo.name }}</td>
                     <td style="text-align: left;">{{ oligo.dna_sequence }}</td>
-                    <td>{{ oligo.sequence|length }}</td>
+                    <td style="white-space: nowrap">{{ oligo.sequence|length }}</td>
                     <td>{{ oligo.scale }}</td>
                     <td>{{ oligo.purity|title }}</td>
                     <td>{% if oligo.modification %}{{ oligo.modification }}{% else %} - - {% endif %}</td>
                     <td>{{ oligo.created_at|date:"M-d-Y" }}</td>
-                    <td>{% if oligo.delivery_date %}{{ oligo.delivery_date|date:"M-d-Y" }}{% else %} - - {% endif %}</td>
+                    <td>
+                        <input type="date" name="{{oligo.id}}-delivery-date"
+                            {% if oligo.delivery_date %}value="{{ oligo.delivery_date|date:'Y-m-d' }}" {% endif %}
+                            style="width: 9rem;" onchange="checkOwnBox(event)" onkeypress="checkEnter(event)">
+                    </td>
                     <td>{% if oligo.billed %}{{ oligo.billed }}{% else %} - - {% endif %}</td>
                     <td>???</td>
                 </tr>
@@ -65,9 +73,42 @@
 
         </table>
 
+        <div style="text-align:center;">
+            <button name="select-all" onclick="selectAll(event)" id="select-all-button" class="button-primary">Select All</button>
+            <button type="submit" name="button" value="update-delivery" class="button-primary" id="update-delivery">Update Delivery Info</button>
+            <hr>
+            <div class="delivery-box">
+                <p>To update the delivery date of <em>every oligo on this page</em>, enter the date below and click the button.</p>
+                <div>
+                    <input type="date" name="all-delivery-date" value="{% now 'Y-m-d' %}">
+                    <button type="submit" name="button" value="update-all-delivery" class="button-primary">Update Delivery Dates - Whole Page</button>
+                </div>
+            </div>
+        </div>
 
-        </form>
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?query={{ data.query }}&low={{ data.low }}&high={{data.high}}&text={{ data.text}}&client={{data.client}}&page=1">&laquo; First</a>
+                    <a href="?query={{ data.query }}&low={{ data.low }}&high={{data.high}}&text={{ data.text}}&client={{data.client}}&page={{ page_obj.previous_page_number }}">Previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?query={{ data.query }}&low={{ data.low }}&high={{data.high}}&text={{ data.text}}&client={{data.client}}&page={{ page_obj.next_page_number }}">Next</a>
+                    <a href="?query={{ data.query }}&low={{ data.low }}&high={{data.high}}&text={{ data.text}}&client={{data.client}}&page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
 
     </div>
+
+    {% load static %}
+    <script src="{% static 'js/admin_list_functions.js' %}">
+    </script>
 
 {% endblock content %}

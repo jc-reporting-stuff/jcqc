@@ -53,11 +53,8 @@
 
     </div>
 
-    <script>
-        document.addEventListener("onkeyup", function(e) {
-            // TODO: Make this press the correct enter button. //
-        });
-
+    {% load static %}
+    <script src="{% static 'js/enter_press.js' %}">
     </script>
 
 {% endblock content %}

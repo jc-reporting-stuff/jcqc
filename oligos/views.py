@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.views.generic.base import View
 from django.utils.timezone import localtime, now, make_aware
+from django.core.paginator import Paginator
 
 from oligos.forms import EasyOrderForm, OligoInitialForm, OligoOrderForm, IdRangeForm, DateRangeForm, OligoTextSearch
 from .models import Oligo
@@ -305,16 +306,24 @@ class OligoSearchView(View):
         return render(request, 'oligos/searches.html', context=context)
 
 
+def create_aware_date(form_date_string):
+    time_zone = pytz.timezone('Canada/Eastern')
+    split_date = form_date_string.split('-')
+    naive_date = datetime.datetime(
+        int(split_date[0]), int(split_date[1]), int(split_date[2]))
+    return make_aware(naive_date, time_zone)
+
+
 class OligoListView(View):
     def get(self, request):
         args = request.GET
 
         ### Error-checking -- make sure all necessary search params exist and are valid ###
-        params = ['query', 'low', 'high', 'text', 'client']
+        params = ['query', 'low', 'high', 'text', 'client', 'page']
         data = {}
         for param in params:
             data[param] = args.get(param) if args.get(param) else None
-        if not (data['query'] and ((data['low'] and data['high']) or data['text'])):
+        if not (data['query'] and ((data['low'] and data['high']) or data['text'])) and not data['page']:
             messages.warning(
                 request, 'Missing search parameter(s), try again please.')
             return redirect(reverse('oligos:search'))
@@ -334,18 +343,9 @@ class OligoListView(View):
                 id__gte=data['low'], id__lte=data['high'])
 
         elif data['query'] == 'date':
-            time_zone = pytz.timezone('Canada/Eastern')
+            start_date = create_aware_date(data['low'])
+            end_date = create_aware_date(data['high'])
 
-            split_start = data['low'].split('-')
-            start_date = datetime.datetime(
-                int(split_start[0]), int(split_start[1]), int(split_start[2]))
-            start_date = make_aware(start_date, time_zone)
-            split_end = data['high'].split('-')
-
-            end_date = datetime.datetime(
-                int(split_end[0]), int(split_end[1]), int(split_end[2]))
-            end_date = make_aware(end_date, time_zone)
-            print(end_date)
             client = data['client'] or False
             queryset = Oligo.objects.filter(
                 created_at__gte=start_date, created_at__lte=end_date)
@@ -364,9 +364,69 @@ class OligoListView(View):
             queryset = Oligo.objects.filter(
                 sequence__icontains=stripped_sequence)
 
+        queryset = queryset.order_by("id")
+
+        PAGINATE_NUMBER = 5
+        paginator = Paginator(queryset, PAGINATE_NUMBER)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        current_path = request.get_full_path()
+
         context = {
-            'oligos': queryset,
+            'page_obj': page_obj,
             'data': data,
+            'current_path': current_path,
         }
 
         return render(request, 'oligos/admin_list.html', context=context)
+
+
+class OligoListActionsView(View):
+    def post(self, request):
+        action = request.POST.get('button')
+        print(action)
+
+        post_data = dict(request.POST.lists())
+
+        if action == 'update-delivery':
+            oligos_to_update = []
+            for key, value in post_data.items():
+                try:
+                    checkbox = re.match('^(\d+)-checkbox$', key).groups()[0]
+                    oligos_to_update.append(checkbox)
+                except:
+                    pass
+            for oligo_to_update in oligos_to_update:
+                if request.POST.get(f'{oligo_to_update}-delivery-date'):
+                    date = request.POST.get(f'{oligo_to_update}-delivery-date')
+                    aware_date = create_aware_date(date)
+                    oligo = Oligo.objects.get(id=oligo_to_update)
+                    oligo.delivery_date = aware_date
+                    oligo.save()
+            messages.success(request, f'Delivery dates saved.')
+
+        if action == 'update-all-delivery':
+            delivery_date = request.POST.get('all-delivery-date')
+            if delivery_date:
+                aware_delivery_date = create_aware_date(delivery_date)
+            else:
+                aware_delivery_date = None
+            for key, value in post_data.items():
+                try:
+                    oligo_id = re.match(
+                        '^(\d+)-delivery-date$', key).groups()[0]
+                except:
+                    continue
+                oligo = Oligo.objects.get(id=oligo_id)
+                oligo.delivery_date = aware_delivery_date
+                oligo.save()
+            messages.success(request, f'Delivery dates saved successfully.')
+
+        redirect_url = request.POST.get('return-url')
+        return HttpResponseRedirect(redirect_url)
+
+
+class BillingView(View):
+    def get(self, request):
+        render(request, 'oligos/billing.html')

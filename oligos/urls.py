@@ -14,5 +14,7 @@ urlpatterns = [
     path('admin/today/', views.OligoTodayListView.as_view(), name='today_listview'),
     path('admin', views.OligoAdminHomeView.as_view(), name='admin_home'),
     path('search', views.OligoSearchView.as_view(), name='search'),
-    path('search-results', views.OligoListView.as_view(), name='search_results')
+    path('search-results', views.OligoListView.as_view(), name='search_results'),
+    path('list-actions', views.OligoListActionsView.as_view(), name='list_actions'),
+    path('billing', views.BillingView.as_view(), name='billing'),
 ]

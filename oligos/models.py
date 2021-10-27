@@ -19,7 +19,8 @@ class Oligo(models.Model):
         blank=True, null=True, auto_now_add=False, auto_now=False)
     price = models.DecimalField(
         decimal_places=2, max_digits=7, blank=True, null=True)
-    volume = models.IntegerField(blank=True, null=True)
+    volume = models.DecimalField(
+        max_digits=6, decimal_places=3, blank=True, null=True)
     OD_reading = models.DecimalField(
         decimal_places=2, max_digits=5, blank=True, null=True)
 
@@ -88,3 +89,24 @@ class Oligo(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Price(models.Model):
+    scale_40_base = models.DecimalField(max_digits=5, decimal_places=2)
+    scale_200_base = models.DecimalField(max_digits=5, decimal_places=2)
+    scale_1000_base = models.DecimalField(max_digits=5, decimal_places=2)
+
+    degenerate_40_base = models.DecimalField(max_digits=5, decimal_places=2)
+    degenerate_200_base = models.DecimalField(max_digits=5, decimal_places=2)
+    degenerate_1000_base = models.DecimalField(max_digits=5, decimal_places=2)
+
+    desalt_fee = models.DecimalField(max_digits=5, decimal_places=2)
+    cartridge_fee = models.DecimalField(max_digits=5, decimal_places=2)
+    setup_fee = models.DecimalField(max_digits=5, decimal_places=2)
+
+    updated = models.DateTimeField(auto_now=True)
+
+    current = models.BooleanField()
+
+    def __str__(self):
+        return f'Price Structure updated {self.updated}'
