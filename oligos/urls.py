@@ -18,5 +18,6 @@ urlpatterns = [
     path('list-actions', views.OligoListActionsView.as_view(), name='list_actions'),
     path('billing', views.BillingView.as_view(), name='billing'),
     path('od', views.EnterODView.as_view(), name='enter_od'),
+    path('report', views.ReportOrderView, name='report'),
     path('remove', views.RemoveOrderView.as_view(), name='remove'),
 ]

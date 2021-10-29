@@ -28,7 +28,10 @@ class Oligo(models.Model):
 
     @property
     def OD(self):
-        return float(self.OD_reading) * float(self.OD_reading_dilution_factor)
+        if self.OD_reading_reading:
+            return float(self.OD_reading_reading) * float(self.OD_reading_reading_dilution_factor)
+        else:
+            return None
 
     @property
     def dna_sequence(self):
@@ -38,21 +41,28 @@ class Oligo(models.Model):
 
     @property
     def micrograms(self):
-        if self.OD:
+        if self.OD_reading:
             return round(float(self.micromoles) * float(self.molecular_weight), 1)
         else:
             return -1
 
     @property
     def micrograms_per_ml(self):
-        if self.OD:
+        if self.OD_reading:
             return round(float(self.micrograms) / float(self.volume), 2)
         else:
             return -1
 
     @property
+    def micrograms_per_microliter(self):
+        if self.OD_reading:
+            return round(float(self.micrograms_per_ml) / 1000, 1)
+        else:
+            return -1
+
+    @property
     def micromoles(self):
-        if not self.OD:
+        if not self.OD_reading:
             return -1
 
         a = 15.4
@@ -106,22 +116,29 @@ class Oligo(models.Model):
             elif letter == 'n':
                 bases_sum += n
 
-        micromoles_made = float(self.OD) / float(bases_sum)
+        micromoles_made = float(self.OD_reading) / float(bases_sum)
         return round(micromoles_made, 3)
 
     @property
     def nanomoles(self):
-        if not self.OD:
+        if self.OD_reading:
+            return self.micromoles * 1000
+        else:
             return -1
-
-        return self.micromoles * 1000
 
     @property
     def nanomoles_per_ml(self):
-        if not self.OD:
+        if self.OD_reading:
+            return round(float(self.nanomoles) / float(self.volume), 2)
+        else:
             return -1
 
-        return round(float(self.nanomoles) / float(self.volume), 2)
+    @property
+    def pmol_per_microliter(self):
+        if self.OD_reading:
+            return round(float(self.nanomoles_per_ml) / 1000, 1)
+        else:
+            return -1
 
     @property
     def molecular_weight(self):

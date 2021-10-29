@@ -432,10 +432,22 @@ class OligoListActionsView(View):
 
         elif action == 'make-report':
             oligos_to_update = get_checked_oligos_from_data(post_data)
-            # TODO: The rest of this:!:!!?!
+            oligos = []
+            for oligo in oligos_to_update:
+                oligo_object = Oligo.objects.get(id=oligo)
+                oligos.append(oligo_object)
+            return render(request, 'oligos/report.html', context={'oligos': oligos})
 
         redirect_url = request.POST.get('return-url')
         return HttpResponseRedirect(redirect_url)
+
+
+def ReportOrderView(request):
+    if not request.GET.get('order_id'):
+        return HttpResponseRedirect(reverse('oligos:search'))
+    order_id = request.GET.get('order_id')
+    oligos = Oligo.objects.filter(order_id=order_id)
+    return render(request, 'oligos/report.html', context={'oligos': oligos})
 
 
 class BillingView(View):

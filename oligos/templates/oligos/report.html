@@ -1,0 +1,34 @@
+{% extends '_base.html' %}
+
+{% block title %}Oligo Report{% endblock title %}
+
+{% block content %}
+
+    <div class="container">
+
+    <h1>Custom Oligo Analysis Report - calculated as liquid</h1>
+
+
+        <table class="oligo-view" style="max-width: 1280px;">
+            <tr>
+                <th>Oligo Name</th>
+                <th>Sequence</th>
+                <th>Size</th>
+                <th>µg/µL</th>
+                <th>pmol/µL</th>
+            </tr>
+
+            {% for oligo in oligos %}
+                <tr>
+                    <td style="text-align: left;">{{ oligo.name }}</td>
+                    <td style="text-align:left;">{{ oligo.dna_sequence }}</td>
+                    <td>{{ oligo.sequence|length }}</td>
+                    <td>{% if oligo.OD_reading %}{{ oligo.micrograms_per_microliter }}{% else %}- -{% endif %}</td>
+                    <td>{% if oligo.OD_reading %}{{ oligo.pmol_per_microliter }}{% else %}- -{% endif %}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+
+{% endblock content %}
