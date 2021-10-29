@@ -23,16 +23,111 @@ class Oligo(models.Model):
         max_digits=6, decimal_places=3, blank=True, null=True)
     OD_reading = models.DecimalField(
         decimal_places=2, max_digits=5, blank=True, null=True)
+    OD_reading_dilution_factor = models.DecimalField(
+        decimal_places=2, max_digits=5, blank=True, null=True)
 
+    @property
+    def OD(self):
+        return float(self.OD_reading) * float(self.OD_reading_dilution_factor)
+
+    @property
     def dna_sequence(self):
         spaced_sequence = ' '.join(self.sequence[i:i+3]
                                    for i in range(0, len(self.sequence), 3))
         return spaced_sequence
 
+    @property
+    def micrograms(self):
+        if self.OD:
+            return round(float(self.micromoles) * float(self.molecular_weight), 1)
+        else:
+            return -1
+
+    @property
+    def micrograms_per_ml(self):
+        if self.OD:
+            return round(float(self.micrograms) / float(self.volume), 2)
+        else:
+            return -1
+
+    @property
+    def micromoles(self):
+        if not self.OD:
+            return -1
+
+        a = 15.4
+        c = 7.3
+        g = 11.7
+        t = 8.8
+        r = (a + g) / 2
+        y = (c + t) / 2
+        m = (a + c) / 2
+        w = (a + t) / 2
+        s = (c + g) / 2
+        k = (g + t) / 2
+        d = (a + g + t) / 3
+        h = (a + c + t) / 3
+        b = (c + g + t) / 3
+        v = (a + c + g) / 3
+        n = (a + c + g + t) / 4
+
+        bases_sum = 0
+
+        for nucleotide in self.sequence:
+            letter = nucleotide.lower()
+            if letter == 'a':
+                bases_sum += a
+            elif letter == 'c':
+                bases_sum += c
+            elif letter == 'g':
+                bases_sum += g
+            elif letter == 't':
+                bases_sum += t
+            elif letter == 'r':
+                bases_sum += r
+            elif letter == 'y':
+                bases_sum += y
+            elif letter == 'm':
+                bases_sum += m
+            elif letter == 'w':
+                bases_sum += w
+            elif letter == 's':
+                bases_sum += s
+            elif letter == 'k':
+                bases_sum += k
+            elif letter == 'd':
+                bases_sum += d
+            elif letter == 'h':
+                bases_sum += h
+            elif letter == 'b':
+                bases_sum += b
+            elif letter == 'v':
+                bases_sum += v
+            elif letter == 'n':
+                bases_sum += n
+
+        micromoles_made = float(self.OD) / float(bases_sum)
+        return round(micromoles_made, 3)
+
+    @property
+    def nanomoles(self):
+        if not self.OD:
+            return -1
+
+        return self.micromoles * 1000
+
+    @property
+    def nanomoles_per_ml(self):
+        if not self.OD:
+            return -1
+
+        return round(float(self.nanomoles) / float(self.volume), 2)
+
+    @property
     def molecular_weight(self):
         a = 312.2
         c = 288.2
-        g = 303.2
+        g = 323.2
         t = 303.2
         r = (a + g) / 2
         y = (c + t) / 2
@@ -45,6 +140,7 @@ class Oligo(models.Model):
         b = (c + g + t) / 3
         v = (a + c + g) / 3
         n = (a + c + g + t) / 4
+        i = 754.8
 
         mw = 0
 
@@ -80,6 +176,8 @@ class Oligo(models.Model):
                 mw += v
             elif letter == 'n':
                 mw += n
+            elif letter == 'i':
+                mw += i
 
         # Return the calculated molecular weight.
         return round(mw, 2)

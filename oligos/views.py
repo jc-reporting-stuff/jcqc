@@ -11,8 +11,8 @@ from django.views.generic.base import View
 from django.utils.timezone import localtime, now, make_aware
 from django.core.paginator import Paginator
 
-from oligos.forms import EasyOrderForm, OligoInitialForm, OligoOrderForm, IdRangeForm, DateRangeForm, OligoTextSearch
-from .models import Oligo
+from oligos.forms import EasyOrderForm, EnterODForm, OligoInitialForm, OligoOrderForm, IdRangeForm, DateRangeForm, OligoTextSearch, PriceForm
+from .models import Oligo, Price
 from accounts.models import Account, User
 from core.decorators import user_has_accounts
 
@@ -429,4 +429,232 @@ class OligoListActionsView(View):
 
 class BillingView(View):
     def get(self, request):
-        render(request, 'oligos/billing.html')
+        max_oligo = Oligo.objects.all().order_by('-id').first()
+        range_form = IdRangeForm(initial={'high': max_oligo.id})
+
+        prices = Price.objects.filter(current=True).last()
+        price_form = PriceForm(instance=prices, prefix="price")
+
+        context = {
+            'range_form': range_form,
+            'price_form': price_form
+        }
+        return render(request, 'oligos/billing.html', context=context)
+
+    def post(self, request):
+        range_form = IdRangeForm(request.POST)
+        price_form = PriceForm(request.POST, prefix="price")
+        if not range_form.is_valid() or not price_form.is_valid():
+            context = {
+                'range_form': range_form,
+                'price_form': price_form
+            }
+            return render(request, 'oligos/billing.html', context=context)
+
+        price_data = price_form.cleaned_data
+        oligo_range = range_form.cleaned_data
+        oligos = Oligo.objects.filter(
+            id__gte=oligo_range['low']).filter(id__lte=oligo_range['high']).order_by('account__owner__id', 'account__id')
+
+        class ReportObject:
+            def __init__(self):
+                self.order_dates = []
+                self.degen_order_dates = []
+                self.submitter_id = ''
+                self.account_id = ''
+                self.oligo_count = 0
+                self.degen_oligo_ids = []
+                self.nmol40_count = 0
+                self.nmol200_count = 0
+                self.nmol1000_count = 0
+                self.degen40_count = 0
+                self.degen200_count = 0
+                self.degen1000_count = 0
+                self.desalt_count = 0
+                self.cartridge_count = 0
+
+            def add_count(self, scale, degen=False):
+                if not degen:
+                    if scale == '40':
+                        self.nmol40_count += 1
+                    elif scale == '200':
+                        self.nmol200_count += 1
+                    elif scale == '1000':
+                        self.nmol1000_count += 1
+                else:
+                    if scale == '40':
+                        self.degen40_count += 1
+                    elif scale == '200':
+                        self.degen200_count += 1
+                    elif scale == '1000':
+                        self.degen1000_count += 1
+
+        billing_rows = []
+        row_counter = 0
+        this_row = None
+
+        ## Build up pricing structure ###
+        for oligo in oligos:
+            # If the user has changed, we'll add an object to the list and switch to it.
+            user_has_changed = False
+            account_has_changed = False
+            if len(billing_rows) != 0:
+                user_has_changed = oligo.submitter.id != this_row.submitter_id
+                account_has_changed = oligo.account.id != this_row.account_id
+
+            # If the user has changed, add a new row to the table.
+            if len(billing_rows) == 0:
+                x = ReportObject()
+                billing_rows.append(x)
+                this_row = billing_rows[row_counter]
+                this_row.submitter_id = oligo.submitter.id
+                this_row.account_id = oligo.account.id
+
+            elif user_has_changed or account_has_changed:
+                x = ReportObject()
+                billing_rows.append(x)
+                row_counter += 1
+                this_row = billing_rows[row_counter]
+                this_row.submitter_id = oligo.submitter.id
+                this_row.account_id = oligo.account.id
+
+            ## Start processing of actual oligo ###
+            this_row.oligo_count += 1
+
+            non_degen_bases = ['A', 'C', 'G', 'T']
+            oligo_scale = oligo.scale.split(' ')[0]
+            if oligo_scale == '1':
+                oligo_scale = '1000'
+            for base in oligo.sequence:
+                if base in non_degen_bases:
+                    this_row.add_count(oligo_scale)
+                else:
+                    this_row.add_count(oligo_scale, degen=True)
+                    if oligo.id not in this_row.degen_oligo_ids:
+                        this_row.degen_oligo_ids.append(oligo.id)
+                    if oligo.created_at.date() not in this_row.degen_order_dates:
+                        this_row.degen_order_dates.append(
+                            oligo.created_at.date())
+
+            if oligo.purity == 'desalted':
+                this_row.desalt_count += 1
+            elif oligo.purity == 'cartridge':
+                this_row.cartridge_count += 1
+
+            if oligo.created_at.date() not in this_row.order_dates:
+                this_row.order_dates.append(oligo.created_at.date())
+
+        billing_context = []
+        for row in billing_rows:
+            row_object = {}
+            submitter = User.objects.get(id=row.submitter_id)
+            account = Account.objects.get(id=row.account_id)
+            row_object['order_date'] = row.order_dates
+            row_object['supervisor'] = account.owner.display_name
+            row_object['client_name'] = submitter.display_name
+            row_object['department'] = submitter.department
+            row_object['account'] = account.code
+            row_object['oligo_count'] = row.oligo_count
+            row_object['40nmol'] = row.nmol40_count
+            row_object['40price'] = price_data['scale_40_base']
+            row_object['200nmol'] = row.nmol200_count
+            row_object['200price'] = price_data['scale_200_base']
+            row_object['1000nmol'] = row.nmol1000_count
+            row_object['1000price'] = price_data['scale_1000_base']
+
+            row_object['degen_order_date'] = row.degen_order_dates
+            row_object['degen_oligo_count'] = len(row.degen_oligo_ids)
+            row_object['40nmol_degen'] = row.degen40_count
+            row_object['40price_degen'] = price_data['degenerate_40_base']
+            row_object['200nmol_degen'] = row.degen200_count
+            row_object['200price_degen'] = price_data['degenerate_200_base']
+            row_object['1000nmol_degen'] = row.degen1000_count
+            row_object['1000price_degen'] = price_data['degenerate_1000_base']
+
+            row_object['desalt_count'] = row.desalt_count
+            row_object['desalt_price'] = price_data['desalt_fee']
+            row_object['cartridge_count'] = row.cartridge_count
+            row_object['cartridge_price'] = price_data['cartridge_fee']
+            row_object['setup_count'] = len(row.order_dates)
+            row_object['setup_price'] = price_data['setup_fee']
+
+            price40 = row.nmol40_count * price_data['scale_40_base']
+            price200 = row.nmol200_count * price_data['scale_200_base']
+            price1000 = row.nmol1000_count * price_data['scale_1000_base']
+
+            price_desalt = row.desalt_count * price_data['desalt_fee']
+            price_cartridge = row.cartridge_count * price_data['cartridge_fee']
+            price_setup = len(row.order_dates) * price_data['setup_fee']
+
+            price40_degen = row.degen40_count * \
+                price_data['degenerate_40_base']
+            price200_degen = row.degen200_count * \
+                price_data['degenerate_200_base']
+            price1000_degen = row.degen1000_count * \
+                price_data['degenerate_1000_base']
+
+            row_object['total'] = price40 + price200 + price1000 + \
+                price_desalt + price_cartridge + price_setup
+            row_object['total_degen'] = price40_degen + \
+                price200_degen + price1000_degen
+            billing_context.append(row_object)
+
+        return render(request, 'oligos/billing_output.html', context={'billing': billing_context})
+
+
+class EnterODView(FormView):
+    def get(self, request):
+        form = EnterODForm
+        return render(request, 'oligos/enter_od.html', context={'form': form})
+
+    def post(self, request):
+        form = EnterODForm(request.POST)
+        if not form.is_valid():
+            return render(request, 'oligos/enter_od.html', context={'form': form})
+
+        form_data = form.cleaned_data
+        sample_volume = form_data['sample_volume']
+        dilution_factor = form_data['dilution_factor']
+        readings = form_data['readings']
+        oligos_to_update = []
+        for line in readings:
+            line.strip().replace("\r", "")
+            try:
+                groups = re.match(
+                    '^(\d+)[\t;,\s]+([\d\.]+).*$', line).groups()
+                data_to_update = {
+                    'id': groups[0],
+                    'od_reading': groups[1],
+                }
+                oligos_to_update.append(data_to_update)
+            except:
+                messages.warning(
+                    self.request, f'Unable to save {line}. Check for typos and try again.')
+        if len(oligos_to_update) == 0:
+            return render(request, 'oligos/enter_od.html', context={'form': form})
+
+        save_count = 0
+        saved_oligos = []
+        for oligo_to_update in oligos_to_update:
+            id = oligo_to_update['id']
+            OD_reading = oligo_to_update['od_reading']
+            try:
+                oligo = Oligo.objects.get(id=id)
+            except:
+                messages.warning(
+                    self.request, f'Could not find an oligo with ID {id}. Check ID and try again.')
+                continue
+            oligo.OD_reading = OD_reading
+            oligo.volume = sample_volume
+            oligo.OD_reading_dilution_factor = dilution_factor
+            oligo.save()
+            saved_oligos.append(oligo)
+            save_count += 1
+
+        if save_count > 0:
+            messages.success(
+                self.request, f'Saved {save_count} OD readings successfully.')
+
+        saved_oligos.sort(key=lambda x: x.id)
+
+        return render(request, 'oligos/od_saved.html', context={'oligos': saved_oligos})

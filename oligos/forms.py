@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
 from django.test import client
 
-from .models import Oligo
+from .models import Oligo, Price
 
 import re
 
@@ -41,7 +41,7 @@ class MultiOligoField(forms.CharField):
         if not value:
             return []
         split_values = value.split('\n')
-        return [v for v in split_values if v]
+        return [v for v in split_values if v.strip()]
 
     def validate(self, value):
         super().validate(value)
@@ -93,3 +93,36 @@ class DateRangeForm(forms.Form):
 
 class OligoTextSearch(forms.Form):
     text = forms.CharField(max_length=150, required=False)
+
+
+class MultiODField(forms.CharField):
+    def to_python(self, value):
+        if not value:
+            return []
+        split_values = value.split('\n')
+        return [v for v in split_values if v.strip()]
+
+    def validate(self, value):
+        super().validate(value)
+        regex = r'(\d+)[\t;,\s]+([\d\.]+)'
+        for line in value:
+            try:
+                re.match(regex, line).groups()
+            except:
+                raise ValidationError(
+                    'Check that input is comma, semicolon or tab delimited. One oligo per line.')
+
+
+class EnterODForm(forms.Form):
+    sample_volume = forms.DecimalField(label="Sample volume (mL)",
+                                       widget=forms.TextInput(attrs={'class': 'short-input'}), required=True)
+    dilution_factor = forms.DecimalField(
+        widget=forms.TextInput(attrs={'class': 'short-input'}), required=True)
+    readings = MultiODField(
+        max_length=10000, widget=forms.Textarea(), required=True)
+
+
+class PriceForm(forms.ModelForm):
+    class Meta:
+        model = Price
+        exclude = ['current']

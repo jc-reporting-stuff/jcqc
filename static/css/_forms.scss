@@ -17,11 +17,20 @@ form {
   .form-number {
     width: 4rem;
   }
+  .short-input {
+    width: 6rem;
+  }
   label {
     font-weight: 600;
   }
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
   input[type="number"] {
     max-width: 4rem;
+    -moz-appearance: textfield;
   }
   input[type="text"],
   input[type="password"],

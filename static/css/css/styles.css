@@ -88,6 +88,10 @@ ul.edit-accounts li {
     ul.edit-accounts li a:hover {
       background-color: #f3f4f6; }
 
+sub {
+  vertical-align: sub;
+  font-size: 0.8rem; }
+
 .container {
   max-width: 80rem;
   margin: auto; }
@@ -211,10 +215,17 @@ form {
     display: inline-block; }
   form .form-number {
     width: 4rem; }
+  form .short-input {
+    width: 6rem; }
   form label {
     font-weight: 600; }
+  form input::-webkit-outer-spin-button,
+  form input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0; }
   form input[type="number"] {
-    max-width: 4rem; }
+    max-width: 4rem;
+    -moz-appearance: textfield; }
   form input[type="text"],
   form input[type="password"],
   form input[type="number"],
@@ -273,6 +284,37 @@ form {
     margin: 0 0.5rem; }
   .login-container .peace-div {
     max-width: 80rem; }
+
+.billing-container {
+  max-width: 1280px;
+  min-width: 25%;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start; }
+  .billing-container .billing-box {
+    border: 1px solid #1e40af;
+    border-radius: 0.5rem;
+    background-color: #eff6ff;
+    padding: 1rem;
+    margin: 1rem 2rem; }
+    .billing-container .billing-box h2 {
+      display: inline;
+      font-weight: 700; }
+  .billing-container .price-form {
+    padding: 1rem; }
+    .billing-container .price-form th {
+      padding: 0; }
+    .billing-container .price-form th:first-child {
+      text-align: left; }
+    .billing-container .price-form p {
+      margin: 0.125rem 0; }
+    .billing-container .price-form input[type="number"] {
+      max-width: 5rem;
+      margin: 0.0125rem 1rem;
+      font-size: 0.85rem; }
 
 .delivery-box {
   border: 1px solid #1e40af;

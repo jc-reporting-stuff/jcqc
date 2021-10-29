@@ -1,0 +1,55 @@
+{% extends '_base.html' %}
+
+{% block title %}Saved OD readings{% endblock title %}
+
+{% block content %}
+
+    <div>
+
+        <h1 style="text-align: center;">Successfully updated OD readings</h1>
+
+        <p style="text-align: center;">Masses and concentrations have been updated.</p>
+
+        <table class="oligo-view">
+            <tr>
+                <th>Oligo ID</th>
+                <th>Oligo Name</th>
+                <th>Sequence</th>
+                <th>Size</th>
+                <th>µg/mL</th>
+                <th>nmol/mL</th>
+                <th>OD<sub>260</sub></th>
+                <th>nmol</th>
+                <th>µg</th>
+                <th>Order Date</th>
+                <th>Scale</th>
+                <th>Purity</th>
+                <th>M.W.</th>
+            </tr>
+
+            {% for oligo in oligos %}
+            
+            <tr>
+                <td>{{ oligo.id }}</td>
+                <td>{{ oligo.name }}</td>
+                <td>{{ oligo.dna_sequence }}</td>
+                <td>{{ oligo.sequence|length }}</td>
+                <td>{{ oligo.micrograms_per_ml }}</td>
+                <td>{{ oligo.nanomoles_per_ml }}</td>
+                <td>{{ oligo.OD_reading }}</td>
+                <td>{{ oligo.nanomoles }}</td>
+                <td>{{ oligo.micrograms }}</td>
+                <td>{{ oligo.created_at|date:"d-M-Y" }}</td>
+                <td>{{ oligo.scale }}</td>
+                <td>{{ oligo.purity }}</td>
+                <td>{{ oligo.molecular_weight }}</td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+{% endblock content %}

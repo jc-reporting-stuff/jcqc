@@ -1,0 +1,96 @@
+{% extends '_base.html' %}
+
+{% block title %}Generate Billing Report{% endblock title %}
+
+{% block content %}
+
+    <div>
+
+        <h1 style="text-align: center;">Billing Report</h1>
+
+
+        <table class="oligo-view">
+            <tr>
+                <th>Order Date</th>
+                <th>Supervisor</th>
+                <th>Client Name</th>
+                <th>Department</th>
+                <th>Billing Account</th>
+                <th>Oli#</th>
+                <th>40nmol</th>
+                <th>@</th>
+                <th>200nmo</th>
+                <th>@</th>
+                <th>1µm</th>
+                <th>@</th>
+                <th>Desalt</th>
+                <th>@</th>
+                <th>Cartridge</th>
+                <th>@</th>
+                <th>Setup</th>
+                <th>@</th>
+                <th>Total</th>
+            </tr>
+
+            {% for row in billing %}
+                <tr>
+                    <td>
+                        {% for date in row.order_date %}
+                            {{ date|date:'Y-m-d' }}
+                            {% if not forloop.last %}<br>{% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>{{ row.supervisor }}</td>
+                    <td>{{ row.client_name }}</td>
+                    <td>{{ row.department }}</td>
+                    <td>{{ row.account }}</td>
+                    <td>{{ row.oligo_count }}</td>
+                    <td>{{ row.40nmol }}</td>
+                    <td>{{ row.40price }}</td>
+                    <td>{{ row.200nmol }}</td>
+                    <td>{{ row.200price }}</td>
+                    <td>{{ row.1000nmol }}</td>
+                    <td>{{ row.1000price }}</td>
+                    <td>{{ row.desalt_count }}</td>
+                    <td>{{ row.desalt_price }}</td>
+                    <td>{{ row.cartridge_count }}</td>
+                    <td>{{ row.cartridge_price }}</td>
+                    <td>{{ row.setup_count }}</td>
+                    <td>{{ row.setup_price }}</td>
+                    <td>{{ row.total }}</td>
+                </tr>
+                {% if row.40mol_degen or row.200nmol_degen or row.1000nmol_degen %}
+                <tr>
+                    <td>
+                        {% for date in row.degen_order_date %}
+                            {{ date|date:'Y-m-d' }}
+                            {% if not forloop.last %}<br>{% endif %}
+                        {% endfor %}
+                    </td>
+                    <td colspan="4" style="text-align: center;">
+                        <strong>Degenerate bases</strong>
+                        </td>
+                    <td>{{ row.degen_oligo_count }}</td>
+                    <td>{{ row.40nmol_degen }}</td>
+                    <td>{{ row.40price_degen }}</td>
+                    <td>{{ row.200nmol_degen }}</td>
+                    <td>{{ row.200price_degen }}</td>
+                    <td>{{ row.1000nmol_degen }}</td>
+                    <td>{{ row.1000price_degen }}</td>
+                    <td>- -</td>
+                    <td>- -</td>
+                    <td>- -</td>
+                    <td>- -</td>
+                    <td>- -</td>
+                    <td>- -</td>
+                    <td>{{ row.total_degen }}</td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+
+        </table>
+       
+
+    </div>
+
+{% endblock content %}
