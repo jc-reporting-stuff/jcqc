@@ -137,6 +137,9 @@ header .ugls-header-banner {
       margin-right: 0;
       padding: 0; }
 
+.warning-text {
+  color: #af272f; }
+
 .nav-container {
   background: #1e40af;
   padding: 0.5rem 1rem;
@@ -161,9 +164,9 @@ header .ugls-header-banner {
       .nav-container .nav-group-container .nav-group .nav-box {
         border: 1px solid #2563eb;
         border-radius: 0.5rem;
-        padding: 0.25rem 1rem;
+        padding: 0.25rem 0.5rem;
         background-color: #1d4ed8;
-        margin: auto 0.5rem;
+        margin: auto 0.25rem;
         color: #dbeafe;
         font-weight: bold;
         text-align: center; }
@@ -177,7 +180,7 @@ header .ugls-header-banner {
           flex-direction: row; }
           .nav-container .nav-group-container .nav-group .nav-box .bottom-box a {
             color: #fcd34d;
-            padding: 0 0.75rem;
+            padding: 0.125rem 0.5rem;
             font-weight: normal; }
             .nav-container .nav-group-container .nav-group .nav-box .bottom-box a:hover {
               color: #fde68a; }
@@ -211,6 +214,14 @@ form {
     border-radius: 0.25rem;
     color: #1f2937;
     background-color: #e5e7eb; }
+  form .button-warning {
+    border: 2px solid #9f1239;
+    border-radius: 0.25rem;
+    background-color: #ffe4e6;
+    padding: 0.25rem 1rem;
+    color: #9f1239;
+    font-weight: 700;
+    margin: 1rem; }
   form .control-group {
     display: inline-block; }
   form .form-number {
@@ -315,6 +326,14 @@ form {
       max-width: 5rem;
       margin: 0.0125rem 1rem;
       font-size: 0.85rem; }
+
+.delete-box {
+  border: 1px solid;
+  border-radius: 0.5rem;
+  margin: 1rem auto;
+  padding: 1rem; }
+  .delete-box strong {
+    font-weight: 700; }
 
 .delivery-box {
   border: 1px solid #1e40af;

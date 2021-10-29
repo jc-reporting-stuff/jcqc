@@ -46,8 +46,6 @@
                 <th>Modify</th>
                 <th>Order Date</th>
                 <th>Delivery Date</th>
-                <th>Billed</th>
-                <th>Receiver Signature</th>
             </tr>
 
             {% for oligo in page_obj %}
@@ -66,8 +64,6 @@
                             {% if oligo.delivery_date %}value="{{ oligo.delivery_date|date:'Y-m-d' }}" {% endif %}
                             style="width: 9rem;" onchange="checkOwnBox(event)" onkeypress="checkEnter(event)">
                     </td>
-                    <td>{% if oligo.billed %}{{ oligo.billed }}{% else %} - - {% endif %}</td>
-                    <td>???</td>
                 </tr>
             {% endfor %}
 
@@ -75,6 +71,7 @@
 
         <div style="text-align:center;">
             <button name="select-all" onclick="selectAll(event)" id="select-all-button" class="button-primary">Select All</button>
+            <button type="submit" name="button" value="make-report" class="button-primary">Make Report</button>
             <button type="submit" name="button" value="update-delivery" class="button-primary" id="update-delivery">Update Delivery Info</button>
             <hr>
             <div class="delivery-box">

@@ -25,9 +25,9 @@
       .nav-box {
         border: 1px solid $blue-600;
         border-radius: 0.5rem;
-        padding: 0.25rem 1rem;
+        padding: 0.25rem 0.5rem;
         background-color: $blue-700;
-        margin: auto 0.5rem;
+        margin: auto 0.25rem;
         color: $blue-100;
         font-weight: bold;
         text-align: center;
@@ -43,7 +43,7 @@
           flex-direction: row;
           a {
             color: $yellow-300;
-            padding: 0 0.75rem;
+            padding: 0.125rem 0.5rem;
             font-weight: normal;
             &:hover {
               color: $yellow-200;

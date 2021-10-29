@@ -5,16 +5,6 @@
 
         <div class="nav-group">
 
-            <a href="{% url 'home' %}">
-                <div class="nav-box">
-                    Home
-                </div>
-            </a>
-
-        </div>
-
-        <div class="nav-group">
-
             <div class="nav-box">
                 <div class="top-row">Oligos</div>
                 <div class="bottom-box">
@@ -38,11 +28,20 @@
         {% if user.is_superuser or user.is_staff %}
 
         <div class="nav-group">
-            <a href="{% url 'oligos:admin_home' %}">
-                <div class="nav-box">
-                    Oligo<br>Admin
+            <div class="nav-box">
+                <div class="top-row">Oligo Admin</div>
+                <div class="bottom-box">
+                    <a href="{% url 'oligos:today_listview' %}">Today</a>
+                    <span>|</span> 
+                    <a href="{% url 'oligos:search' %}">Search</a>
+                    <span>|</span> 
+                    <a href="{% url 'oligos:billing' %}">Billing</a>
+                    <span>|</span> 
+                    <a href="{% url 'oligos:enter_od' %}" style="whitespace: nowrap;">Add OD</a>
+                    <span>|</span> 
+                    <a href="{% url 'oligos:remove' %}" style="whitespace: nowrap;">Remove</a>
                 </div>
-            </a>
+            </div>
 
             <a href="{% url 'sequencing:admin_home' %}">
                 <div class="nav-box">

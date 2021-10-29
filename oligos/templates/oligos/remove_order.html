@@ -1,0 +1,46 @@
+{% extends '_base.html' %}
+
+{% block title %}Remove Oligo Orders{% endblock title %}
+
+{% block content %}
+
+    <div class="container half-width">
+
+        <h1 style="text-align: center;">Remove by Order ID</h1>
+
+        <form action="" method="post">
+            {% csrf_token %}
+
+        <div {% if confirming %} style="display:none;"{% endif %}>
+
+            <p>To remove a single order, you can enter the ID in either box.</p>
+
+            <table>
+                {{ form.as_table }}
+            </table>
+            <input type="submit" name="submit" value="Proceed to Verification" class="button-primary">
+
+        </div>
+
+        <div {% if not confirming %} style="display:none;"{% endif %}>
+
+            <p class="warning-text">Clicking 'Confirm and Remove' will permanently delete these orders</p>
+
+            <p>Tread carefully.</p>
+
+            {% for id, count in accounts.items %}
+                <div class="delete-box">
+                    <strong>Order {{ id }}</strong> for <strong>{{ count }} oligo{{ count|pluralize }}</strong>.
+                </div>
+            {% endfor %}
+
+            <input type="submit" name="submit" value="Confirm and Remove" class="button-warning">
+
+        </div>
+
+        </form>
+        
+
+    </div>
+
+{% endblock content %}

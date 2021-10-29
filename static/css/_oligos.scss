@@ -37,6 +37,16 @@
   }
 }
 
+.delete-box {
+  border: 1px solid;
+  border-radius: 0.5rem;
+  margin: 1rem auto;
+  padding: 1rem;
+  strong {
+    font-weight: 700;
+  }
+}
+
 .delivery-box {
   border: 1px solid $blue-800;
   background-color: $blue-50;

@@ -11,6 +11,15 @@ form {
     color: $gray-800;
     background-color: $gray-200;
   }
+  .button-warning {
+    border: 2px solid $red-border;
+    border-radius: 0.25rem;
+    background-color: $red-background;
+    padding: 0.25rem 1rem;
+    color: $red-text;
+    font-weight: 700;
+    margin: 1rem;
+  }
   .control-group {
     display: inline-block;
   }

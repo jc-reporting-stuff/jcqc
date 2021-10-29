@@ -24,11 +24,11 @@
                 <tr>
                     <td>{{ oligo.id }}</td>
                     <td>{{ oligo.submitter.display_name }}</td>
-                    <td>{{ oligo.name }}</td>
-                    <td>{{ oligo.dna_sequence }}</td>
+                    <td style="text-align:left;">{{ oligo.name }}</td>
+                    <td style="text-align:left;">{{ oligo.dna_sequence }}</td>
                     <td>{{ oligo.sequence|length }}</td>
                     <td>{{ oligo.scale }}</td>
-                    <td>{{ oligo.purity }}</td>
+                    <td>{{ oligo.purity|title }}</td>
                     <td>{% if oligo.modification %}{{ oligo.modification }}{% else %} - -{% endif %}</td>
                 </tr>
             {% endfor %}

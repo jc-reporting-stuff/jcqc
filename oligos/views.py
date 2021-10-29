@@ -170,8 +170,6 @@ class OligoEasyOrder(FormView):
         # Process the oligos from the textarea field.
         # Split them by line, then use regular expressions to split into name, sequence groups.
 
-        # TODO: Validate textarea form input to error on invalid values or improper formatting.
-
         oligo_text = form['oligos'].value()
         oligos_text_split = oligo_text.split('\n')
         ex = r'(.+?)[\t;,] *([ACGTRYMWSKDHBVN]+)'
@@ -366,7 +364,7 @@ class OligoListView(View):
 
         queryset = queryset.order_by("id")
 
-        PAGINATE_NUMBER = 5
+        PAGINATE_NUMBER = 10
         paginator = Paginator(queryset, PAGINATE_NUMBER)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
@@ -382,6 +380,17 @@ class OligoListView(View):
         return render(request, 'oligos/admin_list.html', context=context)
 
 
+def get_checked_oligos_from_data(list_of_dicts):
+    oligos_to_update = []
+    for key in list_of_dicts.keys():
+        try:
+            checkbox = re.match('^(\d+)-checkbox$', key).groups()[0]
+            oligos_to_update.append(checkbox)
+        except:
+            pass
+    return oligos_to_update
+
+
 class OligoListActionsView(View):
     def post(self, request):
         action = request.POST.get('button')
@@ -390,13 +399,7 @@ class OligoListActionsView(View):
         post_data = dict(request.POST.lists())
 
         if action == 'update-delivery':
-            oligos_to_update = []
-            for key, value in post_data.items():
-                try:
-                    checkbox = re.match('^(\d+)-checkbox$', key).groups()[0]
-                    oligos_to_update.append(checkbox)
-                except:
-                    pass
+            oligos_to_update = get_checked_oligos_from_data(post_data)
             for oligo_to_update in oligos_to_update:
                 if request.POST.get(f'{oligo_to_update}-delivery-date'):
                     date = request.POST.get(f'{oligo_to_update}-delivery-date')
@@ -404,15 +407,19 @@ class OligoListActionsView(View):
                     oligo = Oligo.objects.get(id=oligo_to_update)
                     oligo.delivery_date = aware_date
                     oligo.save()
+                else:
+                    oligo = Oligo.objects.get(id=oligo_to_update)
+                    oligo.delivery_date = None
+                    oligo.save()
             messages.success(request, f'Delivery dates saved.')
 
-        if action == 'update-all-delivery':
+        elif action == 'update-all-delivery':
             delivery_date = request.POST.get('all-delivery-date')
             if delivery_date:
                 aware_delivery_date = create_aware_date(delivery_date)
             else:
                 aware_delivery_date = None
-            for key, value in post_data.items():
+            for key in post_data.keys():
                 try:
                     oligo_id = re.match(
                         '^(\d+)-delivery-date$', key).groups()[0]
@@ -422,6 +429,9 @@ class OligoListActionsView(View):
                 oligo.delivery_date = aware_delivery_date
                 oligo.save()
             messages.success(request, f'Delivery dates saved successfully.')
+
+        elif action == 'make-report':
+            oligos_to_update = get_checked_oligos_from_data(post_data)
 
         redirect_url = request.POST.get('return-url')
         return HttpResponseRedirect(redirect_url)
@@ -658,3 +668,36 @@ class EnterODView(FormView):
         saved_oligos.sort(key=lambda x: x.id)
 
         return render(request, 'oligos/od_saved.html', context={'oligos': saved_oligos})
+
+
+class RemoveOrderView(FormView):
+    form_class = IdRangeForm
+    template_name = 'oligos/remove_order.html'
+
+    def form_valid(self, form):
+        data = form.cleaned_data
+        if not data['low'] and not data['high']:
+            messages.info(self.request, 'No data submitted.')
+            return render(self.request, 'oligos/remove_order.html', context={'form': form})
+
+        if not data['low'] or not data['high']:
+            order_id = data['low'] if data['low'] else data['high']
+            oligos_to_remove = list(Oligo.objects.filter(order_id=order_id))
+        else:
+            oligos_to_remove = Oligo.objects.filter(order_id__gte=data['low']).filter(
+                order_id__lte=data['high']).order_by('order_id')
+
+        if not oligos_to_remove:
+            messages.info(self.request, 'No orders within that range.')
+            return render(self.request, 'oligos/remove_order.html', context={'form': form})
+
+        account_ids = [oligo.order_id for oligo in oligos_to_remove]
+        account_context = {}
+        for account in account_ids:
+            try:
+                account_context[account] += 1
+            except KeyError:
+                account_context[account] = 1
+        print(account_context)
+
+        return render(self.request, 'oligos/remove_order.html', context={'form': form, 'accounts': account_context, 'confirming': True})
