@@ -7,14 +7,116 @@
 
 {% block content %}
 
-    <div class="container half-width">
+    <div class="container" style="width: 35rem;">
         <h1>Create Account</h1>
 
-        <form method="post">
+        <form method="post" action="" autocomplete="off">
             {% csrf_token %}
-            {{ form|crispy }}
-            <button type="submit" class="button-primary">Sign Up</button>
+            
+            <div class="signup-block">                
+                {{ form.is_supervisor|as_crispy_field }}
+                {{ form.is_student|as_crispy_field }}
+
+                <p>Please select a maximum of one of the two boxes above.</p>
+            </div>
+
+            <div class="signup-block">
+                {{ form.username|as_crispy_field }}
+                {{ form.email|as_crispy_field }}<br>
+                {{ form.password1|as_crispy_field }}<br>
+                {{ form.password2|as_crispy_field }}<br>
+                <hr>
+                {{ form.first_name|as_crispy_field }}
+                {{ form.last_name|as_crispy_field }}
+
+                {{ form.institution|as_crispy_field }}<br>
+                {{ form.department|as_crispy_field }}
+                {{ form.room_number|as_crispy_field }}
+                {{ form.phone|as_crispy_field }}
+                {{ form.extension|as_crispy_field }}
+
+                {{ form.address|as_crispy_field }}<br>
+                {{ form.city|as_crispy_field }}
+                {{ form.province|as_crispy_field }}<br>
+                {{ form.country|as_crispy_field }}
+                {{ form.postal_code|as_crispy_field }}
+                
+            </div>
+
+            <div style="width: 100%; text-align:center">
+                <button type="submit" class="button-primary" style="width: 50%; font-weight: 700;">Sign Up</button>
+            </div>
         </form>
     </div>
+
+    <script>
+        const checkInternalForm = (event) => {
+            let pBox = document.querySelector('#id_is_supervisor')
+            let sBox = document.querySelector('#id_is_student')
+            clicked = null;
+            if (pBox == event.target) {
+                clicked = pBox;
+                other = sBox;
+            }
+            else {
+                clicked = sBox;
+                other = pBox;
+            }
+
+            // Disable both being checked.
+            if (clicked.checked === true) {
+                other.checked = false;
+            }
+
+            institutionInput = document.querySelector('#id_institution');
+            addressInput = document.querySelector('#id_address');
+            cityInput = document.querySelector('#id_city');
+            provinceInput = document.querySelector('#id_province');
+            countryInput = document.querySelector('#id_country');
+            pcInput = document.querySelector('#id_postal_code');
+
+            institutionDiv = document.querySelector('#div_id_institution');
+            addressDiv = document.querySelector('#div_id_address');
+            cityDiv = document.querySelector('#div_id_city');
+            provinceDiv = document.querySelector('#div_id_province');
+            countryDiv = document.querySelector('#div_id_country');
+            pcDiv = document.querySelector('#div_id_postal_code');
+
+            if (clicked.checked == true || other.checked == true) {
+                institutionInput.value = 'University of Guelph';
+                addressInput.value = '50 Stone Road East';
+                cityInput.value = 'Guelph';
+                provinceInput.value = 'Ontario';
+                countryInput.value = 'Canada';
+                pcInput.value = 'N1G 2W1';
+                institutionDiv.style.display = 'none';
+                addressDiv.style.display = 'none';
+                cityDiv.style.display = 'none';
+                provinceDiv.style.display = 'none';
+                countryDiv.style.display = 'none';
+                pcDiv.style.display = 'none';
+            }
+            else {
+                institutionInput.value = '';
+                addressInput.value = '';
+                cityInput.value = '';
+                provinceInput.value = '';
+                countryInput.value = '';
+                pcInput.value = '';
+                institutionDiv.style.display = 'inline';
+                addressDiv.style.display = 'inline';
+                cityDiv.style.display = 'inline';
+                provinceDiv.style.display = 'inline';
+                countryDiv.style.display = 'inline';
+                pcDiv.style.display = 'inline';
+            }
+
+            
+        }
+        let piBox = document.querySelector('#id_is_supervisor');
+        let studentBox = document.querySelector('#id_is_student');
+        piBox.addEventListener('click', checkInternalForm);
+        studentBox.addEventListener('click', checkInternalForm);
+    </script>
     
 {% endblock content %}

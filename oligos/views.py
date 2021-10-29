@@ -432,6 +432,7 @@ class OligoListActionsView(View):
 
         elif action == 'make-report':
             oligos_to_update = get_checked_oligos_from_data(post_data)
+            # TODO: The rest of this:!:!!?!
 
         redirect_url = request.POST.get('return-url')
         return HttpResponseRedirect(redirect_url)
@@ -676,6 +677,7 @@ class RemoveOrderView(FormView):
 
     def form_valid(self, form):
         data = form.cleaned_data
+
         if not data['low'] and not data['high']:
             messages.info(self.request, 'No data submitted.')
             return render(self.request, 'oligos/remove_order.html', context={'form': form})
@@ -691,13 +693,22 @@ class RemoveOrderView(FormView):
             messages.info(self.request, 'No orders within that range.')
             return render(self.request, 'oligos/remove_order.html', context={'form': form})
 
-        account_ids = [oligo.order_id for oligo in oligos_to_remove]
-        account_context = {}
-        for account in account_ids:
-            try:
-                account_context[account] += 1
-            except KeyError:
-                account_context[account] = 1
-        print(account_context)
+        order_ids = [oligo.order_id for oligo in oligos_to_remove]
 
-        return render(self.request, 'oligos/remove_order.html', context={'form': form, 'accounts': account_context, 'confirming': True})
+        if self.request.POST.get('submit') == 'Confirm and Remove':
+            order_ids = list(dict.fromkeys(order_ids))
+            for order in order_ids:
+                oligos_in_order = Oligo.objects.filter(order_id=order)
+                for oligo in oligos_in_order:
+                    oligo.delete()
+            messages.success(self.request, 'Removed orders successfully')
+            return HttpResponseRedirect(reverse('oligos:client_order_list'))
+
+        order_context = {}
+        for order in order_ids:
+            try:
+                order_context[order] += 1
+            except KeyError:
+                order_context[order] = 1
+
+        return render(self.request, 'oligos/remove_order.html', context={'form': form, 'orders': order_context, 'confirming': True})

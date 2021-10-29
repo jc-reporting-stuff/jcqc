@@ -20,9 +20,9 @@ class UserSignupForm(SignupForm):
 
     username = forms.CharField(
         label='Username', max_length=150, required=False)
-    first_name = forms.CharField(max_length=150)
-    last_name = forms.CharField(max_length=150)
-    phone = forms.CharField(max_length=30, required=True)
+    first_name = forms.CharField(max_length=15, label='First Name')
+    last_name = forms.CharField(max_length=150, label='Last Name')
+    phone = forms.CharField(max_length=30, required=True, label="Phone Number")
     extension = forms.CharField(
         max_length=40, label='Phone Extension', required=False)
     fax_number = forms.CharField(
@@ -40,9 +40,10 @@ class UserSignupForm(SignupForm):
     country = forms.CharField(max_length=150, required=True, label='Country')
     postal_code = forms.CharField(
         max_length=150, required=True, label='Postal or zip code')
-    is_student = forms.BooleanField(label='Are you a student?', required=False)
+    is_student = forms.BooleanField(
+        label='Are you otherwise UofG student, staff or faculty?', required=False)
     is_supervisor = forms.BooleanField(
-        label='Are you UofG faculty or staff?', required=False)
+        label='Are you a UofG Principal Investigator?', required=False)
 
     def save(self, request):
         user = super(UserSignupForm, self).save(request)

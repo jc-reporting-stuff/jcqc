@@ -28,7 +28,7 @@
 
             <p>Tread carefully.</p>
 
-            {% for id, count in accounts.items %}
+            {% for id, count in orders.items %}
                 <div class="delete-box">
                     <strong>Order {{ id }}</strong> for <strong>{{ count }} oligo{{ count|pluralize }}</strong>.
                 </div>
