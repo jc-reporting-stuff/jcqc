@@ -8,34 +8,36 @@
 
         <h1 class="centered">Complete Client List</h1>
 
-        <form action="" method="post">
-        Filter first and last names by text: <input type="text" id="filter-box">
+        <form action="" method="post" autocomplete="off">
+            {% csrf_token %}
 
-        <table class="oligo-view" id="client-table">
-            <tr>
-                <th><a href="?order_by=id">Customer ID</a></th>
-                <th><a href="?order_by=first_name">First Name</a></th>
-                <th><a href="?order_by=last_name">Last Name</a></th>
-                <th>Department/Company</th>
-                <th>Type</th>
-                <th>Oligo Orders</th>
-                <th>Sequencing Orders</th>
-                <th>Account Status</th>
-            </tr>
+            Filter first and last names by text: <input type="text" id="filter-box">
 
-            {% for user in users %}
+            <table class="oligo-view" id="client-table">
                 <tr>
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.first_name }}</td>
-                    <td>{{ user.last_name }}</td>
-                    <td>{{ user.department }}</td>
-                    <td>{{ user.type }}</td>
-                    <td>TODO: Make link</td>
-                    <td>TODO: Make link</td>
-                    <td>{% if user.is_active %}Active (inactivate){% else %}Inactive (activate){% endif %}</td>
+                    <th><a href="?order_by=id">Customer ID</a></th>
+                    <th><a href="?order_by=first_name">First Name</a></th>
+                    <th><a href="?order_by=last_name">Last Name</a></th>
+                    <th>Department/Company</th>
+                    <th>Type</th>
+                    <th>Oligo Orders</th>
+                    <th>Sequencing Orders</th>
+                    <th>Account Status</th>
                 </tr>
-            {% endfor %}
-        </table>
+
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.first_name }}</td>
+                        <td>{{ user.last_name }}</td>
+                        <td>{{ user.department }}</td>
+                        <td>{{ user.type }}</td>
+                        <td>TODO: Make link</td>
+                        <td>TODO: Make link</td>
+                        <td>{% if user.is_active %}Active (inactivate){% else %}Inactive (activate){% endif %}</td>
+                    </tr>
+                {% endfor %}
+            </table>
 
         </form>
 
@@ -43,7 +45,6 @@
 
     <script>
         const filterBox = (event) => {
-            event.preventDefault();
             text = event.target.value.toLowerCase();
             rows = Array.from(document.querySelectorAll('#client-table tr'));
             rows.shift(); // remove header row
@@ -78,7 +79,14 @@
 
         }
 
+        const stopSubmit = event => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+            }
+        }
+
         let inputBox = document.querySelector('#filter-box');
+        inputBox.addEventListener('keydown', stopSubmit)
         inputBox.addEventListener('keyup', filterBox);
     </script>
 
