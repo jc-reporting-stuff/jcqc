@@ -25,7 +25,7 @@ class UserSignupForm(SignupForm):
     )
 
     username = forms.CharField(
-        label='Username', max_length=150, required=False)
+        label='Username', max_length=150, required=True)
     first_name = forms.CharField(max_length=15, label='First Name')
     last_name = forms.CharField(max_length=150, label='Last Name')
     phone = forms.CharField(max_length=30, required=True, label="Phone Number")
