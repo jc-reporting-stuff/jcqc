@@ -7,7 +7,7 @@ class UserAdminConfig(UserAdmin):
 
     ordering = ('-create_date',)
     list_display = ('username', 'email', 'first_name', 'last_name', 'is_active',
-                    'is_staff', 'is_student', 'is_supervisor', 'student_list')
+                    'is_staff', 'user_type', 'student_list')
 
     fieldsets = (
         (None, {'fields': ('email', 'first_name', 'last_name')}),
@@ -15,8 +15,7 @@ class UserAdminConfig(UserAdmin):
             'phone', 'extension', 'fax_number', 'institution', 'department',
             'room_number', 'address', 'city', 'province', 'country', 'postal_code'
         )}),
-        ('Permissions', {'fields': ('is_student',
-         'is_supervisor', 'is_active', 'is_staff')}),
+        ('Permissions', {'fields': ('user_type', 'is_active', 'is_staff')}),
     )
 
     add_fieldsets = (

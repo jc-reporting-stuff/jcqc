@@ -13,33 +13,54 @@
         <form method="post" action="" autocomplete="off">
             {% csrf_token %}
             
-            <div class="signup-block">                
-                {{ form.is_supervisor|as_crispy_field }}
-                {{ form.is_student|as_crispy_field }}
-
-                <p>Please select a maximum of one of the two boxes above.</p>
+            <div class="signup-block"> 
+                <p style="font-weight: 600;">Please select one:</h2>
+                {{ form.user_type }}
             </div>
 
+            <hr>
+
             <div class="signup-block">
-                {{ form.username|as_crispy_field }}
-                {{ form.email|as_crispy_field }}<br>
-                {{ form.password1|as_crispy_field }}<br>
-                {{ form.password2|as_crispy_field }}<br>
+                <div>
+                    {{ form.username|as_crispy_field }}
+                    {{ form.email|as_crispy_field }}
+                </div>
+
+                <div>
+                    {{ form.password1|as_crispy_field }}
+                </div>
+                <div>
+                    {{ form.password2|as_crispy_field }}
+                </div>
+
                 <hr>
-                {{ form.first_name|as_crispy_field }}
-                {{ form.last_name|as_crispy_field }}
 
-                {{ form.institution|as_crispy_field }}<br>
-                {{ form.department|as_crispy_field }}
-                {{ form.room_number|as_crispy_field }}
-                {{ form.phone|as_crispy_field }}
-                {{ form.extension|as_crispy_field }}
+                <div>
+                    {{ form.first_name|as_crispy_field }}
+                    {{ form.last_name|as_crispy_field }}
+                </div>
 
-                {{ form.address|as_crispy_field }}<br>
-                {{ form.city|as_crispy_field }}
-                {{ form.province|as_crispy_field }}<br>
-                {{ form.country|as_crispy_field }}
-                {{ form.postal_code|as_crispy_field }}
+                <div>
+                    {{ form.institution|as_crispy_field }}
+                </div>
+
+                <div>
+                    {{ form.department|as_crispy_field }}
+                    {{ form.room_number|as_crispy_field }}
+                </div>
+
+                <div>
+                    {{ form.phone|as_crispy_field }}
+                    {{ form.extension|as_crispy_field }}
+                </div>
+
+                <div>
+                    {{ form.address|as_crispy_field }}<br>
+                    {{ form.city|as_crispy_field }}<br>
+                    {{ form.province|as_crispy_field }}<br>
+                    {{ form.country|as_crispy_field }}
+                    {{ form.postal_code|as_crispy_field }}
+                </div>
                 
             </div>
 
@@ -51,22 +72,7 @@
 
     <script>
         const checkInternalForm = (event) => {
-            let pBox = document.querySelector('#id_is_supervisor')
-            let sBox = document.querySelector('#id_is_student')
-            clicked = null;
-            if (pBox == event.target) {
-                clicked = pBox;
-                other = sBox;
-            }
-            else {
-                clicked = sBox;
-                other = pBox;
-            }
-
-            // Disable both being checked.
-            if (clicked.checked === true) {
-                other.checked = false;
-            }
+            selected = document.querySelector('input[name="user_type"]:checked').value;
 
             institutionInput = document.querySelector('#id_institution');
             addressInput = document.querySelector('#id_address');
@@ -81,8 +87,10 @@
             provinceDiv = document.querySelector('#div_id_province');
             countryDiv = document.querySelector('#div_id_country');
             pcDiv = document.querySelector('#div_id_postal_code');
+            deptDiv = document.querySelector('#div_id_department');
+            roomDiv = document.querySelector('#div_id_room_number');
 
-            if (clicked.checked == true || other.checked == true) {
+            if ('sp'.includes(selected)) {
                 institutionInput.value = 'University of Guelph';
                 addressInput.value = '50 Stone Road East';
                 cityInput.value = 'Guelph';
@@ -95,6 +103,8 @@
                 provinceDiv.style.display = 'none';
                 countryDiv.style.display = 'none';
                 pcDiv.style.display = 'none';
+                deptDiv.style.display = 'inline-block';
+                roomDiv.style.display = 'inline-block';
             }
             else {
                 institutionInput.value = '';
@@ -103,20 +113,24 @@
                 provinceInput.value = '';
                 countryInput.value = '';
                 pcInput.value = '';
-                institutionDiv.style.display = 'inline';
-                addressDiv.style.display = 'inline';
-                cityDiv.style.display = 'inline';
-                provinceDiv.style.display = 'inline';
-                countryDiv.style.display = 'inline';
-                pcDiv.style.display = 'inline';
+                institutionDiv.style.display = 'inline-block';
+                addressDiv.style.display = 'inline-block';
+                cityDiv.style.display = 'inline-block';
+                provinceDiv.style.display = 'inline-block';
+                countryDiv.style.display = 'inline-block';
+                pcDiv.style.display = 'inline-block';
+                roomDiv.style.display = 'none';
+                deptDiv.style.display = 'none';
             }
 
             
         }
-        let piBox = document.querySelector('#id_is_supervisor');
-        let studentBox = document.querySelector('#id_is_student');
-        piBox.addEventListener('click', checkInternalForm);
-        studentBox.addEventListener('click', checkInternalForm);
+        let choiceSelect = document.getElementsByName('user_type');
+        for (choice of choiceSelect) {
+            choice.addEventListener('change', checkInternalForm);
+        }
+        checkInternalForm();
+
     </script>
     
 {% endblock content %}

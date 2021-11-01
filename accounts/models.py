@@ -28,6 +28,11 @@ class CustomAccountManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    USER_TYPE = (
+        ('p', 'Supervisor'),
+        ('s', 'Student'),
+        ('e', 'External')
+    )
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=150, unique=True)
     first_name = models.CharField(max_length=150)
@@ -44,8 +49,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     country = models.CharField(max_length=150)
     postal_code = models.CharField(max_length=150)
     create_date = models.DateTimeField(auto_now_add=True)
-    is_student = models.BooleanField(default=False)
-    is_supervisor = models.BooleanField(default=False)
+    user_type = models.CharField(
+        max_length=1, choices=USER_TYPE, default='s')
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     students = models.ManyToManyField(
@@ -56,8 +61,17 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomAccountManager()
 
+    @property
     def is_external(self):
-        return not (self.is_student or self.is_supervisor)
+        return self.user_type == 'e'
+
+    @property
+    def is_student(self):
+        return self.user_type == 's'
+
+    @property
+    def is_supervisor(self):
+        return self.user_type == 'p'
 
     def get_financial_accounts(self):
         if self.is_student:

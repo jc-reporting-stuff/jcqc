@@ -18,6 +18,12 @@ class UserSignupForm(SignupForm):
                     field.widget = forms.TextInput(
                         attrs={'placeholder': field.label})
 
+    USER_TYPE = (
+        ('p', 'I am a UofG Principal Investigator'),
+        ('s', 'I am otherwise UofG student, staff or faculty'),
+        ('e', 'I am external to UofG')
+    )
+
     username = forms.CharField(
         label='Username', max_length=150, required=False)
     first_name = forms.CharField(max_length=15, label='First Name')
@@ -40,10 +46,10 @@ class UserSignupForm(SignupForm):
     country = forms.CharField(max_length=150, required=True, label='Country')
     postal_code = forms.CharField(
         max_length=150, required=True, label='Postal or zip code')
-    is_student = forms.BooleanField(
-        label='Are you otherwise UofG student, staff or faculty?', required=False)
-    is_supervisor = forms.BooleanField(
-        label='Are you a UofG Principal Investigator?', required=False)
+    user_type = forms.ChoiceField(
+        choices=USER_TYPE, widget=forms.RadioSelect, initial='s')
+    is_external = forms.BooleanField(
+        label="Are you external to UofG?", required=False)
 
     def save(self, request):
         user = super(UserSignupForm, self).save(request)
@@ -60,8 +66,7 @@ class UserSignupForm(SignupForm):
         user.province = self.cleaned_data['province']
         user.country = self.cleaned_data['country']
         user.postal_code = self.cleaned_data['postal_code']
-        user.is_student = self.cleaned_data['is_student']
-        user.is_supervisor = self.cleaned_data['is_supervisor']
+        user.user_type = self.cleaned_data['user_type']
         user.save()
         return user
 
