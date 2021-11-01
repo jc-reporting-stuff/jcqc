@@ -71,6 +71,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.username
 
+    @property
+    def type(self):
+        if self.is_student or self.is_supervisor or self.is_staff or self.is_superuser:
+            return 'Internal'
+        else:
+            return 'External'
+
 # This is a bit confusing since users are also in the accounts folder, I'm sorry.
 # This models is definitely the Financial Accounts model.
 

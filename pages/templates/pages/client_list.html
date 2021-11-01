@@ -1,0 +1,85 @@
+{% extends '_base.html' %}
+
+{% block title %}Home{% endblock title %}
+
+{% block content %}
+
+    <div class="container">
+
+        <h1 class="centered">Complete Client List</h1>
+
+        <form action="" method="post">
+        Filter first and last names by text: <input type="text" id="filter-box">
+
+        <table class="oligo-view" id="client-table">
+            <tr>
+                <th><a href="?order_by=id">Customer ID</a></th>
+                <th><a href="?order_by=first_name">First Name</a></th>
+                <th><a href="?order_by=last_name">Last Name</a></th>
+                <th>Department/Company</th>
+                <th>Type</th>
+                <th>Oligo Orders</th>
+                <th>Sequencing Orders</th>
+                <th>Account Status</th>
+            </tr>
+
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.first_name }}</td>
+                    <td>{{ user.last_name }}</td>
+                    <td>{{ user.department }}</td>
+                    <td>{{ user.type }}</td>
+                    <td>TODO: Make link</td>
+                    <td>TODO: Make link</td>
+                    <td>{% if user.is_active %}Active (inactivate){% else %}Inactive (activate){% endif %}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        </form>
+
+    </div>
+
+    <script>
+        const filterBox = (event) => {
+            event.preventDefault();
+            text = event.target.value.toLowerCase();
+            rows = Array.from(document.querySelectorAll('#client-table tr'));
+            rows.shift(); // remove header row
+            for (let i = 0; i < rows.length; i++) {
+                if (text === '') {
+                    rows[i].style.display = 'table-row';
+                }
+                const cells = Array.from(rows[i].querySelectorAll('td'));
+                const firstName = cells[1].textContent.toLowerCase();
+                const lastName = cells[2].textContent.toLowerCase();
+                if (firstName.includes(text) || lastName.includes(text)) {
+                    rows[i].style.display = 'table-row';
+                }
+                else {
+                    rows[i].style.display = 'none';
+                }
+                
+            }
+
+            // Redo the striping.
+            visibleRowNumber = 1;
+            for (let i = 0; i < rows.length; i++) {
+                if (rows[i].style.display === 'table-row') {
+                    if ((visibleRowNumber % 2) === 1) {
+                        rows[i].style.backgroundColor = '#e5e7eb';
+                    } else {
+                        rows[i].style.backgroundColor = 'white';
+                    }
+                    visibleRowNumber += 1;
+                }
+            }
+
+        }
+
+        let inputBox = document.querySelector('#filter-box');
+        inputBox.addEventListener('keyup', filterBox);
+    </script>
+
+{% endblock content %}
