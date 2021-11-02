@@ -129,7 +129,10 @@ class OligoCreateView(CreateView):
                 cd.append(cleaned_data)
 
         max_order = Oligo.objects.aggregate(Max('order_id'))
-        max_order_id = max_order['order_id']
+        try:
+            max_order_id = max_order['order_id']
+        except:
+            max_order_id = 0
         order_number = (max_order_id + 1) if max_order_id else 1
 
         submitter = User.objects.get(id=self.request.user.id)
