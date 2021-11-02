@@ -1,0 +1,63 @@
+{% extends '_base.html' %}
+
+{% block title %}Generate Billing Report{% endblock title %}
+
+{% block content %}
+
+    <div>
+
+        <h1 style="text-align: center;">Billing Report</h1>
+
+
+        <table class="oligo-view">
+            <tr>
+                <th>Order Date</th>
+                <th>Supervisor</th>
+                <th>Client Name</th>
+                <th>Department</th>
+                <th>Billing Account</th>
+                <th>Reg. Sequences</th>
+                <th>@</th>
+                <th>Plate Sequences</th>
+                <th>@</th>
+                <th>Long Sequences</th>
+                <th>@</th>
+                <th>Purify</th>
+                <th>@</th>
+                <th>Print</th>
+                <th>@</th>
+                <th>Total</th>
+            </tr>
+
+            {% for row in billing %}
+                <tr>
+                    <td>
+                        {% for date in row.order_dates %}
+                            {{ date|date:'Y-m-d' }}
+                            {% if not forloop.last %}<br>{% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>{{ row.account.owner.display_name }}</td>
+                    <td>{{ row.submitter.display_name }}</td>
+                    <td>{{ row.submitter.department }}</td>
+                    <td>{{ row.account.code }}</td>
+                    <td>{{ row.sequences }}</td>
+                    <td>${{ row.reg_price }}</td>
+                    <td>{{ row.plate_sequences }}</td>
+                    <td>${{ row.plate_price }}</td>
+                    <td>{{ row.long_sequences }}</td>
+                    <td>${{ row.long_price }}</td>
+                    <td>{{ row.purify_count }}</td>
+                    <td>${{ row.purify_price }}</td>
+                    <td>{{ row.hardcopies }}</td>
+                    <td>Total</td>
+                    <td>${{ row.total_price }}</td>
+                </tr>
+            {% endfor %}
+
+        </table>
+       
+
+    </div>
+
+{% endblock content %}

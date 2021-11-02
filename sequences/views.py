@@ -418,7 +418,7 @@ class SequenceSearchView(View):
                 text = args.get(f'{search}-text')
                 return redirect(get_redirect_url(search=search, text=text))
 
-        max_reaction = Reaction.objects.all().order_by('-submission_id').first()
+        max_reaction = Reaction.objects.all().order_by('-id').first()
         id_range_form = IdRangeForm(
             prefix="submission", initial={'high': max_reaction.submission_id})
         date_range_form = DateRangeForm(prefix="date")
@@ -535,131 +535,118 @@ class BillingView(View):
             }
             return render(request, 'sequences/billing.html', context=context)
 
-        price_data = price_form.cleaned_data
         reaction_range = range_form.cleaned_data
         reactions = Reaction.objects.filter(
-            id__gte=reaction_range['low']).filter(id__lte=reaction_range['high']).order_by('account__owner__id', 'account__id')
+            id__gte=reaction_range['low']).filter(id__lte=reaction_range['high']).order_by('submitter__id', 'account__id', 'id')
 
-        class ReportObject:
+        billing_objects = []
+
+        class SubmissionObject:
             def __init__(self):
-                self.is_internal = True
-                self.order_dates = []
-                self.submitter_id = ''
-                self.account_id = ''
-                self.standard_sequence = 0
-                self.plate_sequence = 0
-                self.long_sequence = 0
-                self.purify_count = 0
-                self.hardcopy_coount = 0
+                self.sequences = 0
+                self.long_sequences = 0
+                self.total_count = 0
+                self.date = None
 
-        billing_rows = []
-        row_counter = 0
-        this_row = None
+            def __repr__(self):
+                return f'submission: {self.total_count} sequences'
 
-        ## Build up pricing structure ###
         for reaction in reactions:
-            # If the user has changed, we'll add an object to the list and switch to it.
-            user_has_changed = False
-            account_has_changed = False
-            if len(billing_rows) != 0:
-                user_has_changed = reaction.submitter.id != this_row.submitter_id
-                account_has_changed = reaction.account.id != this_row.account_id
+            user_account_id = f'{reaction.submitter.id}-{reaction.account.id}'
 
-            # If the user has changed, add a new row to the table.
-            if len(billing_rows) == 0:
-                x = ReportObject()
-                billing_rows.append(x)
-                this_row = billing_rows[row_counter]
-                this_row.submitter_id = reaction.submitter.id
-                this_row.account_id = reaction.account.id
+            if len(billing_objects) > 0:
+                order = list(
+                    filter(lambda x: x['name'] == user_account_id, billing_objects))
+                obj = order[0] if order else None
+            if len(billing_objects) == 0 or not obj:
+                obj = {
+                    'name': user_account_id,
+                    'meta': {
+                        'submitter': reaction.submitter,
+                        'account': reaction.account,
+                        'hardcopies': 0,
+                        'purify_count': 0,
+                    }
+                }
+                billing_objects.append(obj)
 
-            elif user_has_changed or account_has_changed:
-                x = ReportObject()
-                billing_rows.append(x)
-                row_counter += 1
-                this_row = billing_rows[row_counter]
-                this_row.submitter_id = oligo.submitter.id
-                this_row.account_id = oligo.account.id
+            try:
+                submission = obj[f'sub-{reaction.submission_id}']
+            except KeyError:
+                obj.update(
+                    {f'sub-{reaction.submission_id}': SubmissionObject()})
+                submission = obj[f'sub-{reaction.submission_id}']
 
-            ## Start processing of actual oligo ###
-            this_row.oligo_count += 1
+            meta = obj['meta']
 
-            non_degen_bases = ['A', 'C', 'G', 'T']
-            oligo_scale = oligo.scale.split(' ')[0]
-            if oligo_scale == '1':
-                oligo_scale = '1000'
-            for base in oligo.sequence:
-                if base in non_degen_bases:
-                    this_row.add_count(oligo_scale)
-                else:
-                    this_row.add_count(oligo_scale, degen=True)
-                    if oligo.id not in this_row.degen_oligo_ids:
-                        this_row.degen_oligo_ids.append(oligo.id)
-                    if oligo.created_at.date() not in this_row.degen_order_dates:
-                        this_row.degen_order_dates.append(
-                            oligo.created_at.date())
+            submission.date = reaction.submit_date
 
-            if oligo.purity == 'desalted':
-                this_row.desalt_count += 1
-            elif oligo.purity == 'cartridge':
-                this_row.cartridge_count += 1
+            if reaction.template.type in ['co', 'ot']:
+                submission.long_sequences += 1
+            else:
+                submission.sequences += 1
 
-            if oligo.created_at.date() not in this_row.order_dates:
-                this_row.order_dates.append(oligo.created_at.date())
+            submission.total_count += 1
 
+            if reaction.template.pcr_purify:
+                meta['purify_count'] += 1
+
+            if reaction.hardcopy:
+                meta['hardcopies'] += 1
+
+        price_data = price_form.cleaned_data
         billing_context = []
-        for row in billing_rows:
-            row_object = {}
-            submitter = User.objects.get(id=row.submitter_id)
-            account = Account.objects.get(id=row.account_id)
-            row_object['order_date'] = row.order_dates
-            row_object['supervisor'] = account.owner.display_name
-            row_object['client_name'] = submitter.display_name
-            row_object['department'] = submitter.department
-            row_object['account'] = account.code
-            row_object['oligo_count'] = row.oligo_count
-            row_object['40nmol'] = row.nmol40_count
-            row_object['40price'] = price_data['scale_40_base']
-            row_object['200nmol'] = row.nmol200_count
-            row_object['200price'] = price_data['scale_200_base']
-            row_object['1000nmol'] = row.nmol1000_count
-            row_object['1000price'] = price_data['scale_1000_base']
 
-            row_object['degen_order_date'] = row.degen_order_dates
-            row_object['degen_oligo_count'] = len(row.degen_oligo_ids)
-            row_object['40nmol_degen'] = row.degen40_count
-            row_object['40price_degen'] = price_data['degenerate_40_base']
-            row_object['200nmol_degen'] = row.degen200_count
-            row_object['200price_degen'] = price_data['degenerate_200_base']
-            row_object['1000nmol_degen'] = row.degen1000_count
-            row_object['1000price_degen'] = price_data['degenerate_1000_base']
+        class Row():
+            def __init__(self, submitter, account):
+                self.submitter = submitter
+                self.account = account
+                self.sequences = 0
+                self.plate_sequences = 0
+                self.long_sequences = 0
+                self.purify_count = 0
+                self.hardcopies = 0
+                self.order_dates = []
 
-            row_object['desalt_count'] = row.desalt_count
-            row_object['desalt_price'] = price_data['desalt_fee']
-            row_object['cartridge_count'] = row.cartridge_count
-            row_object['cartridge_price'] = price_data['cartridge_fee']
-            row_object['setup_count'] = len(row.order_dates)
-            row_object['setup_price'] = price_data['setup_fee']
+            def __repr__(self):
+                return f'{self.submitter}-{self.account.code}'
 
-            price40 = row.nmol40_count * price_data['scale_40_base']
-            price200 = row.nmol200_count * price_data['scale_200_base']
-            price1000 = row.nmol1000_count * price_data['scale_1000_base']
+        for obj in billing_objects:
+            row = Row(obj['meta']['submitter'], obj['meta']['account'])
+            for k, v in obj.items():
+                if (k[:4] == 'sub-'):
+                    if v.total_count >= 48:
+                        row.plate_sequences += v.sequences
+                    else:
+                        row.sequences += v.sequences
+                    row.long_sequences += v.long_sequences
 
-            price_desalt = row.desalt_count * price_data['desalt_fee']
-            price_cartridge = row.cartridge_count * price_data['cartridge_fee']
-            price_setup = len(row.order_dates) * price_data['setup_fee']
+                    if not v.date in row.order_dates:
+                        row.order_dates.append(v.date)
 
-            price40_degen = row.degen40_count * \
-                price_data['degenerate_40_base']
-            price200_degen = row.degen200_count * \
-                price_data['degenerate_200_base']
-            price1000_degen = row.degen1000_count * \
-                price_data['degenerate_1000_base']
+            if obj['meta']['submitter'].is_external:
+                row.reg_price = price_data['ext_standard_sequencing']
+                row.plate_price = price_data['ext_well96_plate']
+                row.long_price = price_data['ext_large_template']
+                row.purify_price = price_data['ext_pcr_purification']
+                row.hardcopy_price = price_data['ext_printout']
 
-            row_object['total'] = price40 + price200 + price1000 + \
-                price_desalt + price_cartridge + price_setup
-            row_object['total_degen'] = price40_degen + \
-                price200_degen + price1000_degen
-            billing_context.append(row_object)
+            else:
+                row.reg_price = price_data['standard_sequencing']
+                row.plate_price = price_data['well96_plate']
+                row.long_price = price_data['large_template']
+                row.purify_price = price_data['pcr_purification']
+                row.hardcopy_price = price_data['printout']
 
-        return render(request, 'oligos/billing_output.html', context={'billing': billing_context})
+            standard_cost = row.sequences * row.reg_price
+            plate_cost = row.plate_sequences * row.plate_price
+            long_cost = row.long_sequences * row.long_price
+            purify_cost = row.purify_count * row.purify_price
+            hardcopy_cost = row.hardcopies * row.hardcopy_price
+
+            row.total_price = standard_cost + plate_cost + \
+                long_cost + purify_cost + hardcopy_cost
+
+            billing_context.append(row)
+
+        return render(request, 'sequences/billing_output.html', context={'billing': billing_context})
