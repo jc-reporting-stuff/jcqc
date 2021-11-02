@@ -39,7 +39,7 @@
     What financial account will this order be using:
     <select name="account">
       {% for account in user.get_financial_accounts %}
-      <option value="{{ account.id }}">{{ account.code }}</option>
+      <option value="{{ account.id }}">{{ account.code }}: {{ account.comment }}</option>
       {% endfor %}
     </select>
 

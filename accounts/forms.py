@@ -47,7 +47,7 @@ class UserSignupForm(SignupForm):
     postal_code = forms.CharField(
         max_length=150, required=True, label='Postal or zip code')
     user_type = forms.ChoiceField(
-        choices=USER_TYPE, widget=forms.RadioSelect, initial='s')
+        choices=USER_TYPE, widget=forms.RadioSelect, required=True)
     is_external = forms.BooleanField(
         label="Are you external to UofG?", required=False)
 

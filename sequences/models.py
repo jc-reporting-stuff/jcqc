@@ -25,6 +25,10 @@ class Primer(models.Model):
                                    for i in range(0, len(self.sequence), 3))
         return spaced_sequence
 
+    @property
+    def source(self):
+        return 'LSD' if self.common else 'Client'
+
 
 class Template (models.Model):
     COMMENT_CHOICES = [
@@ -61,6 +65,9 @@ class Template (models.Model):
     def __str__(self):
         return self.name
 
+    def get_pcr_purify(self):
+        return 'Yes' if self.pcr_purify else 'No'
+
 
 class Reaction(models.Model):
     STATUS_CHOICES = [
@@ -88,3 +95,48 @@ class Reaction(models.Model):
 
     def __str__(self):
         return f'{self.template} with {self.primer}'
+
+    @property
+    def source(self):
+        if self.submitter.user_type == 's' or self.submitter.user_type == 'p':
+            return 'LSD'
+        else:
+            return 'External'
+
+    def get_comment(self):
+        return self.comment if self.comment else ' - - '
+
+    def get_hardcopy(self):
+        return 'Yes' if self.hardcopy else 'No'
+
+
+class SeqPrice(models.Model):
+    standard_sequencing = models.DecimalField(max_digits=5, decimal_places=2)
+    ext_standard_sequencing = models.DecimalField(
+        max_digits=5, decimal_places=2, verbose_name="Standard sequencing (external)")
+
+    well96_plate = models.DecimalField(
+        max_digits=5, decimal_places=2, verbose_name="96-well plate (min 48)")
+    ext_well96_plate = models.DecimalField(
+        max_digits=5, decimal_places=2, verbose_name="96-well plate (external)")
+
+    large_template = models.DecimalField(
+        max_digits=5, decimal_places=2, verbose_name="Large templates (eg cosmids)")
+    ext_large_template = models.DecimalField(
+        max_digits=5, decimal_places=2, verbose_name="Large templates (external)")
+
+    pcr_purification = models.DecimalField(
+        max_digits=5, decimal_places=2, verbose_name="PCR Purification")
+    ext_pcr_purification = models.DecimalField(
+        max_digits=5, decimal_places=2, verbose_name="PCR Purification (external)")
+
+    printout = models.DecimalField(max_digits=5, decimal_places=2)
+    ext_printout = models.DecimalField(
+        max_digits=5, decimal_places=2, verbose_name="Printout (external)")
+
+    updated = models.DateTimeField(auto_now=True)
+
+    current = models.BooleanField()
+
+    def __str__(self):
+        return f'Price Structure updated {self.updated}'

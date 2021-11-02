@@ -12,7 +12,7 @@ from django.utils.timezone import localtime, now, make_aware
 from django.core.paginator import Paginator
 
 from oligos.forms import EasyOrderForm, EnterODForm, OligoInitialForm, OligoOrderForm, IdRangeForm, DateRangeForm, OligoTextSearch, PriceForm
-from .models import Oligo, Price
+from .models import Oligo, OliPrice
 from accounts.models import Account, User
 from core.decorators import user_has_accounts
 
@@ -129,7 +129,8 @@ class OligoCreateView(CreateView):
                 cd.append(cleaned_data)
 
         max_order = Oligo.objects.aggregate(Max('order_id'))
-        order_number = max_order['order_id__max'] + 1
+        max_order_id = max_order['order_id']
+        order_number = (max_order_id + 1) if max_order_id else 1
 
         submitter = User.objects.get(id=self.request.user.id)
         account = Account.objects.get(id=self.request.POST.get('account_id'))
@@ -233,7 +234,7 @@ class OligoEasySubmitView(TemplateView):
 
 class OligoAdminHomeView(View):
     def get(self, request):
-        return render(request, 'oligos/admin-home.html')
+        return render(request, 'oligos/admin_home.html')
 
 
 class OligoTodayListView(ListView):
@@ -455,7 +456,7 @@ class BillingView(View):
         max_oligo = Oligo.objects.all().order_by('-id').first()
         range_form = IdRangeForm(initial={'high': max_oligo.id})
 
-        prices = Price.objects.filter(current=True).last()
+        prices = OliPrice.objects.filter(current=True).last()
         price_form = PriceForm(instance=prices, prefix="price")
 
         context = {

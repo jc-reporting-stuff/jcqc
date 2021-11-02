@@ -1,0 +1,74 @@
+{% extends '_base.html' %}
+
+{% block title %}Search for Sequences{% endblock title %}
+
+{% block content %}
+
+    <div>
+
+        <h1 style="text-align: center;">Search Sequences</h1>
+
+        <form method="get" action="" style="margin-top: 0.5rem;">
+
+        <div class="searches-container">
+
+            <div class="search-box">
+                <h2>Search by ID Range</h2>
+                <p>Max submission ID is already in the form.</p>
+                {{ id_range_form.as_p }}
+                <button type="submit" name="search" value="submission" class="button-primary">Search by ID range</button>
+            </div>
+
+            <div class="search-box">
+                <h2>Search by Date Range</h2>
+                <p>Select client to only search their orders.</p>
+                {{ date_range_form.as_p }}
+                <button type="submit" name="search" value="date" class="button-primary">Search by Date range</button>
+            </div>
+
+            <div class="search-box">
+                <h2>Search by Sequence ID Range</h2>
+                <p><strong>Not</strong> the same as submission ID range.</p>
+                {{ sequence_range_form.as_p }}
+                <button type="submit" name="search" value="sequence" class="button-primary">Search by sequence ID range</button>
+            </div>
+
+            <div class="search-box">
+                <h2>Search by Template Name</h2>
+                <p>Enter whole or partial template name.</p>
+                {{ template_name_form.as_p }}
+                <button type="submit" name="search" value="template" class="button-primary">Search by Template Name</button>
+            </div>
+
+            <div class="search-box">
+                <h2>Search by Primer Name</h2>
+                <p>Enter whole or partial primer name.</p>
+                {{ primer_name_form.as_p }}
+                <button type="submit" name="search" value="primer" class="button-primary">Search by Primer Name</button>
+            </div>
+        
+            <div class="search-box">
+                <h2>Search by reaction status</h2>
+                <p>Select status from dropdown.</p>
+                <p>No option for completed, try a different search.</p>
+                {{ status_form.as_p }}
+                <button type="submit" name="search" value="status" class="button-primary">Search by Status</button>
+            </div>
+
+            <div class="search-box">
+                <h2>TODO: Search by plate name</h2>
+                <p>Once we get the instrument side of things started.</p>
+                <button type="submit" name="search" value="sequence" class="button-primary">Search by plate name</button>
+            </div>
+        
+        </div>
+
+        </form>
+
+    </div>
+
+    {% load static %}
+    <script src="{% static 'js/enter_press.js' %}">
+    </script>
+
+{% endblock content %}

@@ -206,7 +206,7 @@ class Oligo(models.Model):
         return self.name
 
 
-class Price(models.Model):
+class OliPrice(models.Model):
     scale_40_base = models.DecimalField(max_digits=5, decimal_places=2)
     scale_200_base = models.DecimalField(max_digits=5, decimal_places=2)
     scale_1000_base = models.DecimalField(max_digits=5, decimal_places=2)

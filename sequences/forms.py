@@ -2,7 +2,9 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 
-from .models import Primer
+from django.contrib.auth import get_user_model
+
+from .models import Primer, SeqPrice
 import re
 
 
@@ -75,3 +77,48 @@ class ReactionEasyOrderForm(forms.Form):
 
     reactions = MultiReactionField(
         max_length=5000, widget=forms.Textarea, label='Paste your sequencing information here:')
+
+
+class IdRangeForm(forms.Form):
+    low = forms.IntegerField(
+        widget=forms.TextInput, max_value=1000000, min_value=1, label="From", required=False)
+    high = forms.IntegerField(
+        widget=forms.TextInput, max_value=1000000, min_value=1, label="To",
+        required=False)
+
+
+class DateRangeForm(forms.Form):
+    low = forms.DateField(widget=forms.DateTimeInput(
+        attrs={'type': 'date'}), required=False, label="Start Date")
+    high = forms.DateField(widget=forms.DateTimeInput(
+        attrs={'type': 'date'}), required=False, label="End Date")
+    client = forms.ChoiceField()
+
+    def __init__(self, *args, **kwargs):
+        super(DateRangeForm, self).__init__(*args, **kwargs)
+        all_clients = get_user_model().objects.all().order_by('last_name')
+        client_choices = [
+            ('0', f'All Clients (Count: {len(all_clients)})'), ]
+        for client in all_clients:
+            client_choices.append(
+                (client.id, f'{client.display_name()} ({client.id})'),)
+        self.fields['client'].choices = client_choices
+
+
+class TextSearch(forms.Form):
+    text = forms.CharField(max_length=150, required=False)
+
+
+class StatusForm(forms.Form):
+    STATUS_CHOICES = [
+        ('s', 'Submitted'),
+        ('p', 'Preparing'),
+        ('r', 'Running'),
+    ]
+    text = forms.ChoiceField(choices=STATUS_CHOICES)
+
+
+class PriceForm(forms.ModelForm):
+    class Meta:
+        model = SeqPrice
+        exclude = ['current']

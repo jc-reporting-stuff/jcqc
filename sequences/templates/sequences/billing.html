@@ -1,0 +1,39 @@
+{% extends '_base.html' %}
+
+{% block title %}Generate Billing Report{% endblock title %}
+
+{% block content %}
+
+    <div>
+
+        <h1 style="text-align: center;">Generate Billing Report</h1>
+
+
+        <form action="" method="post" style="margin: 0;">
+            {% csrf_token %}
+
+            <div class="billing-container">
+
+                <div class="billing-box">
+                        <h2>Select reactions by ID Range</h2>
+                        <p>Max ID is already in the form.</p>
+                        {{ range_form.as_p }}
+                        <input type="submit" name="search" value="Generate Billing Report" class="button-primary">
+                </div>
+
+                <div class="billing-box price-form">
+                    <p><strong>Default prices, change if required.</strong></p>
+
+                    <table>
+                    {{ price_form.as_table }}
+                    </table>
+                </div>
+
+
+            </div>
+
+        </form>
+
+    </div>
+
+{% endblock content %}

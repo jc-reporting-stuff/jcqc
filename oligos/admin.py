@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Oligo, Price
+from .models import Oligo, OliPrice
 
 
 @admin.register(Oligo)
@@ -17,7 +17,7 @@ class OligoAdmin(admin.ModelAdmin):
                     'created_at', 'delivery_date']
 
 
-@admin.register(Price)
+@admin.register(OliPrice)
 class PriceAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Prices per base pair',

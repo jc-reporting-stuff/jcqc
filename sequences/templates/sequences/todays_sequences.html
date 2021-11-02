@@ -1,0 +1,37 @@
+{% extends '_base.html' %}
+
+{% block title %}Sequencing Search Results{% endblock title %}
+
+{% block content %}
+
+    <div style="width: 98vw; margin: auto;">
+
+    <h1>{{ title }}</h1>
+
+        <table class="oligo-view">
+            <tr>
+                <th>Submission ID</th>
+                <th>Seq ID</th>
+                <th>Client Name</th>
+                <th>Type</th>
+                <th>Primer</th>
+                <th>Source</th>
+                <th>Comment</th>
+            </tr>
+
+            {% for reaction in reactions %}
+                <tr>
+                    <td>{{ reaction.submission_id }}</td>
+                    <td>{{ reaction.id }}</td>
+                    <td>{{ reaction.submitter.display_name }}</td>
+                    <td>{{ reaction.template.get_type_display }}</td>
+                    <td>{{ reaction.primer.name }}</td>
+                    <td>{{ reaction.source }}</td>
+                    <td>{{ reaction.get_comment }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+
+{% endblock content %}

@@ -1,0 +1,22 @@
+{% extends '_base.html' %}
+
+{% block title %}Sequencing Admin{% endblock title %}
+
+{% block content %}
+
+    <div class="container half-width">
+
+        <h1>Sequencing Administrative Actions</h1>
+
+        <p>If link, great. If not link, is to-do.</p>
+
+        <ul class="admin-list">
+            <li><a href="{% url 'sequencing:today_listview' %}"><strong>Today's</strong> orders</a></li>
+            <li><a href="{% url 'sequencing:search' %}">Search Sequences</a></li>
+            <li><a href="{% url 'sequencing:billing' %}">Generate Billing</a></li>
+            
+        </ul>
+
+    </div>
+
+{% endblock content %}

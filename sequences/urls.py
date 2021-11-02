@@ -17,5 +17,9 @@ urlpatterns = [
     path('submission/<int:submission_id>', views.SubmissionDetailView.as_view(),
          name='submission_detail'),
     path('sequencing-admin/',
-         views.SequencingAdminHomeView.as_view(), name='admin_home')
+         views.SequencingAdminHomeView.as_view(), name='admin_home'),
+    path('today', views.SequencesTodayListView.as_view(), name='today_listview'),
+    path('search', views.SequenceSearchView.as_view(), name='search'),
+    path('search-results', views.SequenceListView.as_view(), name='search_results'),
+    path('billing', views.BillingView.as_view(), name='billing'),
 ]

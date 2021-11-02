@@ -1,0 +1,119 @@
+{% extends '_base.html' %}
+
+{% block title %}Search for Sequences{% endblock title %}
+
+{% block content %}
+
+    <div>
+
+        <h1 style="text-align: center;">Sequence Search Results</h1>
+
+        <p style="width: 50%; margin: auto; text-align:center;">Searching by <strong>
+            {% if data.query == 'submission' %}
+                Submission ID
+            {% elif data.query == 'date' %}
+                date range
+            {% elif data.query == 'sequence' %}
+                sequence ID
+            {% elif data.query == 'template' %}
+                Template Name
+            {% elif data.query == 'primer' %}
+                Primer Name
+            {% elif data.query == 'status' %}
+                Status
+            {%endif %}
+            </strong>
+
+            {% if data.query in 'submission date sequence' %}
+                from <strong>{{data.low}}<strong/> to <strong>{{ data.high }}</strong>
+            {% else %}
+                using <strong>"{{ data.text }}"</strong> as the search term
+            {% endif %}
+        </p>
+
+        <form method="post" action="{% url 'oligos:list_actions' %}">
+        {% csrf_token %}
+
+        <input type="hidden" name="return-url" value="{{ current_path }}">
+
+        <table class="oligo-view">
+            <tr>
+                <th>Submission ID</th>
+                <th><input type="checkbox" onchange="selectAll(event)" id="top-checkbox">Seq ID</th>
+                <th>Plate</th>
+                <th>Well</th>
+                <th>Name</th>
+                <th>Template</th>
+                <th>Type</th>
+                <th>Temp Size</th>
+                <th>Temp Conc</th>
+                <th>Temp Vol</th>
+                <th>Purify</th>
+                <th>Temp Comment</th>
+                <th>Primer</th>
+                <th>Conc</th>
+                <th>Pr Vol</th>
+                <th>Pr Source</th>
+                <th>Status</th>
+                <th>Hardcopy</th>
+                <th>Comment</th>
+            </tr>
+
+            {% for reaction in page_obj %}
+                <tr>
+                    <td>{{ reaction.submission_id }}</td>
+                    <td><input type="checkbox" name="{{ reaction.id }}-checkbox">{{ reaction.id }}</td>
+                    <td>??</td>
+                    <td>??</td>
+                    <td>{{ reaction.submitter.display_name }}</td>
+                    <td>{{ reaction.template.name }}</td>
+                    <td>{{ reaction.template.get_type_display }}</td>
+                    <td>{{ reaction.template.template_size }}</td>
+                    <td>{{ reaction.template.template_concentration }}</td>
+                    <td>{{ reaction.template.template_volume }}</td>
+                    <td>{{ reaction.template.get_pcr_purify }}</td>
+                    <td>{{ reaction.template.get_comment_display }}</td>
+                    <td>{{ reaction.primer.name }}</td>
+                    <td>{{ reaction.primer.concentration }}</td>
+                    <td>{{ reaction.primer.volume }}</td>
+                    <td>{{ reaction.primer.source }}</td>
+                    <td>{{ reaction.get_status_display }}</td>
+                    <td>{{ reaction.get_hardcopy }}</td>
+                    <td>{{ reaction.get_comment }}</td>
+
+                </tr>
+            {% endfor %}
+
+        </table>
+
+        <div style="text-align:center;">
+            <button name="select-all" onclick="selectAll(event)" id="select-all-button" class="button-primary">Select All</button>
+            <button type="submit" name="button" value="resequencing" class="button-primary">TODO: resequencing</button>
+        </div>
+
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?query={{ data.query }}&low={{ data.low }}&high={{data.high}}&text={{ data.text}}&client={{data.client}}&page=1">&laquo; First</a>
+                    <a href="?query={{ data.query }}&low={{ data.low }}&high={{data.high}}&text={{ data.text}}&client={{data.client}}&page={{ page_obj.previous_page_number }}">Previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?query={{ data.query }}&low={{ data.low }}&high={{data.high}}&text={{ data.text}}&client={{data.client}}&page={{ page_obj.next_page_number }}">Next</a>
+                    <a href="?query={{ data.query }}&low={{ data.low }}&high={{data.high}}&text={{ data.text}}&client={{data.client}}&page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+
+    </div>
+
+    {% load static %}
+    <script src="{% static 'js/admin_list_functions.js' %}">
+    </script>
+
+{% endblock content %}

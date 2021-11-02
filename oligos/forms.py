@@ -1,9 +1,8 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
-from django.test import client
 
-from .models import Oligo, Price
+from .models import Oligo, OliPrice
 
 import re
 
@@ -124,5 +123,5 @@ class EnterODForm(forms.Form):
 
 class PriceForm(forms.ModelForm):
     class Meta:
-        model = Price
+        model = OliPrice
         exclude = ['current']
