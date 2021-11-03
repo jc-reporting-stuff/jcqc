@@ -129,11 +129,12 @@ class OligoCreateView(CreateView):
                 cd.append(cleaned_data)
 
         max_order = Oligo.objects.aggregate(Max('order_id'))
-        try:
-            max_order_id = max_order['order_id']
-        except:
+        print(max_order)
+        if not max_order['order_id__max']:
             max_order_id = 0
-        order_number = (max_order_id + 1) if max_order_id else 1
+        else:
+            max_order_id = max_order['order_id__max']
+        order_number = max_order_id + 1
 
         submitter = User.objects.get(id=self.request.user.id)
         account = Account.objects.get(id=self.request.POST.get('account_id'))
@@ -571,39 +572,44 @@ class BillingView(View):
             if oligo.created_at.date() not in this_row.order_dates:
                 this_row.order_dates.append(oligo.created_at.date())
 
+        class RowObject:
+            def __init__(self, submitter, account):
+                self.submitter = submitter
+                self.account = account
+
         billing_context = []
         for row in billing_rows:
-            row_object = {}
             submitter = User.objects.get(id=row.submitter_id)
             account = Account.objects.get(id=row.account_id)
-            row_object['order_date'] = row.order_dates
-            row_object['supervisor'] = account.owner.display_name
-            row_object['client_name'] = submitter.display_name
-            row_object['department'] = submitter.department
-            row_object['account'] = account.code
-            row_object['oligo_count'] = row.oligo_count
-            row_object['40nmol'] = row.nmol40_count
-            row_object['40price'] = price_data['scale_40_base']
-            row_object['200nmol'] = row.nmol200_count
-            row_object['200price'] = price_data['scale_200_base']
-            row_object['1000nmol'] = row.nmol1000_count
-            row_object['1000price'] = price_data['scale_1000_base']
+            row_object = RowObject(submitter, account)
+            row_object.order_date = row.order_dates
+            row_object.supervisor = account.owner.display_name
+            row_object.client_name = submitter.display_name
+            row_object.department = submitter.department
+            row_object.account = account.code
+            row_object.oligo_count = row.oligo_count
+            row_object.nmol40 = row.nmol40_count
+            row_object.price40 = price_data['scale_40_base']
+            row_object.nmol200 = row.nmol200_count
+            row_object.price200 = price_data['scale_200_base']
+            row_object.nmol1000 = row.nmol1000_count
+            row_object.price1000 = price_data['scale_1000_base']
 
-            row_object['degen_order_date'] = row.degen_order_dates
-            row_object['degen_oligo_count'] = len(row.degen_oligo_ids)
-            row_object['40nmol_degen'] = row.degen40_count
-            row_object['40price_degen'] = price_data['degenerate_40_base']
-            row_object['200nmol_degen'] = row.degen200_count
-            row_object['200price_degen'] = price_data['degenerate_200_base']
-            row_object['1000nmol_degen'] = row.degen1000_count
-            row_object['1000price_degen'] = price_data['degenerate_1000_base']
+            row_object.degen_order_date = row.degen_order_dates
+            row_object.degen_oligo_count = len(row.degen_oligo_ids)
+            row_object.nmol40_degen = row.degen40_count
+            row_object.price40_degen = price_data['degenerate_40_base']
+            row_object.nmol200_degen = row.degen200_count
+            row_object.price200_degen = price_data['degenerate_200_base']
+            row_object.nmol1000_degen = row.degen1000_count
+            row_object.price1000_degen = price_data['degenerate_1000_base']
 
-            row_object['desalt_count'] = row.desalt_count
-            row_object['desalt_price'] = price_data['desalt_fee']
-            row_object['cartridge_count'] = row.cartridge_count
-            row_object['cartridge_price'] = price_data['cartridge_fee']
-            row_object['setup_count'] = len(row.order_dates)
-            row_object['setup_price'] = price_data['setup_fee']
+            row_object.desalt_count = row.desalt_count
+            row_object.desalt_price = price_data['desalt_fee']
+            row_object.cartridge_count = row.cartridge_count
+            row_object.cartridge_price = price_data['cartridge_fee']
+            row_object.setup_count = len(row.order_dates)
+            row_object.setup_price = price_data['setup_fee']
 
             price40 = row.nmol40_count * price_data['scale_40_base']
             price200 = row.nmol200_count * price_data['scale_200_base']
@@ -620,9 +626,9 @@ class BillingView(View):
             price1000_degen = row.degen1000_count * \
                 price_data['degenerate_1000_base']
 
-            row_object['total'] = price40 + price200 + price1000 + \
+            row_object.total = price40 + price200 + price1000 + \
                 price_desalt + price_cartridge + price_setup
-            row_object['total_degen'] = price40_degen + \
+            row_object.total_degen = price40_degen + \
                 price200_degen + price1000_degen
             billing_context.append(row_object)
 

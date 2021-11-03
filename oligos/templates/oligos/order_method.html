@@ -11,12 +11,16 @@
 
         <h1>Order new oligos</h1>
 
-        <h2>Step 1 of 3: Select account and method</h2>
+        <h2>Step 1 of 3: Select account and order method</h2>
 
 
         <form method="get" action="{% url 'oligos:order_create' %}">
 
-            <p>Please select account to be used: {{ form.account_id }}</p>
+            <p>Please select account to be used:</p>
+            <p style="text-align:center;">
+                {{ form.account_id }} or
+                <button type="button" onclick="gotoAccounts()" class="button-primary">Add an account</button>
+            </p>
 
             <hr>
 
@@ -26,7 +30,7 @@
 
 
             <div class="pt-8">If you have a large number of oligos to order you might prefer using
-                <input type="submit" class="button-primary" value="Bulk Order" formaction="{% url 'oligos:easy_order' %}">
+                <input type="submit" class="button-primary" value="Easy Order" formaction="{% url 'oligos:easy_order' %}">
             </div>
 
         </form>
@@ -35,7 +39,12 @@
 
     </div>
 
+    <script>
+        const gotoAccounts = () => {
+            window.location.assign("{% url 'view_user_accounts' %}");
 
+        }
+    </script>
 
 
 {% endblock content %}

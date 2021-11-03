@@ -33,7 +33,7 @@
                     <td style="text-align: left;"><a href="{% url 'oligos:detail_view' pk=order.id %}">{{ order.name }}</a></td>
                     <td>{{ order.created_at|date:'M d, Y' }}</td>
                     <td>{{ order.scale }}</td>
-                    <td>{{ order.purity }}</td>
+                    <td>{{ order.purity|title }}</td>
                     <td>- -</td>
                     <td>- -</td>
                     <td>{{ order.modification }}</td>

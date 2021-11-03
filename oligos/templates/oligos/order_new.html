@@ -48,6 +48,7 @@
                 <input type="hidden" name="account_id" value="{{ account_id }}">
 
                 <input type="submit" name="previewing" value="Proceed to Preview" class="button-primary">
+                <input type="reset" value="Clear"  class="button-primary">
 
             </div>
 
@@ -68,7 +69,7 @@
                             <th>Purity</th>
                             <th>Modification</th>
                             <th>Length (bp)</th>
-                            <th>Sequence</th>
+                            <th>Sequence 5′ to 3′</th>
                         </tr>
                         {% for form in formset %}
                             {% if form.name.value|length > 0 %}
@@ -85,7 +86,10 @@
                         {% endfor %}
                     </table>
 
-                    <input type="submit" name="submitting" value="Place order"  class="button-primary">
+                    <input type="submit" name="submitting" value="Order Oligos"  class="button-primary">
+
+                    <div class="container half-width">Oligos will be delivered right to your door once they are ready if you are a University of Guelph internal customer or sent via courier
+                    if you are not located around the University of Guelph campus.</div>
 
                 </div>
             

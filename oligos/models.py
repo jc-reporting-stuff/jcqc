@@ -9,8 +9,9 @@ class Oligo(models.Model):
         User, on_delete=models.CASCADE, related_name='oligo_orders')
     account = models.ForeignKey(
         Account, on_delete=models.CASCADE, related_name='oligo_orders')
-    name = CharField(max_length=150)
-    sequence = models.CharField(max_length=150)
+    name = CharField(max_length=150, verbose_name="Oligo Name")
+    sequence = models.CharField(
+        max_length=150, verbose_name="Sequence 5′ to 3′")
     scale = models.CharField(max_length=20)
     purity = models.CharField(max_length=20)
     modification = models.CharField(max_length=150, blank=True, null=True)

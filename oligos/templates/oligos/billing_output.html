@@ -59,7 +59,7 @@
                     <td>{{ row.setup_price }}</td>
                     <td>{{ row.total }}</td>
                 </tr>
-                {% if row.40mol_degen or row.200nmol_degen or row.1000nmol_degen %}
+                {% if row.nmol40_degen or row.nmol200_degen or row.nmol1000_degen %}
                 <tr>
                     <td>
                         {% for date in row.degen_order_date %}
