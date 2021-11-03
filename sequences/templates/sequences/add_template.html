@@ -3,10 +3,11 @@
 {% block title %}Add Templates{% endblock title %}
 
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block content %}
 
-    <div class="container" style="width: 1000px;">
+    <div style="width:90rem; margin: auto;">
         <p>This is <strong>Step 2 of 3.</strong></p>
 
         <form method="post" action="">
@@ -14,8 +15,9 @@
 
             <div>
 
-            <h1>Templates</h1>
+                <h1>Templates</h1>
 
+            
                 {% csrf_token %}
                 {{ template_formset.management_form }}
 
@@ -29,9 +31,8 @@
 
             <div {% if primer_formset|length == 0 %}style="display: none"{% endif%}>
 
-            <h1>Primers</h1>
+            <h1>Your own Primer Description</h1>
 
-                {% csrf_token %}
                 {{ primer_formset.management_form }}
 
                 {% for form in primer_formset %}
@@ -45,8 +46,26 @@
             <input type="hidden" name="template-count" value="{{ template_count }}">
             <input type="hidden" name="primer-count" value="{{ primer_count }}">
             <input type="hidden" name="reaction-count" value="{{ reaction_count }}">
+            <input type="hidden" name="account-id" value="{{ account_id }}">
 
-            <input type="submit" name="proceed-reactions" value="Proceed to reactions" class="button-primary">
+            <div style="display: flex; width: 100%; justify-content: space-between;">
+                <div>
+                    <input type="submit" name="proceed-reactions" value="Proceed to reactions" class="button-primary">
+                    <input type="reset" value="Clear all" class="button-primary">
+                </div>
+                <div>
+                    View the list of 
+                    <a href="{% url 'sequencing:common_primers' %}" style="text-decoration: underline;" target="_blank">Common Primers</a> 
+                    <img src="{% static 'images/open-external-link.svg' %}" alt="popout window icon" class="inline-image">
+                    provided by Lab Services.
+                </div>
+            </div>
+
+            <div class="container half-width">
+                <p><strong>Note:</strong></p>
+                <p>Template and primer names have to be clearly labelled on your tubes, bags and boxes or plates etc. They can be up to 16
+                characters which only consist of letters, numbers, -_()+. Space, quotation mark or asterisk are not accepted.</p>
+            </div>
                 
 
         </form>

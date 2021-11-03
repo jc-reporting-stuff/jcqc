@@ -4,7 +4,7 @@ from django.core.validators import MinValueValidator
 
 from django.contrib.auth import get_user_model
 
-from .models import Primer, SeqPrice
+from .models import Primer, SeqPrice, Template
 import re
 
 
@@ -17,10 +17,12 @@ class ReactionForm(forms.Form):
         all_primers = primers + common_primers
         primer_choices = [
             (p.name, p.name) for p in all_primers]
-        self.fields['template'] = forms.ChoiceField(choices=template_choices)
-        self.fields['primer'] = forms.ChoiceField(choices=primer_choices)
-        self.fields['hardcopy'] = forms.BooleanField(required=False)
+        self.fields['template'] = forms.ChoiceField(
+            choices=template_choices, label='Template Name')
+        self.fields['primer'] = forms.ChoiceField(
+            choices=primer_choices, label='Primer Name')
         self.fields['comment'] = forms.CharField(required=False)
+        self.fields['hardcopy'] = forms.BooleanField(required=False)
 
 
 class MultiReactionField(forms.CharField):
@@ -32,13 +34,41 @@ class MultiReactionField(forms.CharField):
 
     def validate(self, value):
         super().validate(value)
-        regex = r'^(.+?)[\t;,]\s*(.+?)[\t;,]\s*(.*?)\r$'
+        regex = r'^(.+?)[\t;,]\s*(.+?).*'
         for line in value:
             try:
                 re.match(regex, line).groups()
             except:
                 raise ValidationError(
                     'Check that input is comma, semicolon or tab delimited. One reaction per line.')
+
+
+class TemplateModelForm(forms.ModelForm):
+    class Meta:
+        model = Template
+        fields = (
+            'name', 'type', 'template_size', 'insert_size',
+            'template_concentration', 'template_volume', 'comment', 'pcr_purify'
+        )
+        labels = {
+            'template_size': 'Size<br>(total bp)',
+            'insert_size': 'Insert Size<br>(bp)',
+            'template_concentration': 'Conc.<br>(ng/µL)',
+            'template_volume': 'Vol.<br>(µL)',
+            'pcr_purify': 'Purification Required'
+        }
+
+
+class PrimerModelForm(forms.ModelForm):
+    class Meta:
+        model = Primer
+        fields = (
+            'name', 'concentration', 'volume', 'melting_temperature', 'sequence')
+        labels = {
+            'concentration': 'Conc.<br>(pmol/µL)',
+            'volume': 'Vol.<br>(µL)',
+            'melting_temperature': 'Temperature',
+        }
 
 
 class ReactionEasyOrderForm(forms.Form):
@@ -81,9 +111,9 @@ class ReactionEasyOrderForm(forms.Form):
 
 class IdRangeForm(forms.Form):
     low = forms.IntegerField(
-        widget=forms.TextInput, max_value=1000000, min_value=1, label="From", required=False)
+        widget=forms.TextInput, max_value=2000000, min_value=1, label="From", required=False)
     high = forms.IntegerField(
-        widget=forms.TextInput, max_value=1000000, min_value=1, label="To",
+        widget=forms.TextInput, max_value=2000000, min_value=1, label="To",
         required=False)
 
 

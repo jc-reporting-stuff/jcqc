@@ -34,18 +34,14 @@
       {% endfor %}
     </table>
 
-    <hr />
-
-    What financial account will this order be using:
-    <select name="account">
-      {% for account in user.get_financial_accounts %}
-      <option value="{{ account.id }}">{{ account.code }}: {{ account.comment }}</option>
-      {% endfor %}
-    </select>
+    <div>
+      Order will be placed using account {{ account.code }}: {{ account.comment }}
+    </div>
 
     <input type="hidden" name="template-count" value="{{ template_count }}" />
     <input type="hidden" name="primer-count" value="{{ primer_count }}" />
     <input type="hidden" name="reaction-count" value="{{ reaction_count }}" />
+    <input type="hidden" name="account-id" value="{{ account_id }}" />
 
     <p>
       <input
@@ -57,6 +53,9 @@
       <a href="javascript:history.back()" style="margin-left: 3rem">Go back</a>
       to make changes.
     </p>
+
+    <p>When you place the order, a printout page (completed Sequencing Report Form) will be shown.</p>
+    <p>The form will be needed for your submission and no sample will be accepted without it.</p>
   </form>
 </div>
 

@@ -9,7 +9,7 @@
     <div class="container" style="width: 1000px;">
         <h1>Sequencing Orders</h1>
 
-        <p>This is <strong>Step 3 of 3.</strong></p>
+        <p>This is <strong>Step 3 of 3.</strong> Select template and primer combinations</p>
 
         <form method="post" action="">
 
@@ -32,6 +32,7 @@
                 <input type="hidden" name="template-count" value="{{ template_count }}">
                 <input type="hidden" name="primer-count" value="{{ primer_count }}">
                 <input type="hidden" name="reaction-count" value="{{ reaction_count }}">
+                <input type="hidden" name="account-id" value="{{ account_id }}">
 
                 <input type="submit" name="previewing-reactions" value="Proceed to Preview" class="button-primary">
             </div>

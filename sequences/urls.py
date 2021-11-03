@@ -10,6 +10,7 @@ urlpatterns = [
          views.TemplateDetailView.as_view(), name='template_detail'),
     path('primer/view/<int:pk>/',
          views.PrimerDetailView.as_view(), name='primer_detail'),
+    path('primer/common/', views.CommonPrimerView.as_view(), name='common_primers'),
     path('reaction/add/', views.ReactionAddView, name='add_reactions'),
     path('reaction/bulk/', views.BulkReactionAddView.as_view(),
          name='add_bulk_reactions'),

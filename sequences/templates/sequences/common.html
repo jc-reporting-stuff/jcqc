@@ -1,0 +1,29 @@
+{% extends '_base.html' %}
+
+{% block title %}Common Primer list{% endblock %}
+
+{% block content %}
+
+    <div class="container half-width">
+
+        <h1 class="centered">Lab Services Common Primers</h1>
+
+        <table class="oligo-view">
+        <tr>
+            <th>Primer Name</th>
+            <th>Length</th>
+            <th>Sequence 5′ to 3′</th>
+        </tr>
+        {% for primer in primer %}
+        <tr>
+            <td>{{ primer.name }}</td>
+            <td>{{ primer.sequence|length }}</td>
+            <td>{{ primer.sequence }}</td>
+        </tr>
+
+        {% endfor %}
+        </table>
+
+    </div>
+
+{% endblock content %}

@@ -14,7 +14,7 @@ from django.utils.timezone import make_aware
 from django.core.paginator import Paginator
 
 from sequences.models import Reaction, SeqPrice
-from sequences.forms import ReactionEasyOrderForm, ReactionForm, IdRangeForm, DateRangeForm, StatusForm, TextSearch, PriceForm
+from sequences.forms import PrimerModelForm, ReactionEasyOrderForm, ReactionForm, IdRangeForm, DateRangeForm, StatusForm, TemplateModelForm, TextSearch, PriceForm
 
 
 from sequences.models import Template, Primer, Reaction, Account
@@ -70,9 +70,19 @@ class PrimerDetailView(DetailView):
     template_name = 'sequences/primer_detail.html'
 
 
+class CommonPrimerView(ListView):
+    model = Primer
+    context_object_name = 'primer'
+    template_name = 'sequences/common.html'
+
+    def get_queryset(self):
+        return Primer.objects.filter(common=True).order_by('id')
+
+
 @user_has_accounts
 def MethodSelectView(request):
-    return render(request, 'sequences/method_select.html')
+    accounts = request.user.get_financial_accounts()
+    return render(request, 'sequences/method_select.html', context={'accounts': accounts})
 
 
 def get_submission_id():
@@ -96,25 +106,25 @@ def ReactionAddView(request):
         template_count = int(request.POST.get('template-count'))
         primer_count = int(request.POST.get('primer-count'))
         reaction_count = int(request.POST.get('reaction-count'))
+        account_id = int(request.POST.get('account-id'))
 
       # Check and make sure the data from the last form are all valid to create new formsets #
-        valid_data = True if template_count >= 1 and primer_count >= 0 and reaction_count >= 1 else False
+        valid_data = True if template_count >= 1 and primer_count >= 0 and reaction_count >= 1 and account_id >= 1 else False
         if not valid_data:
             messages.info(
                 request, r'You need to order at least 1 template and 1 reaction.')
             return HttpResponseRedirect(reverse_lazy('sequencing:method_select'))
 
         # Create formsets to pass to page #
-        TemplateFormset = modelformset_factory(Template, fields=(
-            'name', 'type', 'template_size', 'insert_size', 'template_concentration', 'template_volume', 'pcr_purify', 'comment'),
-            extra=template_count)
+        TemplateFormset = modelformset_factory(Template, form=TemplateModelForm,
+                                               extra=template_count)
 
-        PrimerFormset = modelformset_factory(Primer, fields=(
-            'name', 'concentration', 'volume', 'melting_temperature', 'sequence'),
-            extra=primer_count)
+        PrimerFormset = modelformset_factory(Primer, form=PrimerModelForm,
+                                             extra=primer_count)
 
         ReactionFormset = formset_factory(ReactionForm, extra=reaction_count)
 
+        # This indicates coming from the method-select/choose number of things page
         if request.POST.get('template-primer-add'):
             template_formset = TemplateFormset(
                 queryset=Template.objects.none(), prefix="template")
@@ -132,13 +142,17 @@ def ReactionAddView(request):
             'reaction_count': reaction_count,
             'template_formset': template_formset,
             'primer_formset': primer_formset,
+            'account_id': account_id
         }
 
+        # If the user hasn't had a chance to add templates and primers yet, serve them the blank forms
         if request.POST.get('template-primer-add'):
             return render(request, 'sequences/add_template.html', context=context)
 
+        # This is the button on the template/primer-add page to move onto defining reactions
         adding_reactions = request.POST.get('proceed-reactions')
 
+        # If the templates/primers look good, we can define the reactions formset and serve
         if template_formset.is_valid() and primer_formset.is_valid() and adding_reactions:
             templates = template_formset.save(commit=False)
             primers = primer_formset.save(commit=False)
@@ -146,9 +160,11 @@ def ReactionAddView(request):
                 form_kwargs={'templates': templates, 'primers': primers})
             context['reaction_formset'] = reaction_formset
             return render(request, 'sequences/add_reaction.html', context=context)
+        # if forms aren't valid, send them back to the template/primer template
         elif adding_reactions:
             return render(request, 'sequences/add_template.html', context=context)
 
+        # This comes from the reactions page, indicating moving onto preview.
         previewing_reactions = request.POST.get('previewing-reactions')
 
         if previewing_reactions:
@@ -172,6 +188,7 @@ def ReactionAddView(request):
             context['reaction_formset'] = reaction_formset
             context['previewing'] = True
             context['reactions'] = reactions
+            context['account'] = Account.objects.get(id=account_id)
             return HttpResponse(render(request, 'sequences/preview.html', context=context))
 
         finalize_order = request.POST.get('finalize-order')
@@ -196,7 +213,7 @@ def ReactionAddView(request):
                 'templates': templates, 'primers': primers})
 
             account_to_save = Account.objects.get(
-                id=request.POST.get('account'))
+                id=request.POST.get('account-id'))
 
             for form in reaction_formset:
                 ## Filter out the template and primer that we want from the saved instances ##
@@ -238,6 +255,15 @@ class BulkReactionAddView(FormView):
     template_name = 'sequences/bulk_add.html'
     form_class = ReactionEasyOrderForm
 
+    def get(self, request):
+        form = ReactionEasyOrderForm()
+        account_id = request.GET.get('account_id')
+        if not account_id:
+            messages.info(
+                request, 'Please select an account before proceeding')
+            return redirect(reverse('sequencing:method_select'))
+        return render(request, 'sequences/bulk_add.html', context={'form': form, 'account_id': account_id})
+
     def post(self, request):
         form = ReactionEasyOrderForm(request.POST or None)
 
@@ -245,12 +271,19 @@ class BulkReactionAddView(FormView):
             return render(request, 'sequences/bulk_add.html', context={'form': form})
 
         data = form.cleaned_data
+        account_id = request.POST.get('account-id')
 
         reactions = []
         for reaction in data['reactions']:
-            ex = r'^(.+?)[\t;,]\s*(.+?)[\t;,]\s*(.*?)\r$'
-            groups = re.match(ex, reaction).groups()
-            reactions.append(groups)
+            try:
+                ex = r'^([^\t;,]+)[\t;,]\s*([^\t\r;,]+)[\t;,]?\s*?([^\r]*)\r?$'
+                groups = re.match(ex, reaction).groups()
+                reactions.append(groups)
+                print(groups)
+            except AttributeError:
+                messages.info(
+                    request, f'Could not match the line {reaction}. Check formatting and try again.')
+                return render(request, 'sequences/bulk_add.html', context={'form': form, 'account_id': account_id})
 
         primer_names = []
         for reaction in reactions:
@@ -271,7 +304,7 @@ class BulkReactionAddView(FormView):
                         request, f'Primer {primer_name} not found as common primer. Check spelling and try again.')
 
             if not all_primers_are_common:
-                return render(request, 'sequences/bulk_add.html', context={'form': form})
+                return render(request, 'sequences/bulk_add.html', context={'form': form, 'account_id': account_id})
 
         if request.POST.get('finalize'):
             template_names = []
@@ -319,7 +352,7 @@ class BulkReactionAddView(FormView):
                     (t for t in templates if t.name == reaction[0]))
                 reaction_primer = next(
                     p for p in primers if p.name == reaction[1])
-                account = Account.objects.get(id=request.POST.get('account'))
+                account = Account.objects.get(id=account_id)
                 r = Reaction(
                     submitter=request.user,
                     template=reaction_template,
@@ -341,14 +374,15 @@ class BulkReactionAddView(FormView):
         data['primer_source_display'] = dict(
             form.fields['primer_source'].choices)[data['primer_source']]
 
-        accounts = request.user.get_financial_accounts()
+        account = Account.objects.get(id=account_id)
 
         context = {
             'form': form,
             'reactions': reactions,
             'previewing': True,
             'reaction_meta': data,
-            'accounts': accounts
+            'account': account,
+            'account_id': account_id,
         }
 
         return render(request, 'sequences/bulk_add.html', context=context)

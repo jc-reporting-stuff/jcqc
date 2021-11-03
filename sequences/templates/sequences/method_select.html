@@ -4,7 +4,7 @@
 
 {% block content %}
 
-    <div class="container half-width">
+    <div class="container" style="width: 45rem;">
         <h1>Submitting samples for sequencing</h1>
 
         <p>There are three steps to the process: to add templates and primers, then to choose reactions.</p>
@@ -12,30 +12,40 @@
         <form method="post" action="{% url 'sequencing:add_reactions' %}" autocomplete="off">
             {% csrf_token %}
 
-            <div class="sequencing-question">
-                <p>How many <strong>templates</strong> are you submitting:
-                <input type="text" style="width: 4rem;" name="template-count" value="1" pattern="[1-9]|[1-4]\d|50"
-                    oninvalid="this.setCustomValidity('Please enter a value between 1 and 50')" oninput="this.setCustomValidity('')">
-                </p>
+            <div>
+                <label for="account">Please select account to be used:</label>
+                <p style="text-align:center;">
+                <select name="account-id" id="account"> 
+                    {% for account in accounts %}
+                        <option value="{{ account.id }}">{{ account.code}}: {{ account.comment }}</option>
+                    {% endfor %}
+                </select>
+                or
+                <button type="button" onclick="gotoAccounts()" class="button-primary">Add an account</button>
+            </p>
             </div>
 
             <div class="sequencing-question">
-                <p>How many <strong>primers</strong> are you submitting:
-                <input type="text" style="width: 4rem;" name="primer-count" value="0" pattern="0|0?\d|[1-4]\d|50"
+                <label for="template-count">How many <strong>templates</strong> are you submitting:</label>
+                <input type="text" style="width: 4rem;" name="template-count" value="1" pattern="[1-9]|[1-4]\d|50" id="template-count"
+                    oninvalid="this.setCustomValidity('Please enter a value between 1 and 50')" oninput="this.setCustomValidity('')">
+            </div>
+
+            <div class="sequencing-question">
+                <label for="primer-count">How many <strong>primers</strong> are you submitting:</label>
+                <input type="text" style="width: 4rem;" name="primer-count" value="0" pattern="0|0?\d|[1-4]\d|50" id="primer-count"
                     oninvalid="this.setCustomValidity('Please enter a value between 0 and 50')" oninput="this.setCustomValidity('')"/>
-                </p>
             </div>
 
             <p>
-                <strong>Note:</strong> Lab Services provides <a href="#">these common primers</a> which
+                <strong>Note:</strong> Lab Services provides <a href="{% url 'sequencing:common_primers' %}">these common primers</a> which
                 do not need to be submitted.
             </p>
 
             <div class="sequencing-question">
-                <p>How many <strong>reactions</strong> are you ordering in total:
-                <input type="text" style="width: 4rem;" name="reaction-count" value="1" pattern="[1-9]|[1-9]\d|100"
+                <label for="reaction-count">How many sequencing <strong>reactions</strong> are required in this submission:</label>
+                <input type="text" style="width: 4rem;" name="reaction-count" value="1" pattern="[1-9]|[1-9]\d|100" id="reaction-count"
                     oninvalid="this.setCustomValidity('Please enter a value between 1 and 100')" oninput="this.setCustomValidity('')">
-                </p>
             </div>
 
             <div style="text-align:center; width: 100%">
@@ -46,8 +56,18 @@
 
         <hr>
 
-        <p><strong>Alternatively,</strong> if you have many samples it may be easier to use <a href="{% url 'sequencing:add_bulk_reactions' %}">Bulk Ordering</a>.
+        <p>
+            <strong>Alternatively,</strong> if you have many samples it may be easier to use
+            <button type="button" onclick="gotoEasyOrder()" class="button-primary">Easy Order</button>
+        </P>
         
     </div>
+
+    <script>
+        const gotoEasyOrder = () => {
+            let accountId = document.querySelector('#account').value
+            window.location.assign(`{% url 'sequencing:add_bulk_reactions' %}?account_id=${accountId}`)
+        }
+    </script>
 
 {% endblock content %}

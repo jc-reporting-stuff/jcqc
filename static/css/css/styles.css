@@ -354,14 +354,21 @@ form {
     .delivery-box p em {
       font-style: italic; }
 
-.half-width h2 {
-  font-size: large;
-  font-weight: bold; }
+.half-width {
+  line-height: 1.1rem; }
+  .half-width h2 {
+    font-size: large;
+    font-weight: bold; }
+  .half-width a {
+    color: #1d4ed8; }
+    .half-width a:visited {
+      color: #1e3a8a; }
 
-.half-width a {
-  color: #1d4ed8; }
-  .half-width a:visited {
-    color: #1e3a8a; }
+.inline-image {
+  height: 0.7rem;
+  width: 0.7rem;
+  margin: 0, 0.1rem;
+  filter: invert(44%) sepia(7%) saturate(703%) hue-rotate(182deg) brightness(98%) contrast(94%); }
 
 .new-oligo-box {
   margin-top: 1rem;

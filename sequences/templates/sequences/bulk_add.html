@@ -10,13 +10,19 @@
 
         <h1>Sequencing - Bulk Order</h1>
 
-        <form method="post" action="">
+        <form method="post" action="{% url 'sequencing:add_bulk_reactions' %}"%>
             {% csrf_token %}
 
             <div {% if previewing %}style="display:none;"{% endif%}>
                 {{ form|crispy }}
+
+                <input type="hidden" name="account-id" value="{{ account_id }}" />
                 
                 <br>
+
+                <p>Format each line as follows where ⟹ is comma, semicolon or tab.</p>
+                <p>TemplateName ⟹ PrimerName ⟹ Comment (optional)</p>
+
 
                 <input type="submit" name="preview" value="Proceed to preview" class="button-primary">
         
@@ -59,15 +65,8 @@
                         {% endfor %}
                     </table>
 
-                    <p>
-                        Choose account will you be using for this order:
-                        <select name="account">
-                            {% for account in accounts %}
-                            <option value="{{ account.id }}">{{ account.code }}: {{ account.comment }}</option>
-                            {% endfor %}
-                        </select>
-                        <input type="submit" name="finalize" value="Place order" class="button-primary">
-                    </p>
+                   <p>Using account {{ account.code }}: {{ account.comment }}</p>
+                    <input type="submit" name="finalize" value="Place order" class="button-primary">
 
                 </div>
             {% endif %}
