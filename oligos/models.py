@@ -2,6 +2,8 @@ from django.db.models.fields import CharField
 from accounts.models import Account, User
 from django.db import models
 
+from .utils import EpsonValues
+
 
 class Oligo(models.Model):
     order_id = models.IntegerField(unique=False)
@@ -28,9 +30,9 @@ class Oligo(models.Model):
         decimal_places=2, max_digits=5, blank=True, null=True)
 
     @property
-    def OD(self):
-        if self.OD_reading_reading:
-            return float(self.OD_reading_reading) * float(self.OD_reading_reading_dilution_factor)
+    def total_OD(self):
+        if self.OD_reading:
+            return float(self.OD_reading) * float(self.OD_reading_dilution_factor) * float(self.volume)
         else:
             return None
 
@@ -41,105 +43,29 @@ class Oligo(models.Model):
         return spaced_sequence
 
     @property
-    def micrograms(self):
+    def pmol_per_microliter(self):
         if self.OD_reading:
-            return round(float(self.micromoles) * float(self.molecular_weight), 1)
+            epson_value = 0
+            for i in range(0, len(self.sequence)):
+                current_base = self.sequence[i]
+                current_plus_next = self.sequence[i:i+2]
+                epson_value += getattr(EpsonValues, current_plus_next) - \
+                    getattr(EpsonValues, current_base)
+            epson_value += getattr(EpsonValues, self.sequence[-1])
+            concentration = (self.OD_reading *
+                             self.OD_reading_dilution_factor * 10**6) / epson_value
+            return round(concentration, 2)
         else:
-            return -1
-
-    @property
-    def micrograms_per_ml(self):
-        if self.OD_reading:
-            return round(float(self.micrograms) / float(self.volume), 2)
-        else:
-            return -1
+            return None
 
     @property
     def micrograms_per_microliter(self):
         if self.OD_reading:
-            return round(float(self.micrograms_per_ml) / 1000, 1)
+            concentration = float(self.pmol_per_microliter) * \
+                float(self.molecular_weight) / 10**6
+            return round(concentration, 2)
         else:
-            return -1
-
-    @property
-    def micromoles(self):
-        if not self.OD_reading:
-            return -1
-
-        a = 15.4
-        c = 7.3
-        g = 11.7
-        t = 8.8
-        r = (a + g) / 2
-        y = (c + t) / 2
-        m = (a + c) / 2
-        w = (a + t) / 2
-        s = (c + g) / 2
-        k = (g + t) / 2
-        d = (a + g + t) / 3
-        h = (a + c + t) / 3
-        b = (c + g + t) / 3
-        v = (a + c + g) / 3
-        n = (a + c + g + t) / 4
-
-        bases_sum = 0
-
-        for nucleotide in self.sequence:
-            letter = nucleotide.lower()
-            if letter == 'a':
-                bases_sum += a
-            elif letter == 'c':
-                bases_sum += c
-            elif letter == 'g':
-                bases_sum += g
-            elif letter == 't':
-                bases_sum += t
-            elif letter == 'r':
-                bases_sum += r
-            elif letter == 'y':
-                bases_sum += y
-            elif letter == 'm':
-                bases_sum += m
-            elif letter == 'w':
-                bases_sum += w
-            elif letter == 's':
-                bases_sum += s
-            elif letter == 'k':
-                bases_sum += k
-            elif letter == 'd':
-                bases_sum += d
-            elif letter == 'h':
-                bases_sum += h
-            elif letter == 'b':
-                bases_sum += b
-            elif letter == 'v':
-                bases_sum += v
-            elif letter == 'n':
-                bases_sum += n
-
-        micromoles_made = float(self.OD_reading) / float(bases_sum)
-        return round(micromoles_made, 3)
-
-    @property
-    def nanomoles(self):
-        if self.OD_reading:
-            return self.micromoles * 1000
-        else:
-            return -1
-
-    @property
-    def nanomoles_per_ml(self):
-        if self.OD_reading:
-            return round(float(self.nanomoles) / float(self.volume), 2)
-        else:
-            return -1
-
-    @property
-    def pmol_per_microliter(self):
-        if self.OD_reading:
-            return round(float(self.nanomoles_per_ml) / 1000, 1)
-        else:
-            return -1
+            return None
 
     @property
     def molecular_weight(self):

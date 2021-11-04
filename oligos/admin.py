@@ -8,9 +8,10 @@ class OligoAdmin(admin.ModelAdmin):
         (None, {'fields': ('order_id', 'submitter', 'account')}),
         ('Details', {'fields': (
             'name', 'sequence', 'scale', 'purity', 'modification',
-            'delivery_date', 'price', 'volume',
+            'delivery_date', 'price',
         )}),
-        ('Analysis', {'fields': ('OD_reading',)}),
+        ('Analysis', {'fields': ('volume',
+         'OD_reading', 'OD_reading_dilution_factor')}),
     )
 
     list_display = ['name', 'submitter', 'account',

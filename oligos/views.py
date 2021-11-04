@@ -440,6 +440,17 @@ class OligoListActionsView(View):
             for oligo in oligos_to_update:
                 oligo_object = Oligo.objects.get(id=oligo)
                 oligos.append(oligo_object)
+
+            for oligo in oligos:
+                if oligo.OD_reading:
+                    oligo.micrograms95 = round(
+                        oligo.micrograms_per_microliter * 95, 1)
+                    oligo.nmols95 = round(
+                        oligo.pmol_per_microliter * 95 / 1000, 1)
+                    oligo.micrograms195 = round(
+                        oligo.micrograms_per_microliter * 195, 1)
+                    oligo.nmols195 = round(
+                        oligo.pmol_per_microliter * 195 / 1000, 1)
             return render(request, 'oligos/report.html', context={'oligos': oligos})
 
         redirect_url = request.POST.get('return-url')
@@ -450,7 +461,12 @@ def ReportOrderView(request):
     if not request.GET.get('order_id'):
         return HttpResponseRedirect(reverse('oligos:search'))
     order_id = request.GET.get('order_id')
-    oligos = Oligo.objects.filter(order_id=order_id)
+    oligos = list(Oligo.objects.filter(order_id=order_id))
+    for oligo in oligos:
+        oligo.micrograms95 = round(oligo.micrograms_per_microliter * 95, 1)
+        oligo.nmols95 = round(oligo.pmol_per_microliter * 95 / 1000, 1)
+        oligo.micrograms195 = round(oligo.micrograms_per_microliter * 195, 1)
+        oligo.nmols195 = round(oligo.pmol_per_microliter * 195 / 1000, 1)
     return render(request, 'oligos/report.html', context={'oligos': oligos})
 
 
