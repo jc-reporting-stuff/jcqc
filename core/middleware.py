@@ -12,7 +12,6 @@ class LoginRequiredMiddleware:
         self.exceptions = tuple(re.compile(url)
                                 for url in settings.LOGIN_EXEMPT_URLS)
         self.open_urls = self.exceptions
-        print(self.open_urls)
 
     def __call__(self, request):
         response = self.get_response(request)
