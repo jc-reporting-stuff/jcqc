@@ -1,7 +1,7 @@
 {% load static %}
 <div class="nav-container">
 
-    <div class="nav-group-container">
+    <div class="nav-group-container {% if user.is_staff or user.is_superuser %}wide{% endif %}">
 
         <div class="nav-group">
 
@@ -43,17 +43,36 @@
                 </div>
             </div>
 
-            <a href="{% url 'sequencing:admin_home' %}">
-                <div class="nav-box">
-                    Sequencing<br>Admin
-                </div>
-            </a>
+            <div class="nav-box">
+                <div class="top-row">Sequencing Admin</div>
+                    <div class="bottom-box">
+                        <a href="{% url 'sequencing:today_listview' %}">Today</a>
+                        <span>|</span> 
+                        <a href="{% url 'sequencing:search' %}">Search</a>
+                        <span>|</span> 
+                        <a href="{% url 'sequencing:billing' %}">Billing</a>
+                        <span>|</span> 
+                        <a href="{% url 'sequencing:prep_menu' %}">Prep</a>
+                        <span>|</span> 
+                        <a href="{% url 'sequencing:remove' %}">Remove</a>
+                    </div>
+
+            </div>
+
 
             <a href="{% url 'client_list' %}">
                 <div class="nav-box">
-                    Client<br>List
+                    Client List
                 </div>
-            </a>            
+            </a> 
+
+            {% if user.is_superuser %}
+                <a href="{% url 'admin:index' %}">
+                    <div class="nav-box">
+                        Admin Dashboard
+                    </div>
+                </a>             
+            {% endif %}
         </div>
 
         {% endif %}
@@ -73,11 +92,6 @@
                 </div>
             </a>
             
-            {% if user.is_superuser %}
-                <div class="admin-link">
-                    <a href="/admin">Admin Dashboard</a>
-                </div>
-            {% endif %}
 
         </div>
     

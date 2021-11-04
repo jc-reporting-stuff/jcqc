@@ -6,28 +6,81 @@
 
     <div class="container">
 
-    <h1>Custom Oligo Analysis Report - calculated as liquid</h1>
+        <div class="report-box">
+            <h1>Custom Oligo Analysis Report - calculated as Liquid.</h1>
 
-
-        <table class="oligo-view" style="max-width: 1280px;">
-            <tr>
-                <th>Oligo Name</th>
-                <th>Sequence</th>
-                <th>Size</th>
-                <th>µg/µL</th>
-                <th>pmol/µL</th>
-            </tr>
-
-            {% for oligo in oligos %}
+            <table class="oligo-view" style="max-width: 1280px;">
                 <tr>
-                    <td style="text-align: left;">{{ oligo.name }}</td>
-                    <td style="text-align:left;">{{ oligo.dna_sequence }}</td>
-                    <td>{{ oligo.sequence|length }}</td>
-                    <td>{% if oligo.OD_reading %}{{ oligo.micrograms_per_microliter }}{% else %}- -{% endif %}</td>
-                    <td>{% if oligo.OD_reading %}{{ oligo.pmol_per_microliter }}{% else %}- -{% endif %}</td>
+                    <th>Oligo Name</th>
+                    <th>Sequence</th>
+                    <th>Size</th>
+                    <th>µg/µL</th>
+                    <th>pmol/µL</th>
                 </tr>
-            {% endfor %}
-        </table>
+
+                {% for oligo in oligos %}
+                    <tr>
+                        <td style="text-align: left;">{{ oligo.name }}</td>
+                        <td style="text-align:left;">{{ oligo.dna_sequence }}</td>
+                        <td>{{ oligo.sequence|length }}</td>
+                        <td>{% if oligo.OD_reading %}{{ oligo.micrograms_per_microliter }}{% else %}0.0{% endif %}</td>
+                        <td>{% if oligo.OD_reading %}{{ oligo.pmol_per_microliter }}{% else %}0.0{% endif %}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <hr>
+
+        <div class="report-box">
+            <h1>Custom Oligo Analysis Report - calculated as Powder (95 µL).</h1>
+
+            <table class="oligo-view" style="max-width: 1280px;">
+                <tr>
+                    <th>Oligo Name</th>
+                    <th>Sequence</th>
+                    <th>Size</th>
+                    <th>µg/µL</th>
+                    <th>pmol/µL</th>
+                </tr>
+
+                {% for oligo in oligos %}
+                    <tr>
+                        <td style="text-align: left;">{{ oligo.name }}</td>
+                        <td style="text-align:left;">{{ oligo.dna_sequence }}</td>
+                        <td>{{ oligo.sequence|length }}</td>
+                        <td>TODO</td>
+                        <td>TODO</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div class="report-box">
+            <h1>Custom Oligo Analysis Report - calculated as Powder (195 µL).</h1>
+
+            <table class="oligo-view" style="max-width: 1280px;">
+                <tr>
+                    <th>Oligo Name</th>
+                    <th>Sequence</th>
+                    <th>Size</th>
+                    <th>µg/µL</th>
+                    <th>pmol/µL</th>
+                </tr>
+
+                {% for oligo in oligos %}
+                    <tr>
+                        <td style="text-align: left;">{{ oligo.name }}</td>
+                        <td style="text-align:left;">{{ oligo.dna_sequence }}</td>
+                        <td>{{ oligo.sequence|length }}</td>
+                        <td>TODO</td>
+                        <td>TODO</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+
 
     </div>
 

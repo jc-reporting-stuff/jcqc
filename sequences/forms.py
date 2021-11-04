@@ -111,9 +111,9 @@ class ReactionEasyOrderForm(forms.Form):
 
 class IdRangeForm(forms.Form):
     low = forms.IntegerField(
-        widget=forms.TextInput, max_value=2000000, min_value=1, label="From", required=False)
+        widget=forms.TextInput, min_value=1, label="From", required=False)
     high = forms.IntegerField(
-        widget=forms.TextInput, max_value=2000000, min_value=1, label="To",
+        widget=forms.TextInput,  min_value=1, label="To",
         required=False)
 
 

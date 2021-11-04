@@ -92,6 +92,10 @@ sub {
   }
 }
 
+.inactive-user {
+  background-color: $gray-400;
+}
+
 .messages-container {
   max-width: 30rem;
   margin: auto;

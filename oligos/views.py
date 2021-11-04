@@ -129,7 +129,6 @@ class OligoCreateView(CreateView):
                 cd.append(cleaned_data)
 
         max_order = Oligo.objects.aggregate(Max('order_id'))
-        print(max_order)
         if not max_order['order_id__max']:
             max_order_id = 0
         else:
@@ -347,7 +346,8 @@ class OligoListView(View):
 
         elif data['query'] == 'date':
             start_date = create_aware_date(data['low'])
-            end_date = create_aware_date(data['high'])
+            end_date = create_aware_date(
+                data['high']) + datetime.timedelta(days=1)
 
             client = data['client'] or False
             queryset = Oligo.objects.filter(
@@ -399,7 +399,6 @@ def get_checked_oligos_from_data(list_of_dicts):
 class OligoListActionsView(View):
     def post(self, request):
         action = request.POST.get('button')
-        print(action)
 
         post_data = dict(request.POST.lists())
 

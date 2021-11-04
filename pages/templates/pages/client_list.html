@@ -16,8 +16,8 @@
             <table class="oligo-view" id="client-table">
                 <tr>
                     <th><a href="?order_by=id">Customer ID</a></th>
-                    <th><a href="?order_by=first_name">First Name</a></th>
                     <th><a href="?order_by=last_name">Last Name</a></th>
+                    <th><a href="?order_by=first_name">First Name</a></th>
                     <th>Department/Company</th>
                     <th>Type</th>
                     <th>Oligo Orders</th>
@@ -26,15 +26,15 @@
                 </tr>
 
                 {% for user in users %}
-                    <tr>
+                    <tr {% if not user.is_active %}class="inactive-user"{% endif %}>
                         <td>{{ user.id }}</td>
-                        <td>{{ user.first_name }}</td>
                         <td>{{ user.last_name }}</td>
+                        <td>{{ user.first_name }}</td>
                         <td>{{ user.department }}</td>
                         <td>{{ user.type }}</td>
                         <td>TODO: Make link</td>
                         <td>TODO: Make link</td>
-                        <td>{% if user.is_active %}Active (inactivate){% else %}Inactive (activate){% endif %}</td>
+                        <td>{% if user.is_active %}Active{% else %}Inactive{% endif %}</td>
                     </tr>
                 {% endfor %}
             </table>

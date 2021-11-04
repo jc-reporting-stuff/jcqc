@@ -23,4 +23,6 @@ urlpatterns = [
     path('search', views.SequenceSearchView.as_view(), name='search'),
     path('search-results', views.SequenceListView.as_view(), name='search_results'),
     path('billing', views.BillingView.as_view(), name='billing'),
+    path('prep/menu', views.PrepMenuView.as_view(), name='prep_menu'),
+    path('remove', views.RemoveOrderView.as_view(), name='remove'),
 ]

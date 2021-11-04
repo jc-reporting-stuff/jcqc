@@ -100,6 +100,9 @@ sub {
   .container .page-container {
     margin: auto; }
 
+.inactive-user {
+  background-color: #9ca3af; }
+
 .messages-container {
   max-width: 30rem;
   margin: auto;
@@ -155,6 +158,8 @@ header .ugls-header-banner {
     justify-content: space-between;
     align-items: center;
     height: 100%; }
+    .nav-container .nav-group-container.wide {
+      width: 95vw; }
     .nav-container .nav-group-container .nav-group {
       display: flex;
       flex-direction: row;
@@ -339,16 +344,15 @@ form {
   border: 1px solid #1e40af;
   background-color: #eff6ff;
   border-radius: 1rem;
-  width: 30rem;
+  width: 50rem;
   margin: 1rem auto;
   padding: 0.75rem; }
   .delivery-box div {
     text-align: center;
-    margin: 0; }
+    margin: 0 auto; }
     .delivery-box div button {
       margin: 0; }
   .delivery-box p {
-    text-align: left;
     margin: 0.25rem 0.5rem;
     line-height: 1.25rem; }
     .delivery-box p em {

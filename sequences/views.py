@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect, reverse
 from django.forms import modelformset_factory, formset_factory
 from django.urls import reverse_lazy
 from django.db.models import Max
-from django.views.generic.base import View
+from django.views.generic.base import View, TemplateView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -684,3 +684,52 @@ class BillingView(View):
             billing_context.append(row)
 
         return render(request, 'sequences/billing_output.html', context={'billing': billing_context})
+
+
+class RemoveOrderView(FormView):
+    form_class = IdRangeForm
+    template_name = 'sequences/remove_order.html'
+
+    def form_valid(self, form):
+        data = form.cleaned_data
+
+        if not data['low'] and not data['high']:
+            messages.info(self.request, 'No data submitted.')
+            return render(self.request, 'sequences/remove_order.html', context={'form': form})
+
+        if not data['low'] or not data['high']:
+            order_id = data['low'] if data['low'] else data['high']
+            reactions_to_remove = list(
+                Reaction.objects.filter(submission_id=order_id))
+        else:
+            reactions_to_remove = Reaction.objects.filter(submission_id__gte=data['low']).filter(
+                submission_id__lte=data['high']).order_by('order_id')
+
+        if not reactions_to_remove:
+            messages.info(self.request, 'No orders within that range.')
+            return render(self.request, 'sequences/remove_order.html', context={'form': form})
+
+        order_ids = [
+            reaction.submission_id for reaction in reactions_to_remove]
+
+        if self.request.POST.get('submit') == 'Confirm and Remove':
+            order_ids = list(dict.fromkeys(order_ids))
+            for order in order_ids:
+                oligos_in_order = Reaction.objects.filter(submission_id=order)
+                for oligo in oligos_in_order:
+                    oligo.delete()
+            messages.success(self.request, 'Removed orders successfully')
+            return HttpResponseRedirect(reverse('sequencing:list_reactions'))
+
+        order_context = {}
+        for order in order_ids:
+            try:
+                order_context[order] += 1
+            except KeyError:
+                order_context[order] = 1
+
+        return render(self.request, 'sequences/remove_order.html', context={'form': form, 'orders': order_context, 'confirming': True})
+
+
+class PrepMenuView(TemplateView):
+    template_name = 'sequences/prep_menu.html'

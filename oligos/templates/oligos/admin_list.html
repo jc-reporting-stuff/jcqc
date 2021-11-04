@@ -37,7 +37,6 @@
         <table class="oligo-view">
             <tr>
                 <th><input type="checkbox" onchange="selectAll(event)" id="top-checkbox">Oligo ID</th>
-                <th>Order ID</th>
                 <th>Client Name</th>
                 <th>Oligo Name</th>
                 <th>Sequence</th>
@@ -52,8 +51,7 @@
             {% for oligo in page_obj %}
                 <tr>
                     <td><input type="checkbox" name="{{ oligo.id }}-checkbox">{{ oligo.id }}</td>
-                    <td><a href="{% url 'oligos:report' %}?order_id={{oligo.order_id}}">{{ oligo.order_id }}</a></td>
-                    <td>{{ oligo.submitter.display_name }}</td>
+                    <td><a href="{% url 'oligos:report' %}?order_id={{oligo.order_id}}">{{ oligo.submitter.display_name }}</a></td>
                     <td style="text-align: left">{{ oligo.name }}</td>
                     <td style="text-align: left;">{{ oligo.dna_sequence }}</td>
                     <td style="white-space: nowrap">{{ oligo.sequence|length }}</td>

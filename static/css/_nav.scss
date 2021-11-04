@@ -16,6 +16,9 @@
     justify-content: space-between;
     align-items: center;
     height: 100%;
+    &.wide {
+      width: 95vw;
+    }
     .nav-group {
       display: flex;
       flex-direction: row;

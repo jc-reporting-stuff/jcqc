@@ -13,7 +13,9 @@
 
         <div {% if confirming %} style="display:none;"{% endif %}>
 
-            <p>To remove a single order, you can enter the ID in either box.</p>
+            <p>To remove a single submission, you can enter the Submission ID in either box.</p>
+
+            <p>Use the <a href="{% url 'admin:index' %}">Admin Panel</a> to edit or remove individual sequences.
 
             <table>
                 {{ form.as_table }}
