@@ -8,6 +8,10 @@ class HomePageView(TemplateView):
     template_name = 'home.html'
 
 
+class MoreInfoView(TemplateView):
+    template_name = 'pages/info.html'
+
+
 class ClientListView(ListView):
     template_name = 'pages/client_list.html'
     context_object_name = 'users'

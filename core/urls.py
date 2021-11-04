@@ -22,7 +22,7 @@ urlpatterns = [
 
     # User management
     path('accounts/', include('allauth.urls')),
-    path('accounts/', include('accounts.urls')),
+    path('user/', include('accounts.urls')),
 
     # Oligos orders
     path('oligos/', include('oligos.urls')),
