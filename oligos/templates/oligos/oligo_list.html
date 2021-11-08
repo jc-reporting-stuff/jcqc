@@ -21,8 +21,6 @@
                 <th>Modify</th>
                 <th>Order Date</th>
                 <th>Delivery Date</th>
-                <th>Billed</th>
-                <th>Receiver Signature</th>
             </tr>
 
             {% for oligo in oligos %}
@@ -36,9 +34,7 @@
                     <td>{{ oligo.purity }}</td>
                     <td>{{ oligo.modification }}</td>
                     <td>{{ oligo.created_at|date:'d M Y' }}</td>
-                    <td>make input</td>
-                    <td>???</td>
-                    <td>???</td>
+                    <td>{{ oligo.delivery_date }}</td>
                 </tr>
             {% endfor %}
         </table>

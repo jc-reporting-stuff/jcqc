@@ -19,6 +19,7 @@
                     <th><a href="?order_by=last_name">Last Name</a></th>
                     <th><a href="?order_by=first_name">First Name</a></th>
                     <th>Department/Company</th>
+                    <th>Room Number</th>
                     <th>Type</th>
                     <th>Oligo Orders</th>
                     <th>Sequencing Orders</th>
@@ -31,9 +32,10 @@
                         <td>{{ user.last_name }}</td>
                         <td>{{ user.first_name }}</td>
                         <td>{{ user.department }}</td>
+                        <td>{{ user.room_number }}</td>
                         <td>{{ user.type }}</td>
-                        <td>TODO: Make link</td>
-                        <td>TODO: Make link</td>
+                        <td>{% if user.oligo_orders.all|length > 0 %}<a href="{% url 'oligos:user_orders' user.username %}">Oligo History</a>{% else %}No oligos{% endif %}</td>
+                        <td>{% if user.reactions.all|length > 0 %}<a href="{% url 'sequencing:user_orders' user.username %}">Sequencing History</a>{% else %}No sequences{% endif %}</td>
                         <td>{% if user.is_active %}Active{% else %}Inactive{% endif %}</td>
                     </tr>
                 {% endfor %}
@@ -74,6 +76,10 @@
                         rows[i].style.backgroundColor = 'white';
                     }
                     visibleRowNumber += 1;
+                }
+
+                if (rows[i][7] && rows[i][7] === 'Inactive' && !rows[i].classList.include('inactive-user')) {
+                    rows[i].classList.add('inactive-user');
                 }
             }
 

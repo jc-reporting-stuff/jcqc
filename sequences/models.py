@@ -77,7 +77,8 @@ class Reaction(models.Model):
         ('c', 'Completed')
     ]
 
-    submitter = models.ForeignKey(User, on_delete=models.CASCADE)
+    submitter = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='reactions')
     template = models.ForeignKey(Template, on_delete=models.CASCADE)
     primer = models.ForeignKey(Primer, on_delete=models.CASCADE)
     comment = models.CharField(max_length=150, blank=True, null=True)

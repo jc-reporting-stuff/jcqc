@@ -8,18 +8,18 @@
             <div class="nav-box">
                 <div class="top-row">Oligos</div>
                 <div class="bottom-box">
-                    <a href="{% url 'oligos:order_quantity' %}">Order</a>
+                    <a href="{% url 'oligos:order_quantity' %}" aria-label="Order oligos">Order</a>
                     <span>|</span> 
-                    <a href="{% url 'oligos:client_order_list' %}">View</a>
+                    <a href="{% url 'oligos:client_order_list' %}" aria-label="Oligo order history">View</a>
                 </div>
             </div>
 
             <div class="nav-box">
                 <div class="top-row">Sequencing</div>
                 <div class="bottom-box">
-                    <a href="{% url 'sequencing:method_select' %}">Order</a>
+                    <a href="{% url 'sequencing:method_select' %}" aria-label="Order DNA dequencing">Order</a>
                     <span>|</span> 
-                    <a href="{% url 'sequencing:list_reactions' %}">View</a>
+                    <a href="{% url 'sequencing:list_reactions' %}" aria-label="Sequencing order history">View</a>
                 </div>
             </div>
         
@@ -29,45 +29,49 @@
 
         <div class="nav-group">
             <div class="nav-box">
-                <div class="top-row">Oligo Admin</div>
+                <div class="top-row">
+                    Oligo Admin
+                </div>
                 <div class="bottom-box">
-                    <a href="{% url 'oligos:today_listview' %}">Today</a>
+                    <a href="{% url 'oligos:today_listview' %}" aria-label="Today's oligo orders">Today</a>
                     <span>|</span> 
-                    <a href="{% url 'oligos:search' %}">Search</a>
+                    <a href="{% url 'oligos:search' %}" aria-label="search for oligos">Search</a>
                     <span>|</span> 
-                    <a href="{% url 'oligos:billing' %}">Billing</a>
+                    <a href="{% url 'oligos:billing' %}" aria-label="oligo billing">Billing</a>
                     <span>|</span> 
-                    <a href="{% url 'oligos:enter_od' %}" style="whitespace: nowrap;">Add OD</a>
+                    <a href="{% url 'oligos:enter_od' %}" style="whitespace: nowrap;" aria-label="add OD values">Add OD</a>
                     <span>|</span> 
-                    <a href="{% url 'oligos:remove' %}" style="whitespace: nowrap;">Remove</a>
+                    <a href="{% url 'oligos:remove' %}" aria-label="oligos by order ID">Remove</a>
                 </div>
             </div>
 
             <div class="nav-box">
-                <div class="top-row">Sequencing Admin</div>
-                    <div class="bottom-box">
-                        <a href="{% url 'sequencing:today_listview' %}">Today</a>
+                <div class="top-row">
+                    Sequencing Admin
+                </div>
+                <div class="bottom-box">
+                        <a href="{% url 'sequencing:today_listview' %}" aria-label="Today's Sequences">Today</a>
                         <span>|</span> 
-                        <a href="{% url 'sequencing:search' %}">Search</a>
+                        <a href="{% url 'sequencing:search' %}" aria-label="Search sequences">Search</a>
                         <span>|</span> 
-                        <a href="{% url 'sequencing:billing' %}">Billing</a>
+                        <a href="{% url 'sequencing:billing' %}" aria-label="Sequence billing">Billing</a>
                         <span>|</span> 
-                        <a href="{% url 'sequencing:prep_menu' %}">Prep</a>
+                        <a href="{% url 'sequencing:prep_menu' %}" aria-label="Sequence prep menu">Prep</a>
                         <span>|</span> 
-                        <a href="{% url 'sequencing:remove' %}">Remove</a>
-                    </div>
-
+                        <a href="{% url 'sequencing:remove' %}" aria-label="Remove sequences by submission ID">Remove</a>
+                </div>
             </div>
+        </div>
 
-
-            <a href="{% url 'client_list' %}">
+        <div class="nav-group">
+            <a href="{% url 'client_list' %}" aria-label="Open client list">
                 <div class="nav-box">
                     Client List
                 </div>
             </a> 
 
             {% if user.is_superuser %}
-                <a href="{% url 'admin:index' %}">
+                <a href="{% url 'admin:index' %}" aria-label="Open admin dashboard">
                     <div class="nav-box">
                         Admin Dashboard
                     </div>
@@ -79,7 +83,7 @@
 
         <div class="nav-group">
 
-            <a href="{% url 'edit_account' %}">
+            <a href="{% url 'edit_account' %}" aria-label="Edit user profile and settings">
                 <div class="nav-box">
                     <img src="{% static 'images/user-icon.svg' %}" id="user-icon" alt="user icon">
                     {{ user.username }}

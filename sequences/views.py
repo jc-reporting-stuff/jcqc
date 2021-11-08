@@ -1,4 +1,5 @@
 from typing import Sequence
+from django.conf import settings
 from django.forms.formsets import formset_factory
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
@@ -12,13 +13,15 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.utils.timezone import make_aware
 from django.core.paginator import Paginator
+from django.utils.decorators import method_decorator
+
 
 from sequences.models import Reaction, SeqPrice
 from sequences.forms import PrimerModelForm, ReactionEasyOrderForm, ReactionForm, IdRangeForm, DateRangeForm, StatusForm, TemplateModelForm, TextSearch, PriceForm
 
 
 from sequences.models import Template, Primer, Reaction, Account
-from core.decorators import user_has_accounts
+from core.decorators import owner_or_staff, user_has_accounts
 import datetime
 import pytz
 import re
@@ -77,6 +80,20 @@ class CommonPrimerView(ListView):
 
     def get_queryset(self):
         return Primer.objects.filter(common=True).order_by('id')
+
+
+@method_decorator(owner_or_staff, name='dispatch')
+class UserListView(ListView):
+    context_object_name = 'reactions'
+    paginate_by = settings.PAGINATE_HISTORY_LENGTH
+    template_name = 'sequences/user_history.html'
+
+    def get_queryset(self):
+        username = self.kwargs.get('username')
+        qs = Reaction.objects.all()
+        qs = qs.filter(submitter__username=username) | qs.filter(
+            account__owner__username=username)
+        return qs
 
 
 @user_has_accounts

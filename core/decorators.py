@@ -20,3 +20,19 @@ def user_has_accounts(function):
 
     wrap.__doc__ = function.__doc__
     return wrap
+
+
+def owner_or_staff(function):
+    def wrap(request, *args, **kwargs):
+        requested_user = kwargs.pop('username')
+
+        if (not request.user.is_staff or not request.user.is_superuser) and request.user.username != requested_user:
+            messages.warning(
+                request, 'You are not authorized to view that page.')
+            redirect_target = 'oligos:client_order_list'
+            return redirect(reverse(redirect_target))
+
+        return function(request, *args, **kwargs)
+
+    wrap.__doc__ = function.__doc__
+    return wrap

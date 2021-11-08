@@ -10,11 +10,12 @@ from django.utils.decorators import method_decorator
 from django.views.generic.base import View
 from django.utils.timezone import localtime, now, make_aware
 from django.core.paginator import Paginator
+from django.conf import settings
 
 from oligos.forms import EasyOrderForm, EnterODForm, OligoInitialForm, OligoOrderForm, IdRangeForm, DateRangeForm, OligoTextSearch, PriceForm
 from .models import Oligo, OliPrice
 from accounts.models import Account, User
-from core.decorators import user_has_accounts
+from core.decorators import owner_or_staff, user_has_accounts
 
 import pytz
 import datetime
@@ -33,12 +34,27 @@ class ClientOrderListView(ListView):
 
 class OligoDetailView(DetailView):
     model = Oligo
+
     context_object_name = 'oligo'
 
     def get_queryset(self):
         user = self.request.user
         qs = super().get_queryset()
         return qs.filter(submitter__id=user.id) | qs.filter(account__owner__id=user.id)
+
+
+@method_decorator(owner_or_staff, name='dispatch')
+class UserListView(ListView):
+    context_object_name = 'oligos'
+    paginate_by = settings.PAGINATE_HISTORY_LENGTH
+    template_name = 'oligos/user_history.html'
+
+    def get_queryset(self):
+        username = self.kwargs.get('username')
+        qs = Oligo.objects.all()
+        qs = qs.filter(submitter__username=username) | qs.filter(
+            account__owner__username=username)
+        return qs
 
 
 @method_decorator(user_has_accounts, name='dispatch')

@@ -211,3 +211,6 @@ DEFAULT_FROM_MAIL = 'DNAtest@uoguelph.ca'
 
 # Sass CSS
 SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, 'static/css')
+
+# Pagination
+PAGINATE_HISTORY_LENGTH = 5

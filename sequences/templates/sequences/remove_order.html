@@ -1,12 +1,12 @@
 {% extends '_base.html' %}
 
-{% block title %}Remove Oligo Orders{% endblock title %}
+{% block title %}Remove Sequencing Orders{% endblock title %}
 
 {% block content %}
 
     <div class="container half-width">
 
-        <h1 style="text-align: center;">Remove by Order ID</h1>
+        <h1 style="text-align: center;">Remove by Submission ID</h1>
 
         <form action="" method="post">
             {% csrf_token %}
@@ -15,7 +15,7 @@
 
             <p>To remove a single submission, you can enter the Submission ID in either box.</p>
 
-            <p>Use the <a href="{% url 'admin:index' %}">Admin Panel</a> to edit or remove individual sequences.
+            <p>Use the <a href="{% url 'admin:index' %}">Admin Panel</a> to edit or remove individual reactions.
 
             <table>
                 {{ form.as_table }}

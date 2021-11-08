@@ -1,0 +1,74 @@
+{% extends '_base.html' %}
+
+{% block title %}Oligo Order History for {{ list_user.username }}{% endblock title %}
+
+{% block content %}
+
+    <div>
+
+    <h1>Oligo order history for {{ list_user.display_name }}</h1>
+
+
+        {% if oligos %}
+            <table class="oligo-view">
+                <tr>
+                    <th>Oligo ID</th>
+                    <th>Client Name</th>
+                    <th>Oligo Name</th>
+                    <th>Sequence</th>
+                    <th>Size</th>
+                    <th>Scale</th>
+                    <th>Purity</th>
+                    <th>Modify</th>
+                    <th>Order Date</th>
+                    <th>Delivery Date</th>
+                </tr>
+
+                {% for oligo in oligos %}
+                    <tr>
+                        <td>{{ oligo.id }}</td>
+                        <td>{{ oligo.submitter.display_name }}</td>
+                        <td style="text-align:left">{{ oligo.name }}</td>
+                        <td style="text-align:left">{{ oligo.dna_sequence }}</td>
+                        <td>{{ oligo.sequence|length }}</td>
+                        <td>{{ oligo.scale }}</td>
+                        <td>{{ oligo.purity|title }}</td>
+                        <td>{{ oligo.modification }}</td>
+                        <td>{{ oligo.created_at|date:'d M Y' }}</td>
+                        <td>{{ oligo.delivery_date }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+            <div class="pagination-box"> 
+                {% if is_paginated %}
+                    {% if page_obj.has_previous %}
+                      <a href="?page=1">&laquo; First</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    {% endif %}
+
+
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                    {% endif %}
+
+                {% else %}
+                    Page 1 of 1.
+                {% endif %}
+            </div>
+
+
+            </div>
+
+        {% else %}
+
+        Nothing here!
+
+        {% endif %}
+
+    </div>
+
+{% endblock content %}

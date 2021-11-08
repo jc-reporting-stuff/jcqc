@@ -101,7 +101,8 @@ sub {
     margin: auto; }
 
 .inactive-user {
-  background-color: #9ca3af; }
+  background-color: #374151 !important;
+  color: #f9fafb; }
 
 .messages-container {
   max-width: 30rem;
@@ -125,6 +126,13 @@ sub {
     border: 1px solid #9f1239;
     background-color: #ffe4e6;
     color: #9f1239; }
+
+.pagination-box {
+  width: 30rem;
+  margin: auto;
+  text-align: center; }
+  .pagination-box a {
+    padding: 0 1rem; }
 
 header .ugls-header-banner {
   background: #6b7478;
@@ -171,7 +179,7 @@ header .ugls-header-banner {
         border-radius: 0.5rem;
         padding: 0.25rem 0.5rem;
         background-color: #1d4ed8;
-        margin: auto 0.25rem;
+        margin: auto 0.35rem;
         color: #dbeafe;
         font-weight: bold;
         text-align: center; }

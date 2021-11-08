@@ -6,6 +6,7 @@ app_name = 'sequencing'
 
 urlpatterns = [
     path('', views.MethodSelectView, name='method_select'),
+    path('list/<str:username>', views.UserListView.as_view(), name='user_orders'),
     path('template/view/<int:pk>/',
          views.TemplateDetailView.as_view(), name='template_detail'),
     path('primer/view/<int:pk>/',
