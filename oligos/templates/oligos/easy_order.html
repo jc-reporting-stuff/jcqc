@@ -7,7 +7,7 @@
 
 {% block content %}
 
-<div class="container half-width">
+<div class="container">
 
     <h1>Order new oligos - Bulk Ordering</h1>
 
@@ -17,15 +17,17 @@
     <form method="post">
 
         {% csrf_token %}
-        {{ form|crispy }}
+        {% crispy form %}
 
         <input type="hidden" name="account_id" value="{{ account_id }}">
 
-        <p><input type="submit" value="Proceed to preview" class="button-primary"></p>
+        <div class="container half-width">
+            <p>Enter oligos as OligoName, OligoSequence</p>
+            <p>One oligo order per line.</p>
+            <p>Seperator can be comma, semicolon or tab (if pasting from spreadsheet).</p>
 
-        <p>Enter oligos as OligoName, OligoSequence</p>
-        <p>One oligo order per line.</p>
-        <p>Seperator can be comma, semicolon or tab (if pasting from spreadsheet).</p>
+            <p><input type="submit" value="Proceed to preview" class="button-primary"></p>
+        </div>
 
     </form>
 

@@ -26,6 +26,23 @@ form {
   .form-number {
     width: 4rem;
   }
+  .row-holder {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    border: 1px solid $gray-200;
+    background-color: $gray-100;
+    border-radius: 1rem;
+    margin: 1rem 0;
+    .controls {
+      textarea {
+        display: block;
+      }
+      .help-inline {
+        margin-left: 1rem;
+      }
+    }
+  }
   .short-input {
     width: 6rem;
   }
@@ -57,7 +74,33 @@ form {
   input[type="radio"] {
     display: inline;
   }
-  textarea {
-    width: 100%;
+}
+
+fieldset {
+  background-color: $gray-100;
+  border-radius: 1rem;
+  border: 1px solid $gray-200;
+  margin-bottom: 1rem;
+  legend {
+    background-color: white;
+    border-width: 0 1px;
+    border-color: $gray-300;
+    border-style: solid;
+    border-radius: 0.5rem;
+    margin-left: 2rem;
+    padding: 0.5rem 1rem;
+    font-size: large;
+    font-weight: 700;
+  }
+  .row-holder-fieldset {
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+  .controls {
+    display: flex;
+    flex-direction: column;
   }
 }

@@ -3,6 +3,7 @@
 {% block title %}Reaction ordering{% endblock title %}
 
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block content %}
 
@@ -34,7 +35,14 @@
                 <input type="hidden" name="reaction-count" value="{{ reaction_count }}">
                 <input type="hidden" name="account-id" value="{{ account_id }}">
 
+                <div style="display: flex; justify-content: space-between; align-items: baseline;">
                 <input type="submit" name="previewing-reactions" value="Proceed to Preview" class="button-primary">
+                <div>
+                    View the list of 
+                    <a href="{% url 'sequencing:common_primers' %}" style="text-decoration: underline;" target="_blank">Common Primers</a> 
+                    <img src="{% static 'images/open-external-link.svg' %}" alt="popout window icon" class="inline-image">
+                    provided by Lab Services.
+                </div>
             </div>
 
         </form>

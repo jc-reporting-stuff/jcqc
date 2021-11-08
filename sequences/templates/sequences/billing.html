@@ -24,8 +24,26 @@
                 <div class="billing-box price-form">
                     <p><strong>Default prices, change if required.</strong></p>
 
+                    <hr>
+
                     <table>
-                    {{ price_form.as_table }}
+                        <tr>
+                            <th></th>
+                            <th>Internal</th>
+                            <th>External</th>
+                        </tr>
+
+                        {% for price in price_form %}
+                            {% if forloop.counter0|divisibleby:2 %}
+                                <tr>
+                                    <td>{{ price.label }} ($): </td>
+                                    <td>{{ price }}</td>
+                            {% else %}
+                                    <td>{{ price }}</td>
+                                </tr>
+
+                            {% endif %}
+                        {% endfor %}
                     </table>
                 </div>
 

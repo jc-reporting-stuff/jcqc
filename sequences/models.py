@@ -111,7 +111,8 @@ class Reaction(models.Model):
 
 
 class SeqPrice(models.Model):
-    standard_sequencing = models.DecimalField(max_digits=5, decimal_places=2)
+    standard_sequencing = models.DecimalField(
+        max_digits=5, decimal_places=2, verbose_name='Standard Sequencing')
     ext_standard_sequencing = models.DecimalField(
         max_digits=5, decimal_places=2, verbose_name="Standard sequencing (external)")
 
@@ -121,7 +122,7 @@ class SeqPrice(models.Model):
         max_digits=5, decimal_places=2, verbose_name="96-well plate (external)")
 
     large_template = models.DecimalField(
-        max_digits=5, decimal_places=2, verbose_name="Large templates (eg cosmids)")
+        max_digits=5, decimal_places=2, verbose_name="Large templates (cosmid, etc)")
     ext_large_template = models.DecimalField(
         max_digits=5, decimal_places=2, verbose_name="Large templates (external)")
 

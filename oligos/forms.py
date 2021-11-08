@@ -1,7 +1,9 @@
 from django import forms
-from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import HTML, Fieldset, Layout, Field, Div
 from .models import Oligo, OliPrice
 
 import re
@@ -55,14 +57,31 @@ class MultiOligoField(forms.CharField):
 
 class EasyOrderForm(forms.Form):
     scale = forms.ChoiceField(widget=forms.RadioSelect, choices=(
-        ('40 nmol', '40 nmol'), ('200 nmol', '200 nmol'), ('1 µmol', '1 µmol')),
+        ('40 nmole', '40 nmole'), ('200 nmole', '200 nmole'), ('1 µmole', '1 µmole')),
         initial='40 nmol')
     purity = forms.ChoiceField(widget=forms.RadioSelect, choices=(
         ('standard', 'Standard'), ('desalted', 'Desalted'), ('cartridge', 'Cartridge')),
         initial='standard')
     modification = forms.CharField(required=True, max_length=150, initial='No')
-    oligos = MultiOligoField(max_length=5000, widget=forms.Textarea,
+    oligos = MultiOligoField(max_length=5000, widget=forms.Textarea(attrs={'cols': '80'}),
                              label="Oligos, see below for formatting instructions")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.layout = Layout(
+            Div(
+                'scale',
+                'purity',
+                'modification',
+                css_class='row-holder',
+            ),
+            Div(
+                Field('oligos'),
+                css_class='row-holder'
+            )
+        )
 
 
 class IdRangeForm(forms.Form):
@@ -126,3 +145,15 @@ class PriceForm(forms.ModelForm):
     class Meta:
         model = OliPrice
         exclude = ['current']
+        labels = {
+            'scale_40_base': 'Scale 40 nmole ($/base)',
+            'scale_200_base': 'Scale 200 nmole ($/base)',
+            'scale_1000_base': 'Scale 1 µmole ($/base)',
+            'degenerate_40_base': 'Degenerate 40 nmole ($/base)',
+            'degenerate_200_base': 'Degenerate 200 nmole ($/base)',
+            'degenerate_1000_base': 'Degenerate 1 µmole ($/base)',
+            'desalt_fee': 'Desalt fee ($/oligo)',
+            'cartridge_fee': 'Cartridge fee ($/oligo)',
+            'setup_fee': 'Setup fee ($/order)',
+
+        }

@@ -4,6 +4,9 @@ from django.core.validators import MinValueValidator
 
 from django.contrib.auth import get_user_model
 
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Fieldset, Field, Div, HTML
+
 from .models import Primer, SeqPrice, Template
 import re
 
@@ -72,28 +75,28 @@ class PrimerModelForm(forms.ModelForm):
 
 
 class ReactionEasyOrderForm(forms.Form):
-    template_type = forms.ChoiceField(choices=(
+    template_type = forms.ChoiceField(label='Type', choices=(
         ('pl', 'Plasmid'),
         ('pp', 'PCR product'),
         ('co', 'Cosmid'),
         ('ot', 'Other'),
     ))
-    template_size = forms.IntegerField(
-        widget=forms.TextInput(attrs={'class': 'form-number'}), validators=[MinValueValidator(500)])
-    pcr_purify = forms.BooleanField(required=False, label="PCR Purification?")
+    template_size = forms.IntegerField(label='Size (bp)',
+                                       widget=forms.TextInput(attrs={'class': 'form-number'}), validators=[MinValueValidator(500)])
+    insert_size = forms.IntegerField(label='Insert Size (bp)',
+                                     widget=forms.TextInput(attrs={'class': 'form-number'}), required=False)
+    template_concentration = forms.IntegerField(label='Conc. (ng/µL)',
+                                                widget=forms.TextInput(attrs={'class': 'form-number'}))
+    template_volume = forms.IntegerField(
+        widget=forms.TextInput(attrs={'class': 'form-number'}), label='Volume (µL)')
     template_comment = forms.ChoiceField(choices=(
         ('no', 'None'),
         ('gc', 'GC rich'),
         ('at', 'AT rich'),
         ('lr', 'Long repeat'),
         ('hp', 'Homopolymer')
-    ), required=False)
-    insert_size = forms.IntegerField(
-        widget=forms.TextInput(attrs={'class': 'form-number'}), required=False)
-    template_concentration = forms.IntegerField(
-        widget=forms.TextInput(attrs={'class': 'form-number'}), label='Template Conc (ng/µL)')
-    template_volume = forms.IntegerField(
-        widget=forms.TextInput(attrs={'class': 'form-number'}), label='Template Volume (µL)')
+    ), required=False, label='Comment')
+    pcr_purify = forms.BooleanField(required=False, label="PCR Purification?")
 
     primer_source = forms.ChoiceField(widget=forms.RadioSelect, choices=(
         ('cl', 'Client'),
@@ -106,7 +109,38 @@ class ReactionEasyOrderForm(forms.Form):
         widget=forms.TextInput(attrs={'class': 'form-number'}), label='Primer Volume (µL)')
 
     reactions = MultiReactionField(
-        max_length=5000, widget=forms.Textarea, label='Paste your sequencing information here:')
+        max_length=5000, widget=forms.Textarea(attrs={'cols': '80'}), label='Paste your sequencing information here:')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.layout = Layout(
+            Fieldset(
+                'Template',
+                Div(
+                    'template_type',
+                    'template_size',
+                    'insert_size',
+                    'template_concentration',
+                    'template_volume',
+                    'template_comment',
+                    'pcr_purify',
+                    css_class='row-holder-fieldset'
+                ),
+            ),
+            Fieldset(
+                'Primer',
+                Div(
+                    'primer_source',
+                    'primer_concentration',
+                    'primer_volume',
+                    'hardcopy',
+                    css_class='row-holder-fieldset'
+                ),
+            ),
+            Field('reactions')
+        )
 
 
 class IdRangeForm(forms.Form):

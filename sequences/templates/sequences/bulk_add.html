@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <div class="container {% if not previewing %}half-width{% endif %}">
+    <div class="container">
 
         <h1>Sequencing - Bulk Order</h1>
 
@@ -14,7 +14,7 @@
             {% csrf_token %}
 
             <div {% if previewing %}style="display:none;"{% endif%}>
-                {{ form|crispy }}
+                {% crispy form %}
 
                 <input type="hidden" name="account-id" value="{{ account_id }}" />
                 

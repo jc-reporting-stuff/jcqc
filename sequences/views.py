@@ -485,7 +485,7 @@ class SequenceListView(View):
         if not (data['query'] and ((data['low'] and data['high']) or data['text'])) and not data['page']:
             messages.warning(
                 request, 'Missing search parameter(s), try again please.')
-            return redirect(reverse('oligos:search'))
+            return redirect(reverse('sequencing:search'))
 
         if data['low'] and data['high']:
             if data['low'] > data['high']:
