@@ -3,7 +3,7 @@ from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.views.generic import ListView, CreateView, FormView, TemplateView, DetailView
 from django.urls import reverse_lazy, reverse
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 from django.db.models import Max
 from django.contrib import messages
 from django.utils.decorators import method_decorator
@@ -17,6 +17,8 @@ from .models import Oligo, OliPrice
 from accounts.models import Account, User
 from core.decorators import owner_or_staff, user_has_accounts
 
+import io
+import openpyxl
 import pytz
 import datetime
 import re
@@ -469,6 +471,9 @@ class OligoListActionsView(View):
                         oligo.pmol_per_microliter * 195 / 1000, 1)
             return render(request, 'oligos/report.html', context={'oligos': oligos})
 
+        elif action == 'create-labels':
+            return CreateLabels()
+
         redirect_url = request.POST.get('return-url')
         return HttpResponseRedirect(redirect_url)
 
@@ -765,3 +770,18 @@ class RemoveOrderView(FormView):
                 order_context[order] = 1
 
         return render(self.request, 'oligos/remove_order.html', context={'form': form, 'orders': order_context, 'confirming': True})
+
+
+def CreateLabels():
+    if settings.DEBUG:
+        path = 'static/test.xlsx'
+    else:
+        path = settings.STATIC_ROOT + '/text.xlsx'
+    wb = openpyxl.load_workbook(path)
+
+    buffer = io.BytesIO()
+
+    wb.save(buffer)
+    buffer.seek(0)
+
+    return FileResponse(buffer, as_attachment=True, filename="hello.xlsx")
