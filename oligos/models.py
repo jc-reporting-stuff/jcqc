@@ -52,9 +52,9 @@ class Oligo(models.Model):
                 epson_value += getattr(EpsonValues, current_plus_next) - \
                     getattr(EpsonValues, current_base)
             epson_value += getattr(EpsonValues, self.sequence[-1])
-            concentration = (self.OD_reading *
-                             self.OD_reading_dilution_factor * 10**6) / epson_value
-            return round(concentration, 2)
+            concentration = (float(self.OD_reading) *
+                             float(self.OD_reading_dilution_factor) * 10**6) / epson_value
+            return round(concentration, 1)
         else:
             return None
 
@@ -63,7 +63,40 @@ class Oligo(models.Model):
         if self.OD_reading:
             concentration = float(self.pmol_per_microliter) * \
                 float(self.molecular_weight) / 10**6
-            return round(concentration, 2)
+            return round(concentration, 1)
+        else:
+            return None
+
+    @property
+    def ug_per_ml(self):
+        if self.OD_reading:
+            concentration = float(self.pmol_per_microliter) * \
+                float(self.molecular_weight) / 1000
+            return round(concentration, 1)
+        else:
+            return None
+
+    @property
+    def nmol_per_ml(self):
+        if self.OD_reading:
+            return self.pmol_per_microliter
+        else:
+            return None
+
+    @property
+    def nmol(self):
+        if self.OD_reading:
+            quantity = float(self.pmol_per_microliter) * float(self.volume)
+            return round(quantity, 1)
+        else:
+            return None
+
+    @property
+    def micrograms(self):
+        if self.OD_reading:
+            mass = float(self.micrograms_per_microliter) * \
+                float(self.volume) * 1000
+            return round(mass, 1)
         else:
             return None
 

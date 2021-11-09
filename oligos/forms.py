@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import HTML, Fieldset, Layout, Field, Div
+from crispy_forms.layout import HTML, Fieldset, Layout, Field, Div, Submit
 from .models import Oligo, OliPrice
 
 import re
@@ -139,6 +139,25 @@ class EnterODForm(forms.Form):
         widget=forms.TextInput(attrs={'class': 'short-input'}), required=True)
     readings = MultiODField(
         max_length=10000, widget=forms.Textarea(), required=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_action = ''
+        self.helper.form_class = 'top-bottom-m-0'
+        self.helper.layout = Layout(
+            Div(
+                'sample_volume',
+                'dilution_factor',
+                css_class='row-holder',
+            ),
+            Div(
+                Field('readings'),
+                css_class='row-holder'
+            ),
+            Submit('submit', 'Submit', css_class='button-primary'),
+        )
 
 
 class PriceForm(forms.ModelForm):

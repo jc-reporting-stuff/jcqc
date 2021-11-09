@@ -76,6 +76,7 @@ class PrimerModelForm(forms.ModelForm):
 
 class ReactionEasyOrderForm(forms.Form):
     template_type = forms.ChoiceField(label='Type', choices=(
+        ('', ' - - - - - - - -'),
         ('pl', 'Plasmid'),
         ('pp', 'PCR product'),
         ('co', 'Cosmid'),

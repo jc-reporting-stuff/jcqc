@@ -6,7 +6,7 @@
 
     <div {% if not orders %}class="container half-width"{% endif %}>
 
-        <h1>Most recent oligo orders</h1>
+        <h1 style="text-align: center;">Most recent oligo orders for {{ user.display_name }}</h1>
 
         {% if not orders %}
 

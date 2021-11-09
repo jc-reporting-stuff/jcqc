@@ -55,12 +55,13 @@ a {
 h1 {
   font-size: x-large;
   font-weight: bold;
-  margin: 1rem 0; }
+  margin: 1rem 0 0.25rem 0; }
   h1.centered {
     text-align: center; }
 
 p {
-  margin: 1rem 0; }
+  margin: 1rem 0;
+  line-height: normal; }
   p a {
     color: #1d4ed8;
     text-decoration: underline; }
@@ -246,13 +247,16 @@ form {
     border: 1px solid #e5e7eb;
     background-color: #f3f4f6;
     border-radius: 1rem;
-    margin: 1rem 0; }
+    margin-bottom: 1rem; }
     form .row-holder .controls textarea {
       display: block; }
     form .row-holder .controls .help-inline {
       margin-left: 1rem; }
   form .short-input {
     width: 6rem; }
+  form.top-bottom-m-0 {
+    margin-top: 0 !important;
+    margin-bottom: 0; }
   form label {
     font-weight: 600; }
   form input::-webkit-outer-spin-button,

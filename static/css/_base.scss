@@ -28,7 +28,7 @@ a {
 h1 {
   font-size: x-large;
   font-weight: bold;
-  margin: 1rem 0;
+  margin: 1rem 0 0.25rem 0;
   &.centered {
     text-align: center;
   }
@@ -36,6 +36,7 @@ h1 {
 
 p {
   margin: 1rem 0;
+  line-height: normal;
   a {
     color: $blue-700;
     text-decoration: underline;

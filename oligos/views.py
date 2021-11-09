@@ -190,7 +190,6 @@ class OligoEasyOrder(FormView):
 
         # Process the oligos from the textarea field.
         # Split them by line, then use regular expressions to split into name, sequence groups.
-
         oligo_text = form['oligos'].value()
         oligos_text_split = oligo_text.split('\n')
         ex = r'(.+?)[\t;,]\s*([ACGTRYMWSKDHBVNacgtrymwskdhbvn\s]+)'
