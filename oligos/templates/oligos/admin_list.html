@@ -56,7 +56,7 @@
                     <td style="text-align: left;">{{ oligo.dna_sequence }}</td>
                     <td style="white-space: nowrap">{{ oligo.sequence|length }}</td>
                     <td>{{ oligo.scale }}</td>
-                    <td>{{ oligo.purity|title }}</td>
+                    <td class="{% if oligo.purity == 'desalted' %}blue-text{% elif oligo.purity == 'cartridge' %}pink-text{% endif %}">{{ oligo.purity|title }}</td>
                     <td>{% if oligo.modification %}{{ oligo.modification }}{% else %} - - {% endif %}</td>
                     <td>{{ oligo.created_at|date:"M-d-Y" }}</td>
                     <td>

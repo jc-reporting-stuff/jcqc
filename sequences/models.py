@@ -141,4 +141,4 @@ class SeqPrice(models.Model):
     current = models.BooleanField()
 
     def __str__(self):
-        return f'Price Structure updated {self.updated}'
+        return f'Price Structure updated {self.updated:%Y-%m-%d}'

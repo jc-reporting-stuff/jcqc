@@ -224,6 +224,7 @@ def ReactionAddView(request):
             primers = primer_formset.save(commit=False)
             for primer in primers:
                 primer.owner = request.user
+                primer.common = False
                 primer.save()
 
             reaction_formset = ReactionFormset(request.POST, form_kwargs={
