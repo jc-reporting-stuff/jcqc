@@ -52,7 +52,7 @@ class MultiOligoField(forms.CharField):
                 re.match(regex, line).groups()
             except:
                 raise ValidationError(
-                    'Check that input is comma, semicolon or tab delimited. One oligo per line.')
+                    'Check that input is comma, semicolon or tab delimited. One oligo per line. Verify no invalid bases.')
 
 
 class EasyOrderForm(forms.Form):

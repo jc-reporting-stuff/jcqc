@@ -17,6 +17,8 @@ from .models import Oligo, OliPrice
 from accounts.models import Account, User
 from core.decorators import owner_or_staff, user_has_accounts
 
+from docx import Document
+
 import io
 import pytz
 import datetime
@@ -475,7 +477,12 @@ class OligoListActionsView(View):
             return render(request, 'oligos/report.html', context={'oligos': oligos})
 
         elif action == 'create-labels':
-            return CreateLabels()
+            oligos_to_label = get_checked_oligos_from_data(post_data)
+            if len(oligos_to_label) > 80:
+                messages.warning(
+                    request, f'Can only make up to 80 labels at a time. Labels made using first 80 by ID ascending.')
+                oligos_to_label = oligos_to_label[:80]
+            return CreateLabels(oligos_to_label)
 
         redirect_url = request.POST.get('return-url')
         return HttpResponseRedirect(redirect_url)
@@ -775,17 +782,33 @@ class RemoveOrderView(FormView):
         return render(self.request, 'oligos/remove_order.html', context={'form': form, 'orders': order_context, 'confirming': True})
 
 
-def CreateLabels():
-    if settings.DEBUG:
-        path = 'static/test.xlsx'
-    else:
-        path = settings.STATIC_ROOT + '/text.xlsx'
-    print(settings.STATIC_ROOT)
-    #wb = openpyxl.load_workbook(path)
-
+def CreateLabels(oligos_id_list):
+    path = 'static/template.docx'
+    doc = Document(path)
     buffer = io.BytesIO()
 
-    # wb.save(buffer)
+    oligos = Oligo.objects.filter(id__in=oligos_id_list)
+
+    table = doc.tables[0]
+
+    label_text_list = []
+    for oligo in oligos:
+        label_text = f'{oligo.name} {oligo.created_at:%Y/%m/%d} GMS\n'
+        label_text += f'{oligo.pmol_per_microliter} pmol/µL  {oligo.micrograms_per_microliter} µg/µL ID{oligo.id}\n'
+        label_text += f'{oligo.sequence.lower()}'
+        label_text_list.append(label_text)
+
+    oligo_counter = 0
+    for row in table.rows:
+        for i, cell in enumerate(row.cells):
+            if i % 2 == 0:
+                if oligo_counter < len(label_text_list):
+                    cell.paragraphs[0].runs[0].text = label_text_list[oligo_counter]
+                    oligo_counter += 1
+                else:
+                    cell.paragraphs[0].runs[0].text = ''
+
+    doc.save(buffer)
     buffer.seek(0)
 
-    return FileResponse(buffer, as_attachment=True, filename="hello.xlsx")
+    return FileResponse(buffer, as_attachment=True, filename="oligo_labels.docx")
