@@ -38,7 +38,7 @@
                 <td>{{ data.scale }}</td>
                 <td>{{ data.purity|capfirst }}</td>
                 <td>{% if data.modification %}{{ data.modification }}{% else %} - - {% endif %}</td>
-                <td>{{ oligo.sequence }} <input type="hidden" name="oligo-{{forloop.counter0}}-sequence" value="{{oligo.sequence}}"></td>
+                <td>{{ oligo.display_sequence }} <input type="hidden" name="oligo-{{forloop.counter0}}-sequence" value="{{oligo.sequence}}"></td>
             </tr>
             {% endfor %}
 

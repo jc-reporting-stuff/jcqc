@@ -58,7 +58,7 @@ class MultiOligoField(forms.CharField):
 class EasyOrderForm(forms.Form):
     scale = forms.ChoiceField(widget=forms.RadioSelect, choices=(
         ('40 nmole', '40 nmole'), ('200 nmole', '200 nmole'), ('1 µmole', '1 µmole')),
-        initial='40 nmol')
+        initial='40 nmole')
     purity = forms.ChoiceField(widget=forms.RadioSelect, choices=(
         ('standard', 'Standard'), ('desalted', 'Desalted'), ('cartridge', 'Cartridge')),
         initial='standard')
@@ -155,5 +155,4 @@ class PriceForm(forms.ModelForm):
             'desalt_fee': 'Desalt fee ($/oligo)',
             'cartridge_fee': 'Cartridge fee ($/oligo)',
             'setup_fee': 'Setup fee ($/order)',
-
         }

@@ -18,7 +18,6 @@ from accounts.models import Account, User
 from core.decorators import owner_or_staff, user_has_accounts
 
 import io
-import openpyxl
 import pytz
 import datetime
 import re
@@ -194,12 +193,16 @@ class OligoEasyOrder(FormView):
 
         oligo_text = form['oligos'].value()
         oligos_text_split = oligo_text.split('\n')
-        ex = r'(.+?)[\t;,] *([ACGTRYMWSKDHBVN]+)'
+        ex = r'(.+?)[\t;,]\s*([ACGTRYMWSKDHBVNacgtrymwskdhbvn\s]+)'
         oligo_groups = []
         for line in oligos_text_split:
             if line and line != '\r':
                 groups = re.match(ex, line).groups()
-                current_oligo = {'name': groups[0], 'sequence': groups[1]}
+                sequence = groups[1].upper().strip().replace(' ', '')
+                display_sequence = ' '.join(sequence[i:i+3]
+                                            for i in range(0, len(sequence), 3))
+                current_oligo = {
+                    'name': groups[0], 'sequence': sequence, 'display_sequence': display_sequence}
                 oligo_groups.append(current_oligo)
 
         account = Account.objects.get(id=account_id)
@@ -777,11 +780,12 @@ def CreateLabels():
         path = 'static/test.xlsx'
     else:
         path = settings.STATIC_ROOT + '/text.xlsx'
-    wb = openpyxl.load_workbook(path)
+    print(settings.STATIC_ROOT)
+    #wb = openpyxl.load_workbook(path)
 
     buffer = io.BytesIO()
 
-    wb.save(buffer)
+    # wb.save(buffer)
     buffer.seek(0)
 
     return FileResponse(buffer, as_attachment=True, filename="hello.xlsx")

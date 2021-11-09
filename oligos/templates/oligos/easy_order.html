@@ -16,7 +16,6 @@
 
     <form method="post">
 
-        {% csrf_token %}
         {% crispy form %}
 
         <input type="hidden" name="account_id" value="{{ account_id }}">
