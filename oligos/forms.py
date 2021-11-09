@@ -46,7 +46,7 @@ class MultiOligoField(forms.CharField):
 
     def validate(self, value):
         super().validate(value)
-        regex = r'^(.+?)[\t;,]\s*([ACGTRYMWSKDHBVNIacgtrymwskdhbvni]+)'
+        regex = r'^(.+?)[\t;,]\s*([ACGTRYMWSKDHBVNIacgtrymwskdhbvni]+$)'
         for line in value:
             try:
                 re.match(regex, line).groups()

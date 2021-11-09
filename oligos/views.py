@@ -186,7 +186,8 @@ class OligoEasyOrder(FormView):
 
     def form_valid(self, form):
         cd = form.cleaned_data
-        account_id = self.request.POST.get('account_id')
+        account_id = self.request.POST.get('account_id') if self.request.POST.get(
+            'account_id') else self.request.GET.get('account_id')
 
         # Process the oligos from the textarea field.
         # Split them by line, then use regular expressions to split into name, sequence groups.
