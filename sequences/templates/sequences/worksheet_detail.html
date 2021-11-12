@@ -1,0 +1,94 @@
+{% extends '_base.html' %}
+
+{% block title %}Worksheet {{ name }} Block {{ block_num }}{% endblock title %}
+
+
+{% block content %}
+
+    <style>
+        @media print {
+            @page {
+                margin: 0;
+            }
+            header, .nav-container, .messages-container {
+                display: none;
+            }
+            .worksheet-table {
+                font-size: smaller;
+            }
+        }
+    </style>
+
+    <table class="worksheet-table">
+        <tr>
+            <th colspan="14" class="first-row">DNA Sequencing Worksheet - {{ name }}</th>
+        </tr>
+
+            <tr class="second-row">
+                <th colspan="6">Date: 2021/11/10</th>
+                <th colspan="4">PCR Machine: </th>
+                <th colspan="4" align="left">Operator:</th>
+            </tr>
+
+        <tr>
+            <th >Well</th>
+            <th>Sub ID</th>
+            <th>SeqID</th>
+            <th>Client Name</th>
+            <th>Template DNA</th>
+            <th>DNAµL</th>
+            <th>Pr.µL</th>
+            <th>Pr. Name</th>
+            <th>H<sub>2</sub>OµL</th>
+            <th>Tube</th>
+            <th>Result</th>
+            <th style="width: 70px;">Note</th>
+        </tr>
+
+        {% for ws in worksheets %}
+                <tr {% if not ws.is_active %}class="inactive-sample"{% endif %}>
+                    <td>{{ ws.well }}</td>
+                    <td>{{ ws.reaction.submission_id }}</td>
+                    <td {% if ws.reaction.hardcopy %}style="color: #059669; background-color: #D1FAE5; font-weight: 600;"{% endif %}>{{ ws.reaction.id }}</td>
+                    <td>{{ ws.reaction.submitter.display_name }}</td>
+                    <td {% if ws.reaction.template.pcr_purify %}style="color: #DC2626; font-weight: 600;"{% endif %}>{{ ws.reaction.template.name }}</td>
+                    <td style="text-align: center;"><input type="text" id="row-{{ forloop.counter }}-dna" class="table-int"></td>
+                    <td style="text-align: center;"><input type="text" id="row-{{ forloop.counter }}-primer" class="table-int"></td>
+                    <td>{{ ws.reaction.primer.name }}</td>
+                    <td style="text-align: center;"><input type="text" id="row-{{ forloop.counter }}-h2o" class="table-int"></td>
+                    <td>{{ forloop.counter }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+        {% endfor %}
+    </table>
+
+    <div style="font-size: 14px; width: 30rem; margin: auto; text-align: center;">
+        <p>SeqID in green indicates hardcopy is requested; and template name in red indicates PCR product purification is required.</p>
+
+    </div>
+
+    <script>
+
+        const calculateWater = (event) => {
+            rowNum = /\d+/.exec(event.target.id);
+            const dnaInput = document.querySelector(`#row-${rowNum}-dna`);
+            const primerInput = document.querySelector(`#row-${rowNum}-primer`);
+            const waterInput = document.querySelector(`#row-${rowNum}-h2o`);
+            console.log({dnaInput, primerInput})
+            waterInput.value = 10 - dnaInput.value - primerInput.value;
+        }
+
+        let inputs = Array.from(document.querySelectorAll('.table-int'));
+        for (let i = 0; i < inputs.length; ++i) {
+            if (i % 3 !== 2) {
+                inputs[i].addEventListener('keyup', calculateWater);
+            }
+        }
+
+    </script>
+
+
+
+{% endblock content %}
+

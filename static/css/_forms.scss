@@ -50,6 +50,14 @@ form {
     margin-top: 0 !important;
     margin-bottom: 0;
   }
+  .tiny-input {
+    width: 3rem;
+    padding: 0.1rem !important;
+    margin: 0 !important;
+    text-align: center;
+    background-color: $gray-50;
+    font-size: 0.8rem !important;
+  }
   label {
     font-weight: 600;
   }

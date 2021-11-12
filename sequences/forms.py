@@ -1,13 +1,16 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
+from django.utils.timezone import make_aware
 
 from django.contrib.auth import get_user_model
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, Field, Div, HTML
+from crispy_forms.layout import Layout, Fieldset, Field, Div, HTML, Submit
 
-from .models import Primer, SeqPrice, Template
+from .models import Plate, Primer, SeqPrice, Template
+from datetime import datetime, timedelta
+import pytz
 import re
 
 
@@ -187,3 +190,26 @@ class PriceForm(forms.ModelForm):
     class Meta:
         model = SeqPrice
         exclude = ['current']
+
+
+class WorksheetSearchForm(forms.Form):
+    tz = pytz.timezone('Canada/Eastern')
+    date = datetime.now() - timedelta(days=14)
+    todays_plates = Plate.objects.filter(
+        created__gte=make_aware(date, tz)
+    ).order_by('-id')
+
+    existing_names_choices = (('', '- - - - - - - - - - - - '),)
+    used_names = []
+    for plate in todays_plates:
+        if not plate.name in used_names:
+            existing_names_choices += ((plate, plate),)
+            used_names.append(plate.name)
+    new_plate_name = forms.CharField(
+        max_length=30, required=False, label="Provide a new plate name:")
+    existing_plate_name = forms.ChoiceField(
+        label='Or add sample to existing plate:', required=False, choices=existing_names_choices)
+    from_id = forms.IntegerField(
+        min_value=1, widget=forms.TextInput, label='Show sequence from ID:')
+    to_id = forms.IntegerField(
+        min_value=1, widget=forms.TextInput, label='To ID:')

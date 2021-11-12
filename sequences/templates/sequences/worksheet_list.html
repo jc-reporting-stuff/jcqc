@@ -1,0 +1,59 @@
+{% extends '_base.html' %}
+
+{% block title %}Past MOL-013 worksheets{% endblock title %}
+
+
+{% block content %}
+
+    <div class="container">
+    <form method="post" action="">
+        <h1 style="text-align: center;">Past Worksheets</h1>
+        
+        <table class="oligo-view" style="width: 60rem;">
+            <tr>
+                <th>Worksheet Name</th>
+                <th>Sequence Count</th>
+                <th>Block</th>
+                <th>Starting Well</th>
+                <th>Create Date</th>
+                <th>Remove Samples</th>
+            </tr>
+
+            {% for worksheet in worksheets %}
+                <tr>
+                    <td><a href="{% url 'sequencing:worksheet_detail' name=worksheet.name block=worksheet.block %}">{{ worksheet.name }}</a></td>
+                    <td>{{ worksheet.count }}</td>
+                    <td>{{ worksheet.block }}</td>
+                    <td>
+                        <input type="text" class="tiny-input" id="input-{{ worksheet.id }}-{{ worksheet.block }}" value="{{ worksheet.starting_well_human }}">
+                        <button
+                            type="button"
+                            class="button-primary"
+                            style="margin: 0 0 0 1rem; font-size: 0.8rem; padding: 0.1rem 0.5rem;"
+                            onclick="updateStartingWell('{{ worksheet.id }}','{{ worksheet.block }}')"
+                            >Update</button>
+                    </td>
+                    <td>{{ worksheet.create_date|date:'Y-m-d' }}</td>
+                    <td>
+                        <a href="{% url 'sequencing:worksheet_edit' name=worksheet.name block=worksheet.block %}">Click to Edit</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <div style="text-align:center; margin:auto;">
+        </div>
+
+    </form>
+    </div>
+
+    <script>
+        const updateStartingWell = (id, block) => {
+            let well = document.querySelector(`#input-${id}-${block}`).value;
+            let url = `{% url 'sequencing:worksheet_update_well'  %}?id=${id}&block=${block}&well=${well}`;
+            window.location.assign(url);
+        }
+    </script>
+
+{% endblock content %}
+

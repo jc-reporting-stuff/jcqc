@@ -1,3 +1,29 @@
+.inactive-sample-red {
+  color: $blood-red;
+}
+
+.info-box {
+  margin: 1rem 0.5rem;
+  border: 1px solid $gray-200;
+  border-radius: 1rem;
+  background-color: $gray-100;
+  padding: 1rem;
+  h2 {
+    font-size: larger;
+    font-weight: bold;
+  }
+  line-height: 1rem;
+  &.small {
+    padding: 0 1rem;
+    width: 50%;
+    margin: auto;
+    margin-top: 1rem;
+    p {
+      margin: 0.5rem;
+    }
+  }
+}
+
 .sequencing-question {
   border: 1px solid $gray-400;
   border-radius: 1rem;
@@ -7,5 +33,58 @@
   margin: 0.75rem 1rem;
   p {
     margin: 0;
+  }
+}
+
+.striped-table {
+  background-color: $gray-200;
+}
+.unstriped-table {
+  background-color: white;
+}
+
+.worksheet-search-table {
+  text-align: left;
+  margin: auto;
+  border: 1px solid $gray-300;
+  border-radius: 1rem;
+  th {
+    padding: 0 1rem;
+  }
+  .helptext {
+    text-align: right;
+  }
+}
+
+.worksheet-table {
+  border: 1px solid gray;
+  margin: 10px auto;
+  font-family: Arial, sans-serif;
+  width: 726px;
+  .first-row {
+    font-size: 21.3333px;
+    text-align: left;
+  }
+  .second-row {
+    text-align: left;
+  }
+  .inactive-sample {
+    filter: opacity(40%);
+    text-decoration: line-through;
+  }
+  th {
+    font-weight: 600;
+  }
+  th,
+  td {
+    font-size: 12px;
+    border: 2px solid gray;
+    padding: 3px 2px;
+    white-space: nowrap;
+  }
+  .table-int {
+    width: 40px;
+    text-align: center;
+    border: 1px solid $gray-300;
   }
 }

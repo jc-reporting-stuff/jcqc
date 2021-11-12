@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Primer, Template, Reaction, SeqPrice
+from .models import Plate, Primer, Template, Reaction, SeqPrice, Worksheet
 
 
 @admin.register(Primer)
@@ -31,10 +31,27 @@ class SequenceAdmin(admin.ModelAdmin):
                     'create_date']
 
 
+@admin.action(description='Mark selected reactions as submitted')
+def make_submitted(reactionadmin, request, queryset):
+    queryset.update(status='s')
+
+
 @admin.register(Reaction)
 class ReactionAdmin(admin.ModelAdmin):
-    list_display = ['submission_id', 'template',
+    list_display = ['id', 'submission_id', 'template',
                     'primer', 'status', ]
+    ordering = ['-id']
+    actions = [make_submitted]
+
+
+@admin.register(Plate)
+class PlateAdmin(admin.ModelAdmin):
+    list_display = ['name', 'id']
+
+
+@admin.register(Worksheet)
+class WorksheetAdmin(admin.ModelAdmin):
+    list_display = ['plate', 'reaction', 'block', 'well']
 
 
 @admin.register(SeqPrice)

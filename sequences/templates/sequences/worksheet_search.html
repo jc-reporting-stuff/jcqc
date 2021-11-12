@@ -1,0 +1,82 @@
+{% extends '_base.html' %}
+
+{% block title %}Create or add to worksheet{% endblock title %}
+
+
+{% block content %}
+
+    <div class="container">
+
+        <h1 style="text-align: center;">Create or add to worksheet</h1>
+
+        <div class="info-box">
+
+            <h2>Instructions</h2>
+
+            <p>
+                This page allows you to create a worksheet for sequencing sample preparation. If you are creating a new sheet, please provide a new plate name and two Sequence IDs to create a worksheet for a new plate. If you would like to add more samples to an existing plate, select the plate name from the dropdown plate list and enter two Sequence IDs. Do not do both.
+            </p>
+        
+        </div>
+
+        <form method="post" action="{% url 'sequencing:worksheet_add' %}">
+            {% csrf_token %}
+
+            <table class="worksheet-search-table">
+                <tr>
+                    <th>
+                        <label for="{{ form.new_plate_name.id_for_label }}">{{ form.new_plate_name.label }}
+                    </th>
+                    <td>
+                        {{ form.new_plate_name }}
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>
+                        <label for="{{ form.existing_plate_name.id_for_label }}">{{ form.existing_plate_name.label }}
+                    </th>
+                    <td>
+                        {{ form.existing_plate_name }}
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>
+                        <label for="{{ form.from_id.id_for_label }}">{{ form.from_id.label }}
+                    </th>
+                    <td>
+                        {{ form.from_id }}
+                    </td>
+                    <td>
+                        > {{ min_value }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="{{ form.to_id.id_for_label }}">{{ form.to_id.label}}
+                    </th>
+                    <td>
+                        {{ form.to_id }}
+                    </td>
+                    <td>
+                        < {{ max_value}}
+                    </td>
+                </tr>
+            </table>
+
+            <div style="width: 100%; text-align: center">
+                <input type='hidden' name='min_value' value='{{ min_value }}'>
+                <input type='hidden' name='max_value' value='{{ max_value }}'>
+                <input type='submit' value='Continue' class="button-primary">
+            </div>
+
+        </form>
+
+    </div>
+
+{% endblock content %}

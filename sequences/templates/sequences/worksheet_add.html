@@ -1,0 +1,184 @@
+{% extends '_base.html' %}
+
+{% block title %}Adding to worksheet {{ name }}{% endblock title %}
+
+{% load static %}
+
+{% block content %}
+
+    <div class="container">
+
+        <h1 style="text-align: center;">Adding sequences to worksheet {{ name }}</h1>
+
+        <div class="info-box small">
+
+            <p>
+                Select sequence records to generate the worksheet. If sequences are selected one at a time they will be added to the worksheet in that order.
+            </p>
+        
+        </div>
+    
+    </div>
+
+        <form method="post" action="{% url 'sequencing:worksheet_submit' %}">
+            {% csrf_token %}
+
+            <div style="width:98%; text-align: right; margin:0; padding:0;" id="filter-div">
+                <a onclick="toggleFilter()" id="filter-link">Show only Submitted and Resequencing sequences</a>
+            </div>
+
+            <div style="width:98%; padding: 0; margin: auto;">
+
+                <table class="oligo-view">
+                    <tr>
+                        <th><input type="checkbox" onchange="selectAll(event, loggingClicks=true)" id="top-checkbox">Seq ID</th>
+                        <th>Name</th>
+                        <th>Template</th>
+                        <th>Type</th>
+                        <th>Temp Size</th>
+                        <th>Temp Conc.</th>
+                        <th>Temp Vol.</th>
+                        <th>Purify</th>
+                        <th>TempComm</th>
+                        <th>Primer</th>
+                        <th>Primer Conc.</th>
+                        <th>Primer Vol.</th>
+                        <th>Source</th>
+                        <th>Status</th>
+                        <th>Comment</th>
+                    </tr>
+
+                    {% for reaction in reactions %}
+
+                        <tr class="{% cycle 'striped-table' 'unstriped-table' %}">
+                            <td>
+                                {% if reaction.status in 'sq'%}
+                                    <input type="checkbox" name="{{ reaction.id }}-checkbox">
+                                {% endif %}
+                                {{ reaction.id }}
+                            </td>
+                            <td>{{ reaction.submitter.display_name }}</td>
+                            <td>{{ reaction.template.name }}</td>
+                            <td>{{ reaction.template.get_type_display }}</td>
+                            <td>{{ reaction.template.template_size }}</td>
+                            <td>{{ reaction.template.template_concentration }}</td>
+                            <td>{{ reaction.template.template_volume }}</td>
+                            <td>{{ reaction.template.get_pcr_purify }}</td>
+                            <td>{{ reaction.template.get_comment_display }}</td>
+                            <td>{{ reaction.primer.name }}</td>
+                            <td>{{ reaction.primer.concentration }}</td>
+                            <td>{{ reaction.primer.volume }}</td>
+                            <td>{{ reaction.primer.source }}</td>
+                            <td>{{ reaction.get_status_display }}</td>
+                            <td>{{ reaction.comment }}</td>
+                        </tr>
+
+                    {% endfor %}
+                </table>        
+            </div>    
+
+            <div style="width: 100%; text-align: center">
+                <button name="select-all" onclick="selectAll(event, loggingClicks=true)" id="select-all-button" class="button-primary">Select All</button>
+                <button name="select-all" onclick="previewWorksheet()" class="button-primary" type="button">
+                    Preview Worksheet 
+                    <img src="{% static '/images/open-external-link.svg' %}" class="inline-image" style="margin-left: 0.25rem; vertical-align: middle">
+                </button>
+
+                <input type='hidden' name='click-order' value='' id="hidden-field">
+                <input type='hidden' name='worksheet-name' value="{{ name }}">
+                <input type='hidden' name='append' value="{{ append }}">
+
+                <input type='submit' name='add' value='Add to worksheet {{ name }}' class="button-primary">
+            </div>
+
+        </form>
+
+    </div>
+
+    {% load static %}
+    <script src="{% static 'js/admin_list_functions.js' %}">
+    </script>
+
+    <script type="text/javascript">
+        const checkHiddenField = (event) => {
+            let hiddenField = document.querySelector('#hidden-field');
+            let currentList = hiddenField.value ? hiddenField.value.split(',') : [];
+            if (event.target.checked === true) {
+                // The box has been checked and we'll add to the make_list
+                currentList.push(event.target.name);
+            } else if (currentList.includes(event.target.name)) {
+                currentList = currentList.filter(item => item !== event.target.name);
+
+            }
+            hiddenField.value = currentList;
+        }
+
+        let checkBoxes = Array.from(document.querySelectorAll('input[type=checkbox]'));
+        for (box of checkBoxes) { 
+            if (box.id !== 'top-checkbox') {
+                box.addEventListener('change', checkHiddenField);
+            }
+        }
+
+        const redo_striping = (rows) => {
+            let rowCounter = 0;
+            for (row of rows) {
+                if (row.style.display !== 'none') {
+                    if (rowCounter % 2 === 1) {
+                        row.style.backgroundColor = '#e5e7eb';
+                    }
+                    else {
+                        row.style.backgroundColor = 'white';
+                    }
+                    rowCounter++;
+                }
+            }
+        }
+
+        const toggleFilter = () => {
+            clickedLink = document.querySelector('#filter-link')
+            clickedLinkText = clickedLink.textContent;
+            let rows = Array.from(document.querySelectorAll('tr'));
+            // The shift() on the next line removes the top header row
+            rows.shift()
+
+            statusToShow = ['Submitted', 'Resequencing']
+
+            if (clickedLinkText.includes('only')) {
+                for (row of rows) {
+                    let cells = Array.from(row.children);
+                    if (!statusToShow.includes(cells[13].textContent)) {
+                        row.style.display = 'none';
+                        clickedLink.textContent = 'Show all sequences in this range';
+                    }
+                }
+            } else {
+                for (row of rows) {
+                    row.style.display = 'table-row';
+                    clickedLink.textContent = 'Show only Submitted and Resequencing sequences';
+                }
+            }
+            redo_striping(rows);
+        }
+
+        const previewWorksheet = () => {
+            const rows = document.querySelector('#hidden-field').value;
+
+            let splitRows = []
+            if (rows.length > 5) {
+                splitRows = rows.split(',');
+            }
+
+            let worksheetIds = []
+            if (splitRows.length > 0) {
+                for (row of splitRows) {
+                    id = /\d+/.exec(row)[0]
+                    worksheetIds.push(id);
+                }
+            }
+            window.open(`{% url 'sequencing:worksheet_preview' %}?ids=${worksheetIds}`, menubar='no', height='400');
+        }
+    </script>
+
+{% endblock content %}
+

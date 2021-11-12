@@ -1,7 +1,8 @@
 from django.db import models
 
-
 from accounts.models import Account, User
+
+import math
 
 
 class Primer(models.Model):
@@ -74,7 +75,9 @@ class Reaction(models.Model):
         ('s', 'Submitted'),
         ('p', 'Preparing'),
         ('r', 'Running'),
-        ('c', 'Completed')
+        ('d', 'Done'),
+        ('v', 'Removed'),
+        ('q', 'Resequencing')
     ]
 
     submitter = models.ForeignKey(
@@ -99,16 +102,62 @@ class Reaction(models.Model):
 
     @property
     def source(self):
-        if self.submitter.user_type == 's' or self.submitter.user_type == 'p':
+        # Check if user is student or supervisor
+        if self.submitter.user_type in 'sp':
             return 'LSD'
         else:
             return 'External'
 
+    @property
     def get_comment(self):
         return self.comment if self.comment else ' - - '
 
+    @property
     def get_hardcopy(self):
         return 'Yes' if self.hardcopy else 'No'
+
+    @property
+    def can_be_resequenced(self):
+        return self.status in 'sq'
+
+
+class Plate(models.Model):
+    name = models.CharField(max_length=50)
+    created = models.DateTimeField(auto_now_add=True, auto_now=False)
+    reactions = models.ManyToManyField(
+        Reaction,
+        through='Worksheet',
+        related_name='plates'
+    )
+
+    def __str__(self):
+        return self.name
+
+
+class Worksheet(models.Model):
+
+    reaction = models.ForeignKey(Reaction, on_delete=models.CASCADE)
+    plate = models.ForeignKey(Plate, on_delete=models.CASCADE)
+    block = models.SmallIntegerField(
+        unique=False, null=False, blank=False, default=1)
+    well_count = models.SmallIntegerField(
+        unique=False, null=False, blank=False
+    )
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f'{self.plate.name} - {self.reaction.template.name} - {self.reaction.primer.name}'
+
+    @property
+    def well(self):
+        remainder = self.well_count % 8
+        # Yes the next line is hacky but it works
+        alphabet = 'ABCDEFGH'
+        alpha = alphabet[remainder]
+        numeric = math.floor(self.well_count / 8) + 1
+        numeric = str(numeric)
+        result = alpha + numeric
+        return result
 
 
 class SeqPrice(models.Model):

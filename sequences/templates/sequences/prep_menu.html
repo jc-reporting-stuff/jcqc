@@ -11,7 +11,8 @@
         <p>If link, great. If not link, is to-do.</p>
 
         <ul class="admin-list">
-            <li><a href="#"><strong>Worksheet</strong> prep</a></li>
+            <li><a href="{% url 'sequencing:worksheet_search' %}"><strong>Worksheet</strong> prep</a></li>
+            <li><a href="{% url 'sequencing:worksheet_list' %}">View <strong>past worksheets</strong></a></li>
             <li>3100 <strong>Runfile</strong> prep</li>
             <li><strong>Distribute</strong> trace files</li>
             

@@ -3,19 +3,18 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 
 
 class CustomAccountManager(BaseUserManager):
-    def create_user(self, username, email, display_name, password, **other_fields):
+    def create_user(self, username, email, password, **other_fields):
 
         if not email:
             raise ValueError('You must provide an email address.')
 
         email = self.normalize_email(email)
-        user = self.model(username=username, email=email,
-                          display_name=display_name, **other_fields)
+        user = self.model(username=username, email=email, **other_fields)
         user.set_password(password)
         user.save()
         return user
 
-    def create_superuser(self, username, email, display_name, password, **other_fields):
+    def create_superuser(self, username, email, password, **other_fields):
 
         other_fields.setdefault('is_staff', True)
         other_fields.setdefault('is_active', True)
@@ -24,7 +23,7 @@ class CustomAccountManager(BaseUserManager):
         if other_fields.get('is_staff') is not True:
             raise ValueError('Superuser must be assigned to is_staff=True.')
 
-        return self.create_user(username, email, display_name, password, **other_fields)
+        return self.create_user(username, email, password, **other_fields)
 
 
 class User(AbstractBaseUser, PermissionsMixin):

@@ -91,7 +91,7 @@ ul.edit-accounts li {
 
 sub {
   vertical-align: sub;
-  font-size: 0.8rem; }
+  font-size: 0.6rem; }
 
 .container {
   max-width: 80rem;
@@ -257,6 +257,13 @@ form {
   form.top-bottom-m-0 {
     margin-top: 0 !important;
     margin-bottom: 0; }
+  form .tiny-input {
+    width: 3rem;
+    padding: 0.1rem !important;
+    margin: 0 !important;
+    text-align: center;
+    background-color: #f9fafb;
+    font-size: 0.8rem !important; }
   form label {
     font-weight: 600; }
   form input::-webkit-outer-spin-button,
@@ -503,6 +510,27 @@ fieldset {
   .pagination a {
     padding: 0.25rem 0.5rem; }
 
+.inactive-sample-red {
+  color: #af272f; }
+
+.info-box {
+  margin: 1rem 0.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 1rem;
+  background-color: #f3f4f6;
+  padding: 1rem;
+  line-height: 1rem; }
+  .info-box h2 {
+    font-size: larger;
+    font-weight: bold; }
+  .info-box.small {
+    padding: 0 1rem;
+    width: 50%;
+    margin: auto;
+    margin-top: 1rem; }
+    .info-box.small p {
+      margin: 0.5rem; }
+
 .sequencing-question {
   border: 1px solid #9ca3af;
   border-radius: 1rem;
@@ -512,6 +540,48 @@ fieldset {
   margin: 0.75rem 1rem; }
   .sequencing-question p {
     margin: 0; }
+
+.striped-table {
+  background-color: #e5e7eb; }
+
+.unstriped-table {
+  background-color: white; }
+
+.worksheet-search-table {
+  text-align: left;
+  margin: auto;
+  border: 1px solid #d1d5db;
+  border-radius: 1rem; }
+  .worksheet-search-table th {
+    padding: 0 1rem; }
+  .worksheet-search-table .helptext {
+    text-align: right; }
+
+.worksheet-table {
+  border: 1px solid gray;
+  margin: 10px auto;
+  font-family: Arial, sans-serif;
+  width: 726px; }
+  .worksheet-table .first-row {
+    font-size: 21.3333px;
+    text-align: left; }
+  .worksheet-table .second-row {
+    text-align: left; }
+  .worksheet-table .inactive-sample {
+    filter: opacity(40%);
+    text-decoration: line-through; }
+  .worksheet-table th {
+    font-weight: 600; }
+  .worksheet-table th,
+  .worksheet-table td {
+    font-size: 12px;
+    border: 2px solid gray;
+    padding: 3px 2px;
+    white-space: nowrap; }
+  .worksheet-table .table-int {
+    width: 40px;
+    text-align: center;
+    border: 1px solid #d1d5db; }
 
 .admin-list li {
   display: block;

@@ -3,7 +3,7 @@ from django.conf import settings
 from django.forms.formsets import formset_factory
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import get_object_or_404, render, redirect, reverse
 from django.forms import modelformset_factory, formset_factory
 from django.urls import reverse_lazy
 from django.db.models import Max
@@ -16,8 +16,8 @@ from django.core.paginator import Paginator
 from django.utils.decorators import method_decorator
 
 
-from sequences.models import Reaction, SeqPrice
-from sequences.forms import PrimerModelForm, ReactionEasyOrderForm, ReactionForm, IdRangeForm, DateRangeForm, StatusForm, TemplateModelForm, TextSearch, PriceForm
+from sequences.models import Plate, Reaction, SeqPrice, Worksheet
+from sequences.forms import PrimerModelForm, ReactionEasyOrderForm, ReactionForm, IdRangeForm, DateRangeForm, StatusForm, TemplateModelForm, TextSearch, PriceForm, WorksheetSearchForm
 
 
 from sequences.models import Template, Primer, Reaction, Account
@@ -563,6 +563,37 @@ class SequenceListView(View):
         return render(request, 'sequences/admin_list.html', context=context)
 
 
+def get_checked_reactions_from_data(list_of_dicts):
+    reactions_to_update = []
+    for key in list_of_dicts.keys():
+        try:
+            checkbox = re.match('^(\d+)-checkbox$', key).groups()[0]
+            reactions_to_update.append(checkbox)
+        except:
+            pass
+    return reactions_to_update
+
+
+class SequenceListActionsView(View):
+    def post(self, request):
+        action = request.POST.get('button')
+
+        post_data = dict(request.POST.lists())
+
+        if action == 'resequencing':
+            reactions_to_resequence = get_checked_reactions_from_data(
+                post_data)
+            reactions = Reaction.objects.filter(id__in=reactions_to_resequence)
+            for reaction in reactions:
+                reaction.status = 'q'
+                reaction.save()
+            messages.success(
+                request, f'Set {len(reactions_to_resequence)} sequence statuses to Resequencing.')
+
+        redirect_url = request.POST.get('return-url')
+        return HttpResponseRedirect(redirect_url)
+
+
 class BillingView(View):
     def get(self, request):
         max_reaction = Reaction.objects.all().order_by('-id').first()
@@ -751,3 +782,280 @@ class RemoveOrderView(FormView):
 
 class PrepMenuView(TemplateView):
     template_name = 'sequences/prep_menu.html'
+
+
+class WorksheetSearchView(View):
+    def get(self, request):
+        form = WorksheetSearchForm
+        reactions = (Reaction.objects.filter(
+            status__in='sq').order_by('id'))
+        min_value = reactions.first().id
+        max_value = reactions.last().id
+        context = {
+            'min_value': min_value,
+            'max_value': max_value,
+            'form': form
+        }
+        return render(request, 'sequences/worksheet_search.html', context=context)
+
+
+class WorksheetAddView(View):
+    def post(self, request):
+        form = WorksheetSearchForm(request.POST)
+
+        if not form.is_valid():
+            messages.info(request, 'Form invalid, try again.')
+            return redirect(reverse('sequencing:worksheet_search'))
+
+        # If user has entered eith two name fields or zero, we need to send them back to try again.
+        new_name = request.POST.get('new_plate_name').strip()
+        existing_name = request.POST.get('existing_plate_name')
+
+        if (not new_name and not existing_name) or (new_name and existing_name):
+            context = {
+                'form': form,
+                'min_value': request.POST.get('min_value'),
+                'max_value': request.POST.get('max_value'),
+            }
+
+            messages.warning(
+                request, f'Must use either an existing plate name or a new plate name.')
+
+            return render(request, 'sequences/worksheet_search.html', context=context)
+
+        # Form data is good, now we can get on with showing the reaction options.
+        data = form.cleaned_data
+
+        if data['from_id'] > data['to_id']:
+            messages.info(
+                request, f"'From ID' was great than 'To ID'; switched and continuing.")
+            temp = data['from_id']
+            data['from_id'] = data['to_id']
+            data['to_id'] = temp
+
+        # Figure out what plate name we are using.
+        name = data['new_plate_name'] if data['new_plate_name'] else data['existing_plate_name']
+        append = True if data['existing_plate_name'] else False
+        reactions = Reaction.objects.filter(
+            id__gte=data['from_id']).filter(id__lte=data['to_id']).order_by('id')
+
+        return render(request, 'sequences/worksheet_add.html', context={'reactions': reactions, 'name': name, 'append': append})
+
+
+class WorksheetSubmitView(View):
+    def post(self, request):
+        if not request.POST.get('add'):
+            messages.warning(
+                request, 'POST request error, contact IT if this persists.')
+            return redirect(reverse('sequencing:worksheet_search'))
+
+        ordered_reactions = request.POST.get('click-order').split(',')
+        reaction_list = []
+        for reaction in ordered_reactions:
+            reaction_id = reaction.split('-')[0]
+            if len(reaction_id) > 0:
+                reaction_list.append(reaction_id)
+
+        if len(reaction_list) == 0:
+            messages.info(
+                request, 'No sequences selected for worksheet, not created.')
+            return redirect(reverse('sequencing:worksheet_search'))
+
+        worksheet_append = True if request.POST.get(
+            'append') == 'True' else False
+        worksheet_name = request.POST.get('worksheet-name')
+
+        reaction_objects = Reaction.objects.filter(id__in=reaction_list)
+        reactions = []
+        for reaction_id in reaction_list:
+            for reaction_object in reaction_objects:
+                if int(reaction_id) == reaction_object.id:
+                    reactions.append(reaction_object)
+
+        if worksheet_append:
+            plate = Plate.objects.filter(
+                name=worksheet_name).order_by('-id').first()
+            last_on_worksheet = Worksheet.objects.filter(
+                plate__name=plate.name).order_by('-well_count').first()
+            current_block = last_on_worksheet.block + 1
+            current_well_count = last_on_worksheet.well_count + 1
+            print(plate, last_on_worksheet)
+        else:
+            plate = Plate.objects.create(name=worksheet_name)
+            current_block = 1
+            current_well_count = 0
+
+        print(current_block, current_well_count)
+
+        for idx, reaction in enumerate(reactions):
+            Worksheet.objects.create(
+                plate=plate, reaction=reaction, block=current_block, well_count=(
+                    current_well_count + idx)
+            )
+            reaction.status = 'p'
+            reaction.save()
+        messages.success(
+            request, f'Successfully saved {len(reactions)} sequences onto worksheet {worksheet_name}')
+
+        return redirect(reverse('sequencing:worksheet_list'))
+
+
+class WorksheetObject:
+    def __init__(self, plate_id, name, block, create_date, count=0, starting_well=96):
+        self.id = plate_id
+        self.name = name
+        self.block = block
+        self.count = count
+        self.create_date = create_date
+        self.starting_well = starting_well
+        self.starting_well_human = 'A1'
+
+    def __repr__(self):
+        return f'{self.name} Block {self.block}'
+
+
+class WorksheetListView(ListView):
+    context_object_name = 'worksheets'
+    template_name = 'sequences/worksheet_list.html'
+
+    def get_queryset(self):
+        # We only need the last twenty, really.
+        plates = Plate.objects.all().order_by('-id')[:20]
+        worksheets = Worksheet.objects.filter(plate__in=plates).order_by('-id')
+
+        worksheet_list = []
+        name_block_list = []
+
+        # Build up a list of worksheet objects containing basic information
+        for worksheet in worksheets:
+            if f'{worksheet.plate.name}-{worksheet.block}' not in name_block_list:
+                name_block_list.append(
+                    f'{worksheet.plate.name}-{worksheet.block}')
+                # Create a new object for the current worksheet and add it to the list.
+                ws = WorksheetObject(worksheet.plate.id, worksheet.plate.name,
+                                     worksheet.block, worksheet.plate.created)
+                worksheet_list.append(ws)
+
+            for ws in worksheet_list:
+                # When we match our object, we'll increase the count.
+                if ws.name == worksheet.plate.name and ws.block == worksheet.block:
+                    ws.count += 1
+                    # Then check to find the lowest well
+                    if ws.starting_well > worksheet.well_count:
+                        ws.starting_well = worksheet.well_count
+                        ws.starting_well_human = worksheet.well
+        return worksheet_list
+
+
+class WorksheetDetailView(View):
+    def get(self, request, **kwargs):
+        name = self.kwargs.pop('name')
+        block_num = self.kwargs.pop('block')
+
+        qs = Worksheet.objects.filter(
+            plate__name=name, block=block_num).order_by('well_count')
+        return render(request, 'sequences/worksheet_detail.html',
+                      context={'worksheets': qs, 'name': name, 'block_num': block_num})
+
+
+class WorksheetEditView(View):
+    def get(self, request, **kwargs):
+        name = self.kwargs.pop('name')
+        block = self.kwargs.pop('block')
+
+        qs = Worksheet.objects.filter(
+            plate__name=name, block=block).order_by('id')
+
+        return render(request, 'sequences/worksheet_edit.html', context={'worksheets': qs})
+
+
+class WorksheetToggleActiveView(View):
+    def get(self, request, **kwargs):
+        id = self.kwargs.pop('pk')
+
+        ws = get_object_or_404(Worksheet, id=id)
+
+        if ws.is_active:
+            ws.is_active = False
+            ws.reaction.status = 'q'
+        else:
+            ws.is_active = True
+            ws.reaction.status = 'p'
+        ws.save()
+        ws.reaction.save()
+
+        return redirect(reverse('sequencing:worksheet_edit', kwargs={'name': ws.plate.name, 'block': ws.block}))
+
+
+class WorksheetPreviewView(View):
+    def get(self, request):
+        ids = request.GET.get('ids').split(
+            ',') if request.GET.get('ids') else None
+
+        if not ids:
+            return render(request, 'sequences/worksheet_preview.html')
+
+        reactions = Reaction.objects.filter(id__in=ids)
+
+        rxn_list = []
+        for id in ids:
+            for reaction in reactions:
+                if reaction.id == int(id):
+                    rxn_list.append(reaction)
+
+        return render(request, 'sequences/worksheet_preview.html', context={'reactions': rxn_list})
+
+
+def get_well_count_from(well):
+    groups = re.match('([ABCDEFGHabcdefgh])(\d+)', well).groups()
+    return groups
+
+
+def redirect_to_list_with_warning(request, warning):
+    messages.warning(request, warning)
+    return redirect(reverse('sequencing:worksheet_list'))
+
+
+def get_well_count_from_human(alpha, numeric):
+    multiplier = numeric - 1
+    alpha_num = 'ABCDEFGH'.index(alpha)
+    return alpha_num + (multiplier * 8)
+
+
+class WorksheetUpdateWellView(View):
+    def get(self, request):
+        block = request.GET.get('block')
+        plate_id = int(request.GET.get('id'))
+        well = request.GET.get('well')
+
+        if (not block) or (not plate_id) or (not well):
+            return redirect_to_list_with_warning(request, 'Missing parameter, make sure you have entered a new starting well.')
+
+        try:
+            parameters = get_well_count_from(well)
+        except AttributeError:
+            return redirect_to_list_with_warning(request, 'Invalid well value. Check and try again.')
+
+        alpha = parameters[0].upper()
+        numeric = int(parameters[1])
+        if numeric > 12:
+            return redirect_to_list_with_warning(request, 'Well numbers only go up to 12, try again.')
+
+        well_count = get_well_count_from_human(alpha, numeric)
+
+        worksheets = Worksheet.objects.filter(
+            plate_id=plate_id)
+
+        if (well_count - 1 + len(worksheets) > 95):
+            return redirect_to_list_with_warning(
+                request, 'That starting well would push sample off the end of the plate. \
+                    Try removing some samples for resequencing or use a lower starting well. \
+                    NO CHANGES HAVE BEEN MADE.'
+            )
+
+        for worksheet in worksheets:
+            worksheet.well_count = well_count
+            worksheet.save()
+            well_count += 1
+
+        return redirect(reverse('sequencing:worksheet_list'))

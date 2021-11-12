@@ -8,7 +8,21 @@ const checkOwnBox = (event) => {
     }
 }
 
-const selectAll = (event) => {
+const updateHiddenField = (all=false) => {
+    hiddenField = document.querySelector('#hidden-field');
+    allCheckboxes = Array.from(document.querySelectorAll('input[type=checkbox'));
+    boxList = [];
+    if (all) {
+        for (box of allCheckboxes) {
+            if (box.id !== 'top-checkbox') {
+                boxList.push(box.name)
+            }
+        }
+    } 
+    hiddenField.value = boxList;
+}
+
+const selectAll = (event, loggingClicks=false) => {
     if (event.target.name === 'select-all') {
         event.preventDefault();
     }
@@ -26,6 +40,11 @@ const selectAll = (event) => {
         else {
             box.checked = false;
         }
+    }
+    if (loggingClicks && button.textContent === 'Select All') {
+        updateHiddenField(all=true);
+    } else {
+        updateHiddenField(all=false)
     }
     button.textContent = button.textContent === 'Select All' ? 'Select None' : 'Select All';
 }

@@ -31,7 +31,7 @@
             {% endif %}
         </p>
 
-        <form method="post" action="{% url 'oligos:list_actions' %}">
+        <form method="post" action="{% url 'sequencing:list_actions' %}">
         {% csrf_token %}
 
         <input type="hidden" name="return-url" value="{{ current_path }}">
@@ -88,7 +88,7 @@
 
         <div style="text-align:center;">
             <button name="select-all" onclick="selectAll(event)" id="select-all-button" class="button-primary">Select All</button>
-            <button type="submit" name="button" value="resequencing" class="button-primary">TODO: resequencing</button>
+            <button type="submit" name="button" value="resequencing" class="button-primary">Set status to 'Resequencing'</button>
         </div>
 
 

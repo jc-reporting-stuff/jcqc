@@ -1,0 +1,48 @@
+{% extends '_base.html' %}
+
+{% block title %}Worksheet {{ name }} Block {{ block_num }}{% endblock title %}
+
+
+{% block content %}
+
+    <div class="container">
+
+        <table class="oligo-view">
+            <tr>
+                <th >Well</th>
+                <th>Sub ID</th>
+                <th>SeqID</th>
+                <th>Client Name</th>
+                <th>Template DNA</th>
+                <th>Pr. Name</th>
+                <th>Add / Remove</th>
+            </tr>
+
+            {% for ws in worksheets %}
+                    <tr {% if not ws.is_active %}class="inactive-sample-red"{% endif %}>
+                        <td>{{ ws.well }}</td>
+                        <td>{{ ws.reaction.submission_id }}</td>
+                        <td {% if ws.reaction.hardcopy %}style="color: #047857; font-weight: 600;"{% endif %}>{{ ws.reaction.id }}</td>
+                        <td>{{ ws.reaction.submitter.display_name }}</td>
+                        <td {% if ws.reaction.template.pcr_purify %}style="color: #DC2626; font-weight: 600;"{% endif %}>{{ ws.reaction.template.name }}</td>
+                        <td>{{ ws.reaction.primer.name }}</td>
+                        <td>
+                            <a href="{% url 'sequencing:worksheet_toggle_active' pk=ws.id %}">{%if ws.is_active %}Remove{% else %}Reactivate{% endif %}</a>
+                        </td>
+                    </tr>
+            {% endfor %}
+        </table>
+
+        <div class="container" style="text-align: right;">
+            <p>Go back to <a href="{% url 'sequencing:worksheet_list' %}">worksheet list</a>.</p>
+        </div>
+
+        <div class="container half-width" style="text-align: center">
+         <p class="inactive-sample-red">Rows in red are inactivated and will show up as a gap on a worksheet.</p>
+         <p class="inactive-sample-red">Inactivated samples will have their status set to 'Resequencing'.</p>
+        </div>
+
+    </div>
+
+{% endblock content %}
+
