@@ -78,16 +78,15 @@
             </div>    
 
             <div style="width: 100%; text-align: center">
+                <input type='hidden' name='click-order' value='' id="hidden-field">
+                <input type='hidden' name='worksheet-name' value="{{ name }}">
+                <input type='hidden' name='append' value="{{ append }}">
+
                 <button name="select-all" onclick="selectAll(event, loggingClicks=true)" id="select-all-button" class="button-primary">Select All</button>
                 <button name="select-all" onclick="previewWorksheet()" class="button-primary" type="button">
                     Preview Worksheet 
                     <img src="{% static '/images/open-external-link.svg' %}" class="inline-image" style="margin-left: 0.25rem; vertical-align: middle">
                 </button>
-
-                <input type='hidden' name='click-order' value='' id="hidden-field">
-                <input type='hidden' name='worksheet-name' value="{{ name }}">
-                <input type='hidden' name='append' value="{{ append }}">
-
                 <input type='submit' name='add' value='Add to worksheet {{ name }}' class="button-primary">
             </div>
 
@@ -101,22 +100,33 @@
 
     <script type="text/javascript">
         const checkHiddenField = (event) => {
+            const highestWellCount = {{ highest_well }};
             let hiddenField = document.querySelector('#hidden-field');
             let currentList = hiddenField.value ? hiddenField.value.split(',') : [];
-            if (event.target.checked === true) {
-                // The box has been checked and we'll add to the make_list
-                currentList.push(event.target.name);
-            } else if (currentList.includes(event.target.name)) {
-                currentList = currentList.filter(item => item !== event.target.name);
 
+            // The select all box already does it's own thing.
+            if (event.target.id != 'select-all-button') {
+                if (event.target.checked === true) {
+                    // The box has been checked and we'll add to the make_list
+                    currentList.push(event.target.name);
+                } else if (currentList.includes(event.target.name)) {
+                    currentList = currentList.filter(item => item !== event.target.name);
+                }
+                hiddenField.value = currentList;
             }
-            hiddenField.value = currentList;
-        }
 
-        let checkBoxes = Array.from(document.querySelectorAll('input[type=checkbox]'));
-        for (box of checkBoxes) { 
-            if (box.id !== 'top-checkbox') {
-                box.addEventListener('change', checkHiddenField);
+            // But we still want to check and see if there are too many samples!
+            if (highestWellCount + currentList.length > 95) {
+                submitButton = document.querySelector('input[name="add"]');
+                submitButton.disabled = true;
+                submitButton.value = 'Too many sequences for this plate!';
+                submitButton.classList.add('button-warning');
+            }
+            else if (highestWellCount + currentList.length <= 95) {
+                submitButton = document.querySelector('input[name="add"]');
+                submitButton.disabled = false;
+                submitButton.value = 'Add to worksheet {{ name }}';
+                submitButton.classList.remove('button-warning');
             }
         }
 
@@ -178,6 +188,16 @@
             }
             window.open(`{% url 'sequencing:worksheet_preview' %}?ids=${worksheetIds}`, menubar='no', height='400');
         }
+
+        let checkBoxes = Array.from(document.querySelectorAll('input[type=checkbox]'));
+        for (box of checkBoxes) { 
+            if (box.id !== 'top-checkbox') {
+                box.addEventListener('change', checkHiddenField);
+            }
+        }
+
+        let selectAllButton = document.querySelector('#select-all-button');
+        selectAllButton.addEventListener('click', checkHiddenField)
     </script>
 
 {% endblock content %}

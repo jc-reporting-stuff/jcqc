@@ -31,6 +31,12 @@
                     <td>{{ oligo.purity|title }}</td>
                     <td>{% if oligo.modification %}{{ oligo.modification }}{% else %} - -{% endif %}</td>
                 </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="8">
+                        <strong>No oligos ordered yet today.</strong>
+                    </td>
+                </tr>
             {% endfor %}
         </table>
 

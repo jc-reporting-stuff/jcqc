@@ -29,6 +29,12 @@
                     <td>{{ reaction.source }}</td>
                     <td>{{ reaction.get_comment }}</td>
                 </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="7">
+                        <strong>No sequences ordered yet today.</strong>
+                    </td>
+                </tr>
             {% endfor %}
         </table>
 

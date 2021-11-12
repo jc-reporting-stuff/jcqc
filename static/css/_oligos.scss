@@ -133,6 +133,9 @@
   .pink-text {
     color: magenta;
   }
+  strong {
+    font-weight: 600;
+  }
   tr {
     &:nth-child(1) {
       border-top: 1px solid $gray-200;

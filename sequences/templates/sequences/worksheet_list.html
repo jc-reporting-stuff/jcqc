@@ -53,6 +53,19 @@
             let url = `{% url 'sequencing:worksheet_update_well'  %}?id=${id}&block=${block}&well=${well}`;
             window.location.assign(url);
         }
+
+        const manageKeypress = (event) => {
+            if (event.key == 'Enter') {
+                event.preventDefault();
+                let [_, id, block] = event.target.id.split('-')
+                updateStartingWell(id, block);
+            }
+        }
+
+        let inputBoxes = Array.from(document.querySelectorAll('.tiny-input'));
+        for (box of inputBoxes) {
+            box.addEventListener('keypress', manageKeypress);
+        }
     </script>
 
 {% endblock content %}

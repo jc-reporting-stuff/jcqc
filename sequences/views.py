@@ -817,10 +817,8 @@ class WorksheetAddView(View):
                 'min_value': request.POST.get('min_value'),
                 'max_value': request.POST.get('max_value'),
             }
-
             messages.warning(
                 request, f'Must use either an existing plate name or a new plate name.')
-
             return render(request, 'sequences/worksheet_search.html', context=context)
 
         # Form data is good, now we can get on with showing the reaction options.
@@ -836,10 +834,24 @@ class WorksheetAddView(View):
         # Figure out what plate name we are using.
         name = data['new_plate_name'] if data['new_plate_name'] else data['existing_plate_name']
         append = True if data['existing_plate_name'] else False
+
         reactions = Reaction.objects.filter(
             id__gte=data['from_id']).filter(id__lte=data['to_id']).order_by('id')
 
-        return render(request, 'sequences/worksheet_add.html', context={'reactions': reactions, 'name': name, 'append': append})
+        context = {
+            'reactions': reactions,
+            'name': name,
+            'append': append,
+            'highest_well': 0,
+        }
+
+        if append:
+            context['highest_well'] = Worksheet.objects.filter(
+                plate__name=name).order_by('-well_count').first().well_count
+
+        print(context['highest_well'])
+
+        return render(request, 'sequences/worksheet_add.html', context=context)
 
 
 class WorksheetSubmitView(View):
@@ -885,7 +897,10 @@ class WorksheetSubmitView(View):
             current_block = 1
             current_well_count = 0
 
-        print(current_block, current_well_count)
+        if current_well_count + len(reactions) > 95:
+            messages.warning(
+                request, 'Too many sequences for this plate, nothing has been saved.')
+            return redirect(reverse('sequencing:worksheet_search'))
 
         for idx, reaction in enumerate(reactions):
             Worksheet.objects.create(
@@ -1044,7 +1059,7 @@ class WorksheetUpdateWellView(View):
         well_count = get_well_count_from_human(alpha, numeric)
 
         worksheets = Worksheet.objects.filter(
-            plate_id=plate_id)
+            plate_id=plate_id, block=block)
 
         if (well_count - 1 + len(worksheets) > 95):
             return redirect_to_list_with_warning(
