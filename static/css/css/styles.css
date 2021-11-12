@@ -200,9 +200,6 @@ header .ugls-header-banner {
               color: #fde68a; }
           .nav-container .nav-group-container .nav-group .nav-box .bottom-box span {
             color: #3b82f6; }
-        .nav-container .nav-group-container .nav-group .nav-box #user-icon {
-          width: 1rem;
-          display: inline; }
 
 .admin-link {
   position: absolute;
@@ -216,6 +213,18 @@ header .ugls-header-banner {
     color: #d1d5db; }
   .admin-link:hover {
     background-color: #d1d5db; }
+
+#user-icon {
+  width: 1rem;
+  display: inline; }
+
+#user-icon-button {
+  position: relative;
+  top: 1.5px;
+  width: 0.9rem;
+  display: inline;
+  filter: brightness(0) saturate(100%) invert(23%) sepia(8%) saturate(1500%) hue-rotate(178deg) brightness(98%) contrast(91%);
+  margin-right: 0.125rem; }
 
 form {
   margin: 2rem auto; }
@@ -478,6 +487,21 @@ fieldset {
       text-decoration: underline; }
       .oligo-view tr td a:visited {
         color: #1e3a8a; }
+  .oligo-view.extra-space td {
+    padding: 0.5rem; }
+  .oligo-view.extra-space .fake-button {
+    display: inline-block;
+    text-align: center;
+    border: 1px solid #9ca3af;
+    border-radius: 0.25rem;
+    background-color: #e5e7eb;
+    padding: 0.25rem 0.25rem;
+    margin: 0 1.25rem;
+    text-decoration: none;
+    color: #374151;
+    min-width: 10rem; }
+    .oligo-view.extra-space .fake-button:hover {
+      background-color: #f3f4f6; }
 
 .searches-container {
   max-width: 1280px;

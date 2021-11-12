@@ -1,0 +1,14 @@
+#user-icon {
+  width: 1rem;
+  display: inline;
+}
+
+#user-icon-button {
+  position: relative;
+  top: 1.5px;
+  width: 0.9rem;
+  display: inline;
+  filter: brightness(0) saturate(100%) invert(23%) sepia(8%) saturate(1500%)
+    hue-rotate(178deg) brightness(98%) contrast(91%);
+  margin-right: 0.125rem;
+}

@@ -5,7 +5,7 @@ from accounts.models import User
 
 
 class HomePageView(TemplateView):
-    template_name = 'home.html'
+    template_name = 'pages/home.html'
 
 
 class MoreInfoView(TemplateView):

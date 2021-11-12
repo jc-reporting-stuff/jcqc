@@ -2,6 +2,8 @@
 
 {% block title %}Home{% endblock title %}
 
+{% load static %}
+
 {% block content %}
 
     <div class="container">
@@ -13,7 +15,7 @@
 
             Filter first and last names by text: <input type="text" id="filter-box">
 
-            <table class="oligo-view" id="client-table">
+            <table class="oligo-view extra-space" id="client-table">
                 <tr>
                     <th><a href="?order_by=id">Customer ID</a></th>
                     <th><a href="?order_by=last_name">Last Name</a></th>
@@ -24,6 +26,7 @@
                     <th>Oligo Orders</th>
                     <th>Sequencing Orders</th>
                     <th>Account Status</th>
+                    <th>Edit in Admin Panel</th>
                 </tr>
 
                 {% for user in users %}
@@ -37,6 +40,12 @@
                         <td>{% if user.oligo_orders.all|length > 0 %}<a href="{% url 'oligos:user_orders' user.username %}">Oligo History</a>{% else %}No oligos{% endif %}</td>
                         <td>{% if user.reactions.all|length > 0 %}<a href="{% url 'sequencing:user_orders' user.username %}">Sequencing History</a>{% else %}No sequences{% endif %}</td>
                         <td>{% if user.is_active %}Active{% else %}Inactive{% endif %}</td>
+                        <td>
+                            <a href="{% url 'admin:accounts_user_change' user.id %}" class="fake-button" style="position: relative">
+                                <img src="{% static 'images/user-icon.svg' %}" id="user-icon-button" alt="user icon">
+                                Edit {{ user.first_name }}
+                                </a>
+                        </td>
                     </tr>
                 {% endfor %}
             </table>

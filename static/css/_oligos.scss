@@ -157,6 +157,26 @@
       }
     }
   }
+  &.extra-space {
+    td {
+      padding: 0.5rem;
+    }
+    .fake-button {
+      display: inline-block;
+      text-align: center;
+      border: 1px solid $gray-400;
+      border-radius: 0.25rem;
+      background-color: $gray-200;
+      padding: 0.25rem 0.25rem;
+      margin: 0 1.25rem;
+      text-decoration: none;
+      color: $gray-700;
+      min-width: 10rem;
+      &:hover {
+        background-color: $gray-100;
+      }
+    }
+  }
 }
 
 .searches-container {
