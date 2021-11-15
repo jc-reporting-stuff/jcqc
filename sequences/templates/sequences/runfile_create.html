@@ -1,0 +1,55 @@
+{% extends '_base.html' %}
+
+{% block title %}Create runfile{% endblock title %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+    <div class="container half-width">
+
+        <h1 style="text-align:center;">Create 3737 runfile</h1>
+
+        <p style="text-align: center;">You can only generate a sequencing runfile after you have created a worksheet.</p>
+
+        <form method="post" action="">
+            {% csrf_token %}
+            <div class="plate-choice">
+                <table>
+                    {% for field in form %}
+
+                        {% if forloop.counter == 2 %}
+                                </table>
+                            </div>
+
+                            <h2 style="margin: 2rem 0;">Optional parameters with defaults selected</h2>
+
+                            <div class="plate-options">
+
+                                <table style="margin:auto;">
+                        {% endif %}
+
+                    <tr>
+                <th style="text-align: right;">
+                    {{ field.label_tag }}
+                </th>
+                <td>
+                    {{ field }}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+
+            
+            <div style="width: 100%; text-align: center;">
+                <input type="submit" value="Generate Runfile" class="button-primary">
+            </div>
+        </form>
+            
+    </div>
+
+
+
+{% endblock content %}
+

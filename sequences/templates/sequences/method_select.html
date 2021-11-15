@@ -38,7 +38,10 @@
             </div>
 
             <p>
-                <strong>Note:</strong> Lab Services provides <a href="{% url 'sequencing:common_primers' %}">these common primers</a> which
+                <strong>Note:</strong> Lab Services provides 
+                <a onclick="openWindow('{% url 'sequencing:common_primers' %}')" style="cursor: pointer">these common primers</a>
+                <img src="/static/images/open-external-link.svg" alt="popout window icon" class="inline-image">
+                 which
                 do not need to be submitted.
             </p>
 
@@ -67,6 +70,10 @@
         const gotoEasyOrder = () => {
             let accountId = document.querySelector('#account').value
             window.location.assign(`{% url 'sequencing:add_bulk_reactions' %}?account_id=${accountId}`)
+        }
+
+        const openWindow = (url) => {
+            window.open(url, "CommonPrimers", "width=700,height=800,left=100,top=100");
         }
     </script>
 
