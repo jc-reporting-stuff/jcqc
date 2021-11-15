@@ -22,8 +22,6 @@
                                 </table>
                             </div>
 
-                            <hr>
-
                             <h2 style="margin: 2rem 0;">Optional parameters with defaults selected</h2>
 
                             <div class="plate-options">
@@ -32,15 +30,16 @@
                         {% endif %}
 
                     <tr>
-                        <th style="text-align: right;">
-                            {{ field.label_tag }}
-                        </th>
-                        <td>
-                            {{ field }}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
+                <th style="text-align: right;">
+                    {{ field.label_tag }}
+                </th>
+                <td>
+                    {{ field }}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
 
             
             <div style="width: 100%; text-align: center;">

@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Field, Div, HTML, Submit
 
-from .models import Plate, Primer, SeqPrice, Template
+from .models import Plate, Primer, SeqPrice, Template, Worksheet
 from datetime import datetime, timedelta
 import pytz
 import re
@@ -213,3 +213,104 @@ class WorksheetSearchForm(forms.Form):
         min_value=1, widget=forms.TextInput, label='Show sequence from ID:')
     to_id = forms.IntegerField(
         min_value=1, widget=forms.TextInput, label='To ID:')
+
+
+class RunfilePlate:
+    def __init__(self, id, name, block):
+        self.id = id
+        self.name = name
+        self.block = block
+
+    def __repr__(self):
+        return f'{self.name} block {self.block}'
+
+
+class RunfilePrepForm(forms.Form):
+    recent_plates = Plate.objects.order_by('-id')[:10]
+
+    recent_worksheets = Worksheet.objects.filter(
+        plate__in=recent_plates).order_by('-id')
+
+    plates_list = []
+    for worksheet in recent_worksheets:
+        name_block_exists = False
+        if len(plates_list) > 0:
+            for plate in plates_list:
+                if worksheet.plate.name == plate.name and worksheet.block == plate.block:
+                    name_block_exists = True
+                    break
+        if not name_block_exists:
+            plates_list.append(RunfilePlate(
+                worksheet.plate.id, worksheet.plate.name, worksheet.block))
+
+    PLATE_NAME_CHOICES = ((f'{plate.id}-{plate.block}', f'{plate.name} Block {plate.block}')
+                          for plate in plates_list)
+
+    dye_sets = ['Z-BigDyev3', 'E-BigDyev1', 'Any5Dye',
+                'S', 'Any4Dye', 'G5', 'Aby4Dye-HDR', 'G5-RCT']
+    DYE_SET_CHOICES = ((dye, dye) for dye in dye_sets)
+
+    mobility_files = [
+        'KB-3730-POP7-BDTv3.mob',
+        'DT3730POP7{bd].mob',
+        'DT3730pop7{bdV3}.mob',
+        'KB-3730-POP7-BDTv1.mob'
+    ]
+    MOBILITY_FILE_CHOICES = ((file, file) for file in mobility_files)
+
+    run_modules = [
+        'LongSeq50_POP7_1',
+        'GeneMapper36_POP7_1',
+        'GeneMapper50_POP7_1',
+        'HTSNP36_POP7_V3_1',
+        'HTSNP50_POP7_1',
+        'RapidSeq36_POP7_1',
+        'StdSeq36_POP7_1',
+        'XLRSeq50_POP7_1',
+    ]
+    RUN_MODULE_CHOICES = ((module, module) for module in run_modules)
+
+    analysis_modules = [
+        '3730BDTv-KB-DeNovo_v5.1',
+        '3730BDTv-KB-DeNovo_v5.2',
+        '3730-BDTv3-KB_v5.2-LSD'
+    ]
+    ANALYSIS_MODULE_CHOICES = ((module, module) for module in analysis_modules)
+
+    plate_name = forms.ChoiceField(
+        choices=PLATE_NAME_CHOICES, label='Select plate name and block')
+    dye_set = forms.ChoiceField(choices=DYE_SET_CHOICES)
+    mobility_file = forms.ChoiceField(choices=MOBILITY_FILE_CHOICES)
+    run_module = forms.ChoiceField(choices=RUN_MODULE_CHOICES)
+    analysis_module = forms.ChoiceField(
+        choices=ANALYSIS_MODULE_CHOICES, initial='3730-BDTv3-KB_v5.2-LSD')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.method = 'post'
+        self.helper.layout = Layout(
+            Fieldset(
+                'Plate',
+                Div(
+                    'plate_name',
+                    css_class='runfile-form'
+                ),
+                css_class='runfile-form'
+            ),
+            Fieldset(
+                'Optional parameters (default selected)',
+                Div(
+                    'dye_set',
+                    'mobility_file',
+                    'run_module',
+                    'analysis_module',
+                    css_class='runfile-form'
+                ),
+            ),
+            Div(
+                Submit('submit', 'Create Run File',
+                       css_class="button-primary"),
+                css_class='centered'
+            ),
+        )

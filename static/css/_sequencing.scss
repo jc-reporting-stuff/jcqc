@@ -24,6 +24,24 @@
   }
 }
 
+.plate-choice {
+  border: 1px solid $blue-800;
+  background-color: $blue-100;
+  border-radius: 0.5rem;
+  color: $blue-900;
+  padding: 0.5rem;
+  table {
+    margin: auto;
+  }
+}
+.plate-options {
+  border: 1px solid $gray-800;
+  background-color: $gray-100;
+  border-radius: 0.5rem;
+  color: $gray-900;
+  padding: 0.5rem;
+}
+
 .sequencing-question {
   border: 1px solid $gray-400;
   border-radius: 1rem;

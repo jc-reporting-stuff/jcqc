@@ -20,6 +20,9 @@ form {
     font-weight: 700;
     margin: 1rem;
   }
+  .centered {
+    text-align: center;
+  }
   .control-group {
     display: inline-block;
   }
@@ -104,6 +107,10 @@ fieldset {
     font-size: large;
     font-weight: 700;
   }
+  .controls {
+    display: flex;
+    flex-direction: column;
+  }
   .row-holder-fieldset {
     margin-top: 0.5rem;
     display: flex;
@@ -111,8 +118,14 @@ fieldset {
     align-items: center;
     justify-content: space-evenly;
   }
-  .controls {
-    display: flex;
-    flex-direction: column;
+  .runfile-form {
+    .asteriskField {
+      display: none;
+    }
+    .control-group {
+      display: flex;
+      justify-content: flex-start;
+      align-items: baseline;
+    }
   }
 }

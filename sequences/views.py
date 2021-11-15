@@ -17,7 +17,7 @@ from django.utils.decorators import method_decorator
 
 
 from sequences.models import Plate, Reaction, SeqPrice, Worksheet
-from sequences.forms import PrimerModelForm, ReactionEasyOrderForm, ReactionForm, IdRangeForm, DateRangeForm, StatusForm, TemplateModelForm, TextSearch, PriceForm, WorksheetSearchForm
+from sequences.forms import PrimerModelForm, ReactionEasyOrderForm, ReactionForm, IdRangeForm, DateRangeForm, RunfilePrepForm, StatusForm, TemplateModelForm, TextSearch, PriceForm, WorksheetSearchForm
 
 
 from sequences.models import Template, Primer, Reaction, Account
@@ -1074,3 +1074,9 @@ class WorksheetUpdateWellView(View):
             well_count += 1
 
         return redirect(reverse('sequencing:worksheet_list'))
+
+
+class RunfileCreateView(View):
+    def get(self, request):
+        form = RunfilePrepForm
+        return render(request, 'sequences/runfile_create.html', context={'form': form})

@@ -46,4 +46,7 @@ urlpatterns = [
          name='worksheet_preview'),
     path('worksheet/update/well/', views.WorksheetUpdateWellView.as_view(),
          name='worksheet_update_well'),
+
+    path('runfile/create/', views.RunfileCreateView.as_view(),
+         name='runfile_create'),
 ]

@@ -271,6 +271,8 @@ form {
     color: #9f1239;
     font-weight: 700;
     margin: 1rem; }
+  form .centered {
+    text-align: center; }
   form .control-group {
     display: inline-block; }
   form .form-number {
@@ -338,15 +340,21 @@ fieldset {
     padding: 0.5rem 1rem;
     font-size: large;
     font-weight: 700; }
+  fieldset .controls {
+    display: flex;
+    flex-direction: column; }
   fieldset .row-holder-fieldset {
     margin-top: 0.5rem;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-evenly; }
-  fieldset .controls {
+  fieldset .runfile-form .asteriskField {
+    display: none; }
+  fieldset .runfile-form .control-group {
     display: flex;
-    flex-direction: column; }
+    justify-content: flex-start;
+    align-items: baseline; }
 
 .login-container {
   width: 100%; }
@@ -582,6 +590,22 @@ fieldset {
     margin-top: 1rem; }
     .info-box.small p {
       margin: 0.5rem; }
+
+.plate-choice {
+  border: 1px solid #1e40af;
+  background-color: #dbeafe;
+  border-radius: 0.5rem;
+  color: #1e3a8a;
+  padding: 0.5rem; }
+  .plate-choice table {
+    margin: auto; }
+
+.plate-options {
+  border: 1px solid #1f2937;
+  background-color: #f3f4f6;
+  border-radius: 0.5rem;
+  color: #111827;
+  padding: 0.5rem; }
 
 .sequencing-question {
   border: 1px solid #9ca3af;
