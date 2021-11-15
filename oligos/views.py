@@ -466,13 +466,13 @@ class OligoListActionsView(View):
             for oligo in oligos:
                 if oligo.OD_reading:
                     oligo.micrograms95 = round(
-                        oligo.micrograms_per_microliter * 95, 1)
+                        (oligo.micrograms_per_microliter or 0) * 95, 1)
                     oligo.nmols95 = round(
-                        oligo.pmol_per_microliter * 95 / 1000, 1)
+                        (oligo.pmol_per_microliter or 0) * 95 / 1000, 1)
                     oligo.micrograms195 = round(
-                        oligo.micrograms_per_microliter * 195, 1)
+                        (oligo.micrograms_per_microliter or 0) * 195, 1)
                     oligo.nmols195 = round(
-                        oligo.pmol_per_microliter * 195 / 1000, 1)
+                        (oligo.pmol_per_microliter or 0) * 195 / 1000, 1)
             return render(request, 'oligos/report.html', context={'oligos': oligos})
 
         elif action == 'create-labels':
@@ -493,10 +493,13 @@ def ReportOrderView(request):
     order_id = request.GET.get('order_id')
     oligos = list(Oligo.objects.filter(order_id=order_id))
     for oligo in oligos:
-        oligo.micrograms95 = round(oligo.micrograms_per_microliter * 95, 1)
-        oligo.nmols95 = round(oligo.pmol_per_microliter * 95 / 1000, 1)
-        oligo.micrograms195 = round(oligo.micrograms_per_microliter * 195, 1)
-        oligo.nmols195 = round(oligo.pmol_per_microliter * 195 / 1000, 1)
+        oligo.micrograms95 = round(
+            (oligo.micrograms_per_microliter or 0) * 95, 1)
+        oligo.nmols95 = round((oligo.pmol_per_microliter or 0) * 95 / 1000, 1)
+        oligo.micrograms195 = round(
+            (oligo.micrograms_per_microliter or 0) * 195, 1)
+        oligo.nmols195 = round(
+            (oligo.pmol_per_microliter or 0) * 195 / 1000, 1)
     return render(request, 'oligos/report.html', context={'oligos': oligos})
 
 

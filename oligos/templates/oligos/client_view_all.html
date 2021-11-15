@@ -34,8 +34,8 @@
                     <td>{{ order.created_at|date:'M d, Y' }}</td>
                     <td>{{ order.scale }}</td>
                     <td>{{ order.purity|title }}</td>
-                    <td>- -</td>
-                    <td>- -</td>
+                    <td>{% if order.micrograms_per_microliter %}{{ order.micrograms_per_microliter }}{% else %}0.0{%endif %}</td>
+                    <td>{% if order.pmol_per_microliter %}{{ order.pmol_per_microliter }}{% else %}0.0{%endif %}</td>
                     <td>{{ order.modification }}</td>
                     <td>{{ order.sequence|length }}</td>
                     <td style="text-align: left;">{{ order.dna_sequence }}</td>

@@ -23,8 +23,8 @@
                         <td style="text-align: left;">{{ oligo.name }}</td>
                         <td style="text-align:left;">{{ oligo.dna_sequence }}</td>
                         <td>{{ oligo.sequence|length }}</td>
-                        <td>{% if oligo.micrograms_per_microliter %}{{ oligo.micrograms_per_microliter }}{% else %} - -{% endif %}</td>
-                        <td>{% if oligo.pmol_per_microliter %}{{ oligo.pmol_per_microliter }}{% else %} - -{% endif %}</td>
+                        <td>{% if oligo.micrograms_per_microliter %}{{ oligo.micrograms_per_microliter }}{% else %}0.0{% endif %}</td>
+                        <td>{% if oligo.pmol_per_microliter %}{{ oligo.pmol_per_microliter }}{% else %}0.0{% endif %}</td>
                     </tr>
                 {% endfor %}
             </table>
@@ -49,8 +49,8 @@
                         <td style="text-align: left;">{{ oligo.name }}</td>
                         <td style="text-align:left;">{{ oligo.dna_sequence }}</td>
                         <td>{{ oligo.sequence|length }}</td>
-                        <td>{% if oligo.micrograms95 %}{{ oligo.micrograms95 }}{% else %} - - {% endif %}</td>
-                        <td>{% if oligo.micrograms95 %}{{ oligo.nmols95 }}{% else %} - - {% endif %}</td>
+                        <td>{% if oligo.micrograms95 %}{{ oligo.micrograms95 }}{% else %}0.0{% endif %}</td>
+                        <td>{% if oligo.micrograms95 %}{{ oligo.nmols95 }}{% else %}0.0{% endif %}</td>
                     </tr>
                 {% endfor %}
             </table>
@@ -73,8 +73,8 @@
                         <td style="text-align: left;">{{ oligo.name }}</td>
                         <td style="text-align:left;">{{ oligo.dna_sequence }}</td>
                         <td>{{ oligo.sequence|length }}</td>
-                        <td>{% if oligo.micrograms195 %}{{ oligo.micrograms195 }}{% else %} - - {% endif %}</td>
-                        <td>{% if oligo.micrograms195 %}{{ oligo.nmols195 }}{% else %} - - {% endif %}</td>
+                        <td>{% if oligo.micrograms195 %}{{ oligo.micrograms195 }}{% else %}0.0{% endif %}</td>
+                        <td>{% if oligo.micrograms195 %}{{ oligo.nmols195 }}{% else %}0.0{% endif %}</td>
                     </tr>
                 {% endfor %}
             </table>

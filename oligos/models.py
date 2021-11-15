@@ -31,7 +31,7 @@ class Oligo(models.Model):
 
     @property
     def total_OD(self):
-        if self.OD_reading:
+        if self.OD_reading and self.OD_reading_dilution_factor:
             return float(self.OD_reading) * float(self.OD_reading_dilution_factor) * float(self.volume)
         else:
             return None
@@ -44,7 +44,7 @@ class Oligo(models.Model):
 
     @property
     def pmol_per_microliter(self):
-        if self.OD_reading:
+        if self.OD_reading and self.OD_reading_dilution_factor:
             epson_value = 0
             for i in range(0, len(self.sequence)):
                 current_base = self.sequence[i]
@@ -60,7 +60,7 @@ class Oligo(models.Model):
 
     @property
     def micrograms_per_microliter(self):
-        if self.OD_reading:
+        if self.OD_reading and self.OD_reading_dilution_factor:
             concentration = float(self.pmol_per_microliter) * \
                 float(self.molecular_weight) / 10**6
             return round(concentration, 1)
@@ -69,7 +69,7 @@ class Oligo(models.Model):
 
     @property
     def ug_per_ml(self):
-        if self.OD_reading:
+        if self.OD_reading and self.OD_reading_dilution_factor:
             concentration = float(self.pmol_per_microliter) * \
                 float(self.molecular_weight) / 1000
             return round(concentration, 1)
@@ -78,14 +78,14 @@ class Oligo(models.Model):
 
     @property
     def nmol_per_ml(self):
-        if self.OD_reading:
+        if self.OD_reading and self.OD_reading_dilution_factor:
             return self.pmol_per_microliter
         else:
             return None
 
     @property
     def nmol(self):
-        if self.OD_reading:
+        if self.OD_reading and self.OD_reading_dilution_factor:
             quantity = float(self.pmol_per_microliter) * float(self.volume)
             return round(quantity, 1)
         else:
@@ -93,7 +93,7 @@ class Oligo(models.Model):
 
     @property
     def micrograms(self):
-        if self.OD_reading:
+        if self.OD_reading and self.OD_reading_dilution_factor:
             mass = float(self.micrograms_per_microliter) * \
                 float(self.volume) * 1000
             return round(mass, 1)
