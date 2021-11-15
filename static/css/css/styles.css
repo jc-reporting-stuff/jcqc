@@ -226,6 +226,32 @@ header .ugls-header-banner {
   filter: brightness(0) saturate(100%) invert(23%) sepia(8%) saturate(1500%) hue-rotate(178deg) brightness(98%) contrast(91%);
   margin-right: 0.125rem; }
 
+.info-content {
+  width: 60rem;
+  margin: auto; }
+  .info-content h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    border-bottom: 1px solid #d1d5db; }
+  .info-content h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 1rem 0; }
+  .info-content p {
+    padding: 0 2rem;
+    margin-bottom: 1rem; }
+  .info-content ul {
+    padding: 0 2rem; }
+  .info-content li {
+    padding: 0.4rem 0;
+    list-style-type: disc;
+    list-style-position: outside; }
+  .info-content .info-section {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #f3f4f6;
+    border-radius: 0.5rem; }
+
 form {
   margin: 2rem auto; }
   form .asteriskField {

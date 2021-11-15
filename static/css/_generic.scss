@@ -12,3 +12,36 @@
     hue-rotate(178deg) brightness(98%) contrast(91%);
   margin-right: 0.125rem;
 }
+
+.info-content {
+  width: 60rem;
+  margin: auto;
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    border-bottom: 1px solid $gray-300;
+  }
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 1rem 0;
+  }
+  p {
+    padding: 0 2rem;
+    margin-bottom: 1rem;
+  }
+  ul {
+    padding: 0 2rem;
+  }
+  li {
+    padding: 0.4rem 0;
+    list-style-type: disc;
+    list-style-position: outside;
+  }
+  .info-section {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: $gray-100;
+    border-radius: 0.5rem;
+  }
+}
