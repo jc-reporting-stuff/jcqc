@@ -10,6 +10,9 @@ const checkOwnBox = (event) => {
 
 const updateHiddenField = (all=false) => {
     hiddenField = document.querySelector('#hidden-field');
+    if (!hiddenField) {
+        return
+    }
     allCheckboxes = Array.from(document.querySelectorAll('input[type=checkbox'));
     boxList = [];
     if (all) {
