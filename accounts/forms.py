@@ -10,7 +10,7 @@ from .models import Account, User, Preapproval
 
 class UserSignupForm(SignupForm):
     def __init__(self, *args, **kwargs):
-        super(UserSignupForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         for field_name in self.fields:
             field = self.fields.get(field_name)
             if field:
@@ -48,27 +48,6 @@ class UserSignupForm(SignupForm):
         max_length=150, required=True, label='Postal or zip code')
     user_type = forms.ChoiceField(
         choices=USER_TYPE, widget=forms.RadioSelect, required=True)
-    is_external = forms.BooleanField(
-        label="Are you external to UofG?", required=False)
-
-    def save(self, request):
-        user = super(UserSignupForm, self).save(request)
-        user.first_name = self.cleaned_data['first_name']
-        user.last_name = self.cleaned_data['last_name']
-        user.phone = self.cleaned_data['phone']
-        user.extension = self.cleaned_data['extension']
-        user.fax_number = self.cleaned_data['fax_number']
-        user.institution = self.cleaned_data['institution']
-        user.department = self.cleaned_data['department']
-        user.room_number = self.cleaned_data['room_number']
-        user.address = self.cleaned_data['address']
-        user.city = self.cleaned_data['city']
-        user.province = self.cleaned_data['province']
-        user.country = self.cleaned_data['country']
-        user.postal_code = self.cleaned_data['postal_code']
-        user.user_type = self.cleaned_data['user_type']
-        user.save()
-        return user
 
     def get_success_url(self):
         return reverse('edit_account')

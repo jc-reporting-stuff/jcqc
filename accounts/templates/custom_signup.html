@@ -71,6 +71,17 @@
     </div>
 
     <script>
+        const deptRequired = (required) => {
+            const deptInput = document.querySelector('#id_department');
+            const deptLabel = document.querySelector('label[for="id_department"]');
+            if (required) {
+                deptInput.required = true;
+                deptLabel.innerHTML = 'Department<span class="asteriskField">*</span>';
+            } else {
+                deptInput.required = false;
+                deptLabel.innerHTML = 'Department';
+            }
+        }
         const checkInternalForm = (event) => {
             selected = document.querySelector('input[name="user_type"]:checked').value;
 
@@ -105,6 +116,7 @@
                 pcDiv.style.display = 'none';
                 deptDiv.style.display = 'inline-block';
                 roomDiv.style.display = 'inline-block';
+                deptRequired(true);
             }
             else {
                 institutionInput.value = '';
@@ -121,6 +133,7 @@
                 pcDiv.style.display = 'inline-block';
                 roomDiv.style.display = 'none';
                 deptDiv.style.display = 'none';
+                deptRequired(false);
             }
 
             
@@ -129,7 +142,6 @@
         for (choice of choiceSelect) {
             choice.addEventListener('change', checkInternalForm);
         }
-        checkInternalForm();
 
     </script>
     
