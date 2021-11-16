@@ -49,4 +49,5 @@ urlpatterns = [
 
     path('runfile/create/', views.RunfileCreateView.as_view(),
          name='runfile_create'),
+    path('runfile/download/', views.CreateRunfile, name='runfile_download'),
 ]

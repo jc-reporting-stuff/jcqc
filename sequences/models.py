@@ -122,7 +122,7 @@ class Reaction(models.Model):
 
 
 class Plate(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=11)
     created = models.DateTimeField(auto_now_add=True, auto_now=False)
     reactions = models.ManyToManyField(
         Reaction,

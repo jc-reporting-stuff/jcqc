@@ -23,7 +23,7 @@
             </strong>
 
             {% if data.query in 'oligo date order' %}
-                from <strong>{{data.low}}<strong/> to <strong>{{ data.high }}</strong>
+                from <strong>{{data.low}}</strong> to <strong>{{ data.high }}</strong>
             {% else %}
                 using <strong>"{{ data.text }}"</strong> as the search term
             {% endif %}

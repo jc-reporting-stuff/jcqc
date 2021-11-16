@@ -1,0 +1,26 @@
+{% extends '_base.html' %}
+
+{% block title %}Download runfile{% endblock title %}
+
+
+{% block content %}
+
+
+    <div class="container" style="width: 35rem;">
+
+        <h1 style="text-align:center;">Download 3737 runfile</h1>
+
+        <p style="text-align: center;">
+            <a href="{% url 'sequencing:runfile_download' %}{{ link_params }}">Click here</a> to download your runfile.
+        </p>
+
+        <p><strong>Note:</strong> If the file displays as text in your browser, right-click the link and click 'Save link as...' to download.</p>
+
+        <p>The status of all sequences in this file have been set to 'running'.</p>
+            
+    </div>
+
+
+
+{% endblock content %}
+

@@ -4,7 +4,7 @@ from django.forms.formsets import formset_factory
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect, reverse
-from django.forms import modelformset_factory, formset_factory
+from django.forms import modelformset_factory, formset_factory, utils
 from django.urls import reverse_lazy
 from django.db.models import Max
 from django.views.generic.base import View, TemplateView
@@ -25,6 +25,7 @@ from core.decorators import owner_or_staff, user_has_accounts
 import datetime
 import pytz
 import re
+from sequences.utils import create_runfile
 
 
 class ReactionListView(ListView):
@@ -1080,3 +1081,38 @@ class RunfileCreateView(View):
     def get(self, request):
         form = RunfilePrepForm
         return render(request, 'sequences/runfile_create.html', context={'form': form})
+
+    def post(self, request):
+        form = RunfilePrepForm(request.POST)
+        if not form.is_valid():
+            return render(request, 'sequences/runfile_create.html', context={'form': form})
+
+        cd = form.cleaned_data
+        id_block_list = cd['plate_name'].split('---')
+        plate_name = id_block_list[0]
+        plate_id = id_block_list[1]
+        ws_block = id_block_list[2]
+        module = cd['analysis_module']
+
+        reactions = Reaction.objects.filter(
+            plates__id=plate_id, worksheet__block=ws_block)
+        for reaction in reactions:
+            reaction.status = 'r'
+            reaction.save()
+
+        link_get_params = f'?id={plate_id}&block={ws_block}&module={module}&filename={plate_name}'
+        return render(request, 'sequences/runfile_download.html', context={'link_params': link_get_params})
+
+
+def CreateRunfile(request):
+    plate_id = request.GET.get('id')
+    block = request.GET.get('block')
+    module = request.GET.get('module')
+    filename = request.GET.get('filename')
+    response = HttpResponse(
+        content_type='text/plain',
+        headers={'Content-Disposition': f'attachment; filename="{filename}.txt"'},
+    )
+    runfile_contents = create_runfile(plate_id, block, module)
+    response.write(runfile_contents)
+    return response

@@ -213,7 +213,7 @@ class WorksheetSearchForm(forms.Form):
         self.fields['existing_plate_name'].choices = get_plate_choices()
 
     new_plate_name = forms.CharField(
-        max_length=30, required=False, label="Provide a new plate name:")
+        max_length=11, required=False, label="Provide a new plate name:")
     existing_plate_name = forms.ChoiceField(
         label='Or add sample to existing plate:', required=False)
     from_id = forms.IntegerField(
@@ -233,26 +233,6 @@ class RunfilePlate:
 
 
 class RunfilePrepForm(forms.Form):
-    recent_plates = Plate.objects.order_by('-id')[:10]
-
-    recent_worksheets = Worksheet.objects.filter(
-        plate__in=recent_plates).order_by('-id')
-
-    plates_list = []
-    for worksheet in recent_worksheets:
-        name_block_exists = False
-        if len(plates_list) > 0:
-            for plate in plates_list:
-                if worksheet.plate.name == plate.name and worksheet.block == plate.block:
-                    name_block_exists = True
-                    break
-        if not name_block_exists:
-            plates_list.append(RunfilePlate(
-                worksheet.plate.id, worksheet.plate.name, worksheet.block))
-
-    PLATE_NAME_CHOICES = ((f'{plate.id}-{plate.block}', f'{plate.name} Block {plate.block}')
-                          for plate in plates_list)
-
     dye_sets = ['Z-BigDyev3', 'E-BigDyev1', 'Any5Dye',
                 'S', 'Any4Dye', 'G5', 'Aby4Dye-HDR', 'G5-RCT']
     DYE_SET_CHOICES = ((dye, dye) for dye in dye_sets)
@@ -284,8 +264,7 @@ class RunfilePrepForm(forms.Form):
     ]
     ANALYSIS_MODULE_CHOICES = ((module, module) for module in analysis_modules)
 
-    plate_name = forms.ChoiceField(
-        choices=PLATE_NAME_CHOICES, label='Select plate name and block')
+    plate_name = forms.ChoiceField(label='Select plate name and block')
     dye_set = forms.ChoiceField(choices=DYE_SET_CHOICES)
     mobility_file = forms.ChoiceField(choices=MOBILITY_FILE_CHOICES)
     run_module = forms.ChoiceField(choices=RUN_MODULE_CHOICES)
@@ -321,3 +300,24 @@ class RunfilePrepForm(forms.Form):
                 css_class='centered'
             ),
         )
+
+        recent_plates = Plate.objects.order_by('-id')[:10]
+
+        recent_worksheets = Worksheet.objects.filter(
+            plate__in=recent_plates).order_by('-id')
+
+        plates_list = []
+        for worksheet in recent_worksheets:
+            name_block_exists = False
+            if len(plates_list) > 0:
+                for plate in plates_list:
+                    if worksheet.plate.name == plate.name and worksheet.block == plate.block:
+                        name_block_exists = True
+                        break
+            if not name_block_exists:
+                plates_list.append(RunfilePlate(
+                    worksheet.plate.id, worksheet.plate.name, worksheet.block))
+
+        PLATE_NAME_CHOICES = ((f'{plate.name}---{plate.id}---{plate.block}', f'{plate.name} Block {plate.block}')
+                              for plate in plates_list)
+        self.fields['plate_name'].choices = PLATE_NAME_CHOICES
