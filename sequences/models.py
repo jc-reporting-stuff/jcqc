@@ -88,8 +88,6 @@ class Reaction(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     submission_id = models.IntegerField()
     status = models.CharField(max_length=1, choices=STATUS_CHOICES)
-    plate_name = models.CharField(max_length=20, blank=True, null=True)
-    well = models.CharField(max_length=10, blank=True, null=True)
     submit_date = models.DateField(
         auto_now=False, auto_now_add=True)
     complete_date = models.DateField(
@@ -119,6 +117,10 @@ class Reaction(models.Model):
     @property
     def can_be_resequenced(self):
         return self.status in 'sq'
+
+    @property
+    def latest_worksheet(self):
+        return self.worksheet_set.order_by('-id').first()
 
 
 class Plate(models.Model):

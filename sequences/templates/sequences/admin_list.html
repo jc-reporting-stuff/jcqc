@@ -63,8 +63,13 @@
                 <tr>
                     <td>{{ reaction.submission_id }}</td>
                     <td><input type="checkbox" name="{{ reaction.id }}-checkbox">{{ reaction.id }}</td>
-                    <td>??</td>
-                    <td>??</td>
+                    {% if reaction.latest_worksheet %}
+                        <td>{{ reaction.latest_worksheet.plate.name }}</td>
+                        <td>{{ reaction.latest_worksheet.well }}</td>
+                    {% else %}
+                        <td>- -</td>
+                        <td>- -</td>
+                    {% endif %}
                     <td>{{ reaction.submitter.display_name }}</td>
                     <td>{{ reaction.template.name }}</td>
                     <td>{{ reaction.template.get_type_display }}</td>
