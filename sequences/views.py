@@ -752,7 +752,7 @@ class RemoveOrderView(FormView):
                 Reaction.objects.filter(submission_id=order_id))
         else:
             reactions_to_remove = Reaction.objects.filter(submission_id__gte=data['low']).filter(
-                submission_id__lte=data['high']).order_by('order_id')
+                submission_id__lte=data['high']).order_by('submission_id')
 
         if not reactions_to_remove:
             messages.info(self.request, 'No orders within that range.')

@@ -39,7 +39,7 @@
                 <input type="submit" name="previewing-reactions" value="Proceed to Preview" class="button-primary">
                 <div>
                     View the list of 
-                    <a href="{% url 'sequencing:common_primers' %}" style="text-decoration: underline;" target="_blank">Common Primers</a> 
+                    <a href="#" onclick="openWindow('{% url 'sequencing:common_primers' %}')" style="cursor: pointer; text-decoration: underline;">Common Primers</a> 
                     <img src="{% static 'images/open-external-link.svg' %}" alt="popout window icon" class="inline-image">
                     provided by Lab Services.
                 </div>
@@ -48,5 +48,11 @@
         </form>
 
     </div>
+
+    <script>
+        const openWindow = (url) => {
+            window.open(url, "CommonPrimers", "width=700,height=800,left=100,top=100");
+        }
+    </script>
 
 {% endblock content %}

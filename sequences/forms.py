@@ -192,23 +192,30 @@ class PriceForm(forms.ModelForm):
         exclude = ['current']
 
 
-class WorksheetSearchForm(forms.Form):
+def get_plate_choices():
     tz = pytz.timezone('Canada/Eastern')
     date = datetime.now() - timedelta(days=14)
     todays_plates = Plate.objects.filter(
         created__gte=make_aware(date, tz)
     ).order_by('-id')
-
     existing_names_choices = (('', '- - - - - - - - - - - - '),)
     used_names = []
     for plate in todays_plates:
         if not plate.name in used_names:
             existing_names_choices += ((plate, plate),)
             used_names.append(plate.name)
+    return existing_names_choices
+
+
+class WorksheetSearchForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['existing_plate_name'].choices = get_plate_choices()
+
     new_plate_name = forms.CharField(
         max_length=30, required=False, label="Provide a new plate name:")
     existing_plate_name = forms.ChoiceField(
-        label='Or add sample to existing plate:', required=False, choices=existing_names_choices)
+        label='Or add sample to existing plate:', required=False)
     from_id = forms.IntegerField(
         min_value=1, widget=forms.TextInput, label='Show sequence from ID:')
     to_id = forms.IntegerField(

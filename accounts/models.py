@@ -49,7 +49,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     postal_code = models.CharField(max_length=150)
     create_date = models.DateTimeField(auto_now_add=True)
     user_type = models.CharField(
-        max_length=1, choices=USER_TYPE, default='s')
+        max_length=1, choices=USER_TYPE, default='s', verbose_name='User Type')
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     students = models.ManyToManyField(
