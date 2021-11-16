@@ -37,7 +37,7 @@ class UpdateProfileView(UpdateView):
     fields = [
         'email', 'first_name', 'last_name', 'phone', 'extension', 'fax_number',
         'institution', 'department', 'room_number', 'address', 'city', 'province',
-        'country', 'postal_code', 'is_student', 'is_supervisor',
+        'country', 'postal_code', 'user_type',
     ]
     template_name = 'update_profile.html'
 
