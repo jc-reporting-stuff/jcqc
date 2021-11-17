@@ -1,0 +1,74 @@
+{% extends '_base.html' %}
+
+{% block title %}Download runfile{% endblock title %}
+
+
+{% block content %}
+
+
+    <div class="container" style="width: 50rem;">
+
+        <h1 style="text-align:center;">Sequence File distribution results</h1>
+
+        <p>See bottom of page to email a notification to clients.</p>
+
+        <p>Folder analysed was: <code><strong>{{folder_name }}</strong></code></p>
+
+        <p>All files have been moved to the desired individual folders.  You need to manually delete the folders (named <code>{{ folder_name }}</code>) left behind in the dropbox using FTP.  You need first remove all files in a folder, then remove the empty folder itself.</p>
+
+        {% if invalid_filenames or no_sequence_filenames %}
+            <div class="info-content" style="width:40rem;">
+
+                {% if invalid_filenames %}
+                    <div class="info-section" style="border: 1px solid orange;">
+                        <h2>The following filenames seem to be invalid</h2>
+                        <p>No action was taken for these files. Check filenames and try again.</p>
+                    
+                        <ul>    
+                            {% for filename in invalid_filenames %}
+                                <li>{{ filename }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% if no_sequence_filenames %}
+                    <div class="info-section" style="border: 1px solid orange;">
+                        <h2 style="font-size: 1.2rem; margin: 0.25rem 1rem;">Could not match a sequence from these filenames</h2>
+                        <p>Filename is based on everything before the first underscore <code>_</code> in a filename. No action was taken for these files. Check filenames and try again.</p>
+                    
+                        <ul>    
+                            {% for filename in no_sequence_filenames %}
+                                <li>{{ filename }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+            </div>
+        {% endif %}
+
+        <h2 style="font-size: 1.5rem; text-align:center; margin-top: 2rem;">Successful file transfers</h2>
+
+        <table class="oligo-view" style="font-size: 1rem;">
+            <tr>
+                <th>Filename</th>
+                <th>Client username</th>
+                <th><code>.ab1</code></th>
+                <th><code>.seq</code></th>
+            </tr>
+
+            {% for file in successful_imports %}
+                <tr>
+                    <td>{{ file.name }}</td>
+                    <td>{{ file.username }}</td>
+                    <td>{% if file.ab1 %}✔️{% else %}❌{% endif %}</td>
+                    <td>{% if file.seq %}✔️{% else %}❌{% endif %}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+
+{% endblock content %}
+

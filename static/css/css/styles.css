@@ -52,6 +52,13 @@ a {
   a:visited {
     color: #1e3a8a; }
 
+code {
+  background-color: #e5e7eb;
+  border-radius: 0.25rem;
+  font-family: monospace;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem; }
+
 h1 {
   font-size: x-large;
   font-weight: bold;
@@ -103,6 +110,9 @@ sub {
     max-width: 40rem; }
   .container .page-container {
     margin: auto; }
+  .container h2 {
+    font-size: 1.25rem;
+    font-weight: bold; }
 
 .inactive-user {
   background-color: #374151 !important;
@@ -517,6 +527,8 @@ fieldset {
     border-bottom: 1px solid #111827; }
   .oligo-view tr:nth-child(even) {
     background-color: #e5e7eb; }
+  .oligo-view tr.warning-row {
+    color: #e64a19; }
   .oligo-view tr th {
     padding: 0.5rem 0.125rem;
     text-align: center; }
@@ -528,6 +540,11 @@ fieldset {
       text-decoration: underline; }
       .oligo-view tr td a:visited {
         color: #1e3a8a; }
+  .oligo-view code {
+    font-family: monospace;
+    background-color: #f3f4f6;
+    border-radius: 0.25rem;
+    padding: 0.1rem 0.4rem; }
   .oligo-view.extra-space td {
     padding: 0.5rem; }
   .oligo-view.extra-space .fake-button {
@@ -595,6 +612,14 @@ fieldset {
     margin-top: 1rem; }
     .info-box.small p {
       margin: 0.5rem; }
+
+.inline-code {
+  font-family: monospace;
+  font-size: 1rem;
+  background: #f3f4f6;
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  font-weight: bold; }
 
 .plate-choice {
   border: 1px solid #1e40af;

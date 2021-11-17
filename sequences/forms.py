@@ -182,6 +182,9 @@ class StatusForm(forms.Form):
         ('s', 'Submitted'),
         ('p', 'Preparing'),
         ('r', 'Running'),
+        ('d', 'Done'),
+        ('v', 'Removed'),
+        ('q', 'Resequencing')
     ]
     text = forms.ChoiceField(choices=STATUS_CHOICES)
 

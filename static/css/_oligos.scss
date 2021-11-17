@@ -146,6 +146,9 @@
     &:nth-child(even) {
       background-color: $gray-200;
     }
+    &.warning-row {
+      color: $warning-orange;
+    }
     th {
       padding: 0.5rem 0.125rem;
       text-align: center;
@@ -161,6 +164,12 @@
         }
       }
     }
+  }
+  code {
+    font-family: monospace;
+    background-color: $gray-100;
+    border-radius: 0.25rem;
+    padding: 0.1rem 0.4rem;
   }
   &.extra-space {
     td {

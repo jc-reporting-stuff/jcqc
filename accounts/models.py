@@ -102,7 +102,6 @@ class Account(models.Model):
     code = models.CharField(max_length=50)
     comment = models.CharField(max_length=150, blank=True)
     is_active = models.BooleanField(default=True)
-    create_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['owner', '-is_active']

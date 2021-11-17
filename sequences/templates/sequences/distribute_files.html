@@ -1,0 +1,58 @@
+{% extends '_base.html' %}
+
+{% block title %}Download runfile{% endblock title %}
+
+
+{% block content %}
+
+
+    <div class="container" style="width: 40rem;">
+
+        <h1 style="text-align:center;">Distribute Sequencing Files</h1>
+
+        <p>Orange text indicates there are unequal <span class="inline-code">.ab1</span> and <span class="inline-code">.seq</span> files.</p>
+
+        <table class="oligo-view">
+            <tr>
+            <th>Folder Name</th>
+            <th>Size</th>
+            <th>Total Files</th>
+            <th><code>.ab1</code> files</th>
+            <th><code>.seq</code> files</th>
+            <th>Distribute Files</th>
+            </tr>
+
+            {% for folder in folders %}
+                <tr{% if folder.ab1_files != folder.seq_files %} class="warning-row"{% endif %}>
+                    <td>{{ folder.name }}</td>
+                    <td>{{ folder.size }}</td>
+                    <td>{{ folder.ab1_files|add:folder.seq_files }}</td>
+                    <td>{{ folder.ab1_files }}</td>
+                    <td>{{ folder.seq_files }}</td>
+                    <td>
+                        {% if folder.ab1_files > 0 and folder.seq_files > 0 %}
+                            <form action="" method="post" style="margin:0;">
+                                {% csrf_token %}
+                                <input type="hidden" name="folder-name" value="{{ folder.name }}">
+                                <input type="submit" value="Distribute Files" class="button-primary" style="margin: 0; padding: 0.2rem 0.5rem;">
+                            </form>
+                        {% else %}
+                        No files!
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6">
+                        <strong>No folders found in dropbox.</strong>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+            
+    </div>
+
+
+
+{% endblock content %}
+

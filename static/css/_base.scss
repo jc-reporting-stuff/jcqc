@@ -25,6 +25,14 @@ a {
   }
 }
 
+code {
+  background-color: $gray-200;
+  border-radius: 0.25rem;
+  font-family: monospace;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+}
+
 h1 {
   font-size: x-large;
   font-weight: bold;
@@ -94,6 +102,10 @@ sub {
   }
   .page-container {
     margin: auto;
+  }
+  h2 {
+    font-size: 1.25rem;
+    font-weight: bold;
   }
 }
 

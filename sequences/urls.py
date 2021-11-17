@@ -27,6 +27,8 @@ urlpatterns = [
     path('billing/', views.BillingView.as_view(), name='billing'),
     path('prep/menu/', views.PrepMenuView.as_view(), name='prep_menu'),
     path('remove/', views.RemoveOrderView.as_view(), name='remove'),
+    path('distribute/', views.DistributeFilesView.as_view(),
+         name='distribute_files'),
 
     path('worksheet/<str:name>/<int:block>', views.WorksheetDetailView.as_view(),
          name='worksheet_detail'),

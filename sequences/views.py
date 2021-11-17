@@ -1,5 +1,6 @@
 from typing import Sequence
 from django.conf import settings
+from django.contrib.messages.api import success
 from django.forms.formsets import formset_factory
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
@@ -23,9 +24,11 @@ from sequences.forms import PrimerModelForm, ReactionEasyOrderForm, ReactionForm
 from sequences.models import Template, Primer, Reaction, Account
 from core.decorators import owner_or_staff, user_has_accounts
 import datetime
+import os
 import pytz
 import re
-from sequences.utils import create_runfile
+import shutil
+import sequences.utils as utils
 
 
 class ReactionListView(ListView):
@@ -1113,6 +1116,104 @@ def CreateRunfile(request):
         content_type='text/plain',
         headers={'Content-Disposition': f'attachment; filename="{filename}.txt"'},
     )
-    runfile_contents = create_runfile(plate_id, block, module)
+    runfile_contents = utils.create_runfile(plate_id, block, module)
     response.write(runfile_contents)
     return response
+
+
+class DistributeFilesView(View):
+    def get(self, request):
+        folders = utils.dropbox_folders()
+        return render(request, 'sequences/distribute_files.html', context={'folders': folders})
+
+    def post(self, request):
+        plate_name = request.POST.get('folder-name')
+        base_path = settings.FILES_BASE_DIR
+        sequences_base_path = os.path.join(
+            base_path, settings.CUSTOMER_SEQUENCES_DIR)
+
+        # Check the customer sequences folder exists and if not create it.
+        utils.check_customer_folder_exists(sequences_base_path, create=True)
+
+        sequences_folder = os.path.join(
+            base_path, settings.DROPBOX_DIR, plate_name)
+        try:
+            files = os.listdir(sequences_folder)
+        except FileNotFoundError:
+            messages.info(request, 'No files found in dropbox')
+            folders = utils.dropbox_folders()
+            return render(request, 'sequences/distribute_files.html', context={'folders': folders})
+
+        sequence_ids = []
+        valid_filenames = []
+        invalid_filenames = []
+        for file in files:
+            sequence_id = file.split('_')[0]
+            try:
+                int(sequence_id)
+                sequence_ids.append(int(sequence_id))
+                valid_filenames.append(file)
+            except ValueError:
+                invalid_filenames.append(file)
+
+        sequence_ids = list(set(sequence_ids))
+
+        sequences = Reaction.objects.filter(id__in=sequence_ids).order_by('id')
+
+        users_to_notify = []
+        for sequence in sequences:
+            if not (sequence.submitter in users_to_notify):
+                users_to_notify.append(sequence.submitter)
+
+        # TODO: loop through files and move into customer sequence folders.
+        successful_imports = []
+        no_sequence_filenames = []
+        for filename in valid_filenames:
+            sequence_id = int(filename.split('_')[0])
+            fname = filename[:-4]
+            extension = filename[-3:]
+
+            if sequence_id in sequence_ids:
+                try:
+                    sequence = [s for s in sequences if s.id == sequence_id][0]
+                except IndexError:
+                    no_sequence_filenames.append(filename)
+                    continue
+                if len(successful_imports) == 0:
+                    successful_imports.append(
+                        utils.SuccessfulImport(fname, sequence.submitter.username))
+
+                import_class_exists = False
+                for i in successful_imports:
+                    if i.name == fname:
+                        i.make_true(extension)
+                        import_class_exists = True
+
+                if not import_class_exists:
+                    newImport = utils.SuccessfulImport(
+                        fname, sequence.submitter.username)
+                    newImport.make_true(extension)
+                    successful_imports.append(newImport)
+
+                username = sequence.submitter.username
+                user_folder_path = os.path.join(sequences_base_path, username)
+                if not os.path.isdir(user_folder_path):
+                    os.mkdir(user_folder_path, 0o744)
+                src = os.path.join(sequences_folder, filename)
+                dst = os.path.join(user_folder_path, filename)
+                shutil.copyfile(src, dst)
+                sequence.status = 'd'
+                sequence.save()
+
+            else:
+                invalid_filenames.append(filename)
+
+        context = {
+            'successful_imports': successful_imports,
+            'users_to_notify': users_to_notify,
+            'invalid_filenames': invalid_filenames,
+            'no_sequence_filenames': no_sequence_filenames,
+            'folder_name': plate_name
+        }
+        print(successful_imports)
+        return render(request, 'sequences/distribute_files_email.html', context=context)

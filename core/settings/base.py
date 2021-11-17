@@ -215,3 +215,8 @@ SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, 'static/css')
 # Pagination
 PAGINATE_HISTORY_LENGTH = 5
 PAGINATE_SEARCH_LENGTH = 25
+
+
+# Dropbox and file distribution constants
+DROPBOX_DIR = 'dropbox'
+CUSTOMER_SEQUENCES_DIR = 'customer_sequences'
