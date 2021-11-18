@@ -97,7 +97,7 @@
             <table width="100%">
                 <tr>
                     <th style="text-align:right;"><label for="subject">Subject:</label></th>
-                    <td colspan="3"><input type="text" name="subject" id="subject" value="LSD Sequencing Notification" style="width:100%;"></td>
+                    <td colspan="3"><input type="text" name="subject" id="subject" value="{{ email_content.headline }}" style="width:100%;"></td>
                 </tr>
                 <tr>
                     <th style="text-align:right;"><label for="prefix">Prefix:</label></th>
@@ -120,7 +120,7 @@
                 </tr>
                 <tr>
                     <td colspan="4">
-                        <textarea style="width:100%; height: 10rem;" name="email-body">{{ email_body }}</textarea>
+                        <textarea style="width:100%; height: 22rem;" name="email-body">{{ email_content.content }}</textarea>
                     </td>
                 </tr>
             </table>

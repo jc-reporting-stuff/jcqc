@@ -376,6 +376,11 @@ fieldset {
     justify-content: space-between;
     align-items: center;
     margin: auto; }
+    .login-container .top-container .message-headline {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: bold;
+      text-align: center; }
   .login-container .panel {
     margin: 2.5rem auto;
     padding: 0.75rem;

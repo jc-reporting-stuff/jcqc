@@ -17,6 +17,7 @@ from django.core.paginator import Paginator
 from django.utils.decorators import method_decorator
 from django.core import mail
 from accounts.models import User
+from pages.models import Message
 
 
 from sequences.models import Plate, Reaction, SeqPrice, Worksheet
@@ -1213,7 +1214,7 @@ class DistributeFilesView(View):
         users = User.objects.filter(
             username__in=users_to_notify).order_by('last_name')
 
-        email_body = 'This is the email body. Replace me with a database call to get a email body!'
+        email_content = Message.objects.get(name='EmailSequenceNotify')
 
         context = {
             'successful_imports': successful_imports,
@@ -1221,7 +1222,7 @@ class DistributeFilesView(View):
             'invalid_filenames': invalid_filenames,
             'no_sequence_filenames': no_sequence_filenames,
             'folder_name': plate_name,
-            'email_body': email_body
+            'email_content': email_content
         }
         return render(request, 'sequences/distribute_files_email.html', context=context)
 
@@ -1288,7 +1289,7 @@ class SendNotificationEmails(View):
             connection.send_messages(email_list)
             connection.close()
             messages.success(
-                request, f'Emailed {len(email_list)} clients about their sequences.')
+                request, f'Emailed {len(email_list)} client{"" if len(email_list) == 1 else "s"} about their sequences.')
         except:
             user_emails = [user.email for user in users]
             messages.warning(

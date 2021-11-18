@@ -1,7 +1,8 @@
 from django.views.generic import TemplateView, ListView
-from django.shortcuts import render
+from allauth.account.views import LoginView
 
 from accounts.models import User
+from pages.models import Message
 
 
 class HomePageView(TemplateView):
@@ -22,3 +23,11 @@ class ClientListView(ListView):
         else:
             order_by = 'last_name'
         return User.objects.all().order_by(order_by)
+
+
+class MessageLoginView(LoginView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        message = Message.objects.get(name='FrontPageMessage')
+        context['message'] = message
+        return context

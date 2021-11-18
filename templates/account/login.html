@@ -9,9 +9,15 @@
 
     <div class="login-container">
 
-        <div class="top-container">
+        <div class="top-container" {% if message.is_active %}style="align-items: flex-start;"{% endif %}>
             <img src="{% static "images/afl-logo.svg" %}" style="width: 300px;" alt="Agriculture and Food Lab logo">
-            <img src="{% static "images/afl-header-about.png" %}" style="width: 650px;" alt="Polygons">
+            {% if message.is_active %}
+                <div style="{{ message.styling }}">
+                    <p class="message-headline">{{ message.headline }}</p>
+                    <pre style="margin: 0.5rem; white-space: pre-wrap;">{{ message.content }}</pre>
+                </div>
+            {% endif %}
+            <img src="{% static "images/afl-header-about.png" %}" style="{% if message.is_active %}height: 109px;{% else %}width:650px;{% endif %}" alt="Polygons">
         </div>
         
         <div class="panel">
