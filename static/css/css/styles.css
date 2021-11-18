@@ -689,6 +689,12 @@ fieldset {
     text-align: center;
     border: 1px solid #d1d5db; }
 
+#email-box {
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  background-color: #f3f4f6; }
+
 .admin-list li {
   display: block;
   margin: 0.5rem 1rem;

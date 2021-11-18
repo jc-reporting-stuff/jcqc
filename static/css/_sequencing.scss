@@ -115,3 +115,10 @@
     border: 1px solid $gray-300;
   }
 }
+
+#email-box {
+  border: 1px solid $gray-300;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  background-color: $gray-100;
+}

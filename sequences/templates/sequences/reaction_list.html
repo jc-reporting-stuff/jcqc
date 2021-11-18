@@ -27,11 +27,11 @@
                 <td>{{ reaction.get_status_display }}</td>
                 <td>{{ reaction.submit_date }}</td>
                 <td>
-                    {% if not reaction.status == 'c' %}
-                        Not available
+                    {% if reaction.status == 'd' %}
+                        <a href="{% url 'sequencing:sequence_download' %}?username={{ user.username}}&filename={{ reaction.get_filename }}&type=ab1">Trace</a>
+                        <a href="{% url 'sequencing:sequence_download' %}?username={{ user.username}}&filename={{ reaction.get_filename }}&type=seq">Text</a>
                     {% else %}
-                        <a href="#">Trace</a>
-                        <a href="#">Text</a>
+                        Not available
                     {% endif %}
                 </td>
 

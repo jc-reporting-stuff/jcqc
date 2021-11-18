@@ -2,7 +2,7 @@ from typing import Sequence
 from django.conf import settings
 from django.contrib.messages.api import success
 from django.forms.formsets import formset_factory
-from django.http.response import HttpResponse, HttpResponseRedirect
+from django.http.response import FileResponse, HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect, reverse
 from django.forms import modelformset_factory, formset_factory, utils
@@ -15,6 +15,8 @@ from django.views.generic.detail import DetailView
 from django.utils.timezone import make_aware
 from django.core.paginator import Paginator
 from django.utils.decorators import method_decorator
+from django.core import mail
+from accounts.models import User
 
 
 from sequences.models import Plate, Reaction, SeqPrice, Worksheet
@@ -1165,7 +1167,7 @@ class DistributeFilesView(View):
             if not (sequence.submitter in users_to_notify):
                 users_to_notify.append(sequence.submitter)
 
-        # TODO: loop through files and move into customer sequence folders.
+        # loop through files and move into customer sequence folders.
         successful_imports = []
         no_sequence_filenames = []
         for filename in valid_filenames:
@@ -1208,12 +1210,88 @@ class DistributeFilesView(View):
             else:
                 invalid_filenames.append(filename)
 
+        users = User.objects.filter(
+            username__in=users_to_notify).order_by('last_name')
+
+        email_body = 'This is the email body. Replace me with a database call to get a email body!'
+
         context = {
             'successful_imports': successful_imports,
-            'users_to_notify': users_to_notify,
+            'users': users,
             'invalid_filenames': invalid_filenames,
             'no_sequence_filenames': no_sequence_filenames,
-            'folder_name': plate_name
+            'folder_name': plate_name,
+            'email_body': email_body
         }
-        print(successful_imports)
         return render(request, 'sequences/distribute_files_email.html', context=context)
+
+
+def IndividualSequenceDownloadView(request):
+    username = request.GET.get('username')
+    if not request.user.username == request.GET.get('username') or not request.user.is_staff or not request.user.is_superuser:
+        messages.warning(
+            request, 'Sequence username does not match current user.')
+        return redirect(reverse('sequencing:list_reactions'))
+
+    filename = request.GET.get('filename')
+    extension = request.GET.get('type')
+    file = f'{filename}.{extension}'
+    path = os.path.join(settings.FILES_BASE_DIR,
+                        settings.CUSTOMER_SEQUENCES_DIR, username, file)
+    return FileResponse(open(path, 'rb'))
+
+
+class SendNotificationEmails(View):
+    def post(self, request):
+        user_list = []
+        regex = r'user-(\d+)'
+        for k, v in request.POST.items():
+            is_user = re.search(regex, k)
+            if is_user:
+                user_id = int(is_user.groups()[0])
+                user_list.append(user_id)
+
+        users = User.objects.filter(id__in=user_list)
+
+        subject = request.POST.get('subject')
+        to_list = [user.email for user in users]
+        from_email = 'dnatest@uoguoelph.ca'
+        body_text = request.POST.get('email-body')
+
+        prefix = request.POST.get('prefix')
+        display_name = request.POST.get('display_name')
+
+        email_list = []
+
+        for user in users:
+            if display_name == 'firstname':
+                user_display_name = user.first_name
+            elif display_name == 'firstname_lastname':
+                user_display_name = user.display_name
+            elif display_name == 'lastname':
+                user_display_name = user.last_name
+            else:
+                user_display_name = 'Lab Services Client'
+
+            body_content = f'{prefix}{user_display_name},\n\n{body_text}'
+
+            new_email = mail.EmailMessage(
+                subject,
+                body_content,
+                'dnatest@uoguelph.ca',
+                [user.email],
+            )
+            email_list.append(new_email)
+
+        try:
+            connection = mail.get_connection()
+            connection.send_messages(email_list)
+            connection.close()
+            messages.success(
+                request, f'Emailed {len(email_list)} clients about their sequences.')
+        except:
+            user_emails = [user.email for user in users]
+            messages.warning(
+                request, f'Unable to send emails, email IT to investigate. Might have to manually email: {user_emails}')
+
+        return redirect(reverse('sequencing:prep_menu'))

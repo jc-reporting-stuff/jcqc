@@ -122,6 +122,10 @@ class Reaction(models.Model):
     def latest_worksheet(self):
         return self.worksheet_set.order_by('-id').first()
 
+    @property
+    def get_filename(self):
+        return f'{self.id}_{self.template.name}_{self.primer.name}_{self.latest_worksheet.padded_well}'
+
 
 class Plate(models.Model):
     name = models.CharField(max_length=11)
@@ -158,8 +162,15 @@ class Worksheet(models.Model):
         alpha = alphabet[remainder]
         numeric = math.floor(self.well_count / 8) + 1
         numeric = str(numeric)
-        result = alpha + numeric
-        return result
+        return alpha + numeric
+
+    @property
+    def padded_well(self):
+        alpha = self.well[0]
+        numeric = self.well[1:]
+        if int(numeric) < 10:
+            numeric = '0' + str(numeric)
+        return alpha + numeric
 
 
 class SeqPrice(models.Model):

@@ -29,6 +29,12 @@ urlpatterns = [
     path('remove/', views.RemoveOrderView.as_view(), name='remove'),
     path('distribute/', views.DistributeFilesView.as_view(),
          name='distribute_files'),
+    path('distribute/email', views.SendNotificationEmails.as_view(),
+         name='send_notification_emails'),
+
+    path('runfile/download/', views.CreateRunfile, name='runfile_download'),
+    path('sequence/download/', views.IndividualSequenceDownloadView,
+         name='sequence_download'),
 
     path('worksheet/<str:name>/<int:block>', views.WorksheetDetailView.as_view(),
          name='worksheet_detail'),

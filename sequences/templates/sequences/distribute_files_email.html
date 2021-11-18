@@ -6,7 +6,7 @@
 {% block content %}
 
 
-    <div class="container" style="width: 50rem;">
+    <div class="container" style="width: 55rem;">
 
         <h1 style="text-align:center;">Sequence File distribution results</h1>
 
@@ -34,8 +34,8 @@
 
                 {% if no_sequence_filenames %}
                     <div class="info-section" style="border: 1px solid orange;">
-                        <h2 style="font-size: 1.2rem; margin: 0.25rem 1rem;">Could not match a sequence from these filenames</h2>
-                        <p>Filename is based on everything before the first underscore <code>_</code> in a filename. No action was taken for these files. Check filenames and try again.</p>
+                        <h2 style="font-size: 1.2rem; margin: 0.25rem 1rem;">Could not match a sequence ID to these filenames</h2>
+                        <p>Sequence ID is based on everything before the first underscore <code>_</code> in a filename. No action was taken for these files. Check filenames and try again.</p>
                     
                         <ul>    
                             {% for filename in no_sequence_filenames %}
@@ -67,6 +67,70 @@
                 </tr>
             {% endfor %}
         </table>
+
+        <hr>
+
+        <form method="post" action="{% url 'sequencing:send_notification_emails' %}" id="email-box">
+            {% csrf_token %}
+
+            <h2 style="font-size: 1.5rem; text-align:center;">Notify clients by email</h2>
+
+            <table class="oligo-view">
+                <tr>
+                    <th>Client ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Select</th>
+                </tr>
+
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.display_name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td><input type="checkbox" name="user-{{user.id}}" checked></td>
+                    </tr>
+                {% endfor %}
+
+            </table>
+
+            <table width="100%">
+                <tr>
+                    <th style="text-align:right;"><label for="subject">Subject:</label></th>
+                    <td colspan="3"><input type="text" name="subject" id="subject" value="LSD Sequencing Notification" style="width:100%;"></td>
+                </tr>
+                <tr>
+                    <th style="text-align:right;"><label for="prefix">Prefix:</label></th>
+                    <td>
+                        <select id="prefix" name="prefix" style="width:100%;">
+                            <option value="Dear " selected>Dear</option>
+                            <option value="Hello ">Hello</option>
+                            <option value="Hi ">Hi</option>
+                            <option value="">None</option>
+                        </select>
+                    </td>
+                    <th style="text-align:right;"><label for="display_namename">Display name:</th>
+                    <td>
+                        <select id="display_name" name="display_name" style="width:100%;">
+                            <option value="firstname_lastname">Firstname Lastname</option>
+                            <option value="firstname">Firstname</option>
+                            <option value="lastname">Lastname</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <textarea style="width:100%; height: 10rem;" name="email-body">{{ email_body }}</textarea>
+                    </td>
+                </tr>
+            </table>
+
+            <div style="width: 100%; text-align:center">
+                <input type="submit" value="Send Email to Selected Clients" class="button-primary">
+                <input type="reset" value="Reset Form" class="button-primary">
+            </div>
+        
+        </form>
 
     </div>
 

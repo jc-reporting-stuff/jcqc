@@ -78,6 +78,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             return Account.objects.filter(owner=self, is_active=True)
 
+    @property
     def display_name(self):
         return f'{self.first_name} {self.last_name}'
 
