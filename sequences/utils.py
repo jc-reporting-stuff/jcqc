@@ -1,9 +1,12 @@
 from django.conf import settings
+from django.contrib import messages
+from django.http.response import HttpResponse
 from sequences.models import Worksheet
 
-from sys import platform
+from zipfile import ZipFile
+from datetime import datetime
 
-import shutil
+import io
 import os
 
 
@@ -95,3 +98,15 @@ class SuccessfulImport:
 
     def __repr__(self):
         return f'{self.name}: ab1({self.ab1}), seq({self.seq})'
+
+
+def create_zip_for(filenames, request):
+    response = HttpResponse(content_type='application/zip')
+    zipObj = ZipFile(response, 'w')
+    for file in filenames:
+        try:
+            zipObj.write(file, os.path.split(file)[1])
+        except FileNotFoundError:
+            messages.warning(
+                request, f'File not found: {os.path.split(file)[1]}')
+    return response

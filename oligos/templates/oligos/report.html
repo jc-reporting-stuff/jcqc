@@ -11,6 +11,7 @@
 
             <table class="oligo-view" style="max-width: 1280px;">
                 <tr>
+                    <th>Oligo ID</th>
                     <th>Oligo Name</th>
                     <th>Sequence</th>
                     <th>Size</th>
@@ -20,6 +21,7 @@
 
                 {% for oligo in oligos %}
                     <tr>
+                        <td>{{ oligo.id}}</td>
                         <td style="text-align: left;">{{ oligo.name }}</td>
                         <td style="text-align:left;">{{ oligo.dna_sequence }}</td>
                         <td>{{ oligo.sequence|length }}</td>
@@ -37,6 +39,7 @@
 
             <table class="oligo-view" style="max-width: 1280px;">
                 <tr>
+                    <th>Oligo ID</th>
                     <th>Oligo Name</th>
                     <th>Sequence</th>
                     <th>Size</th>
@@ -46,6 +49,7 @@
 
                 {% for oligo in oligos %}
                     <tr>
+                        <td>{{ oligo.id }}</td>
                         <td style="text-align: left;">{{ oligo.name }}</td>
                         <td style="text-align:left;">{{ oligo.dna_sequence }}</td>
                         <td>{{ oligo.sequence|length }}</td>
@@ -61,6 +65,7 @@
 
             <table class="oligo-view" style="max-width: 1280px;">
                 <tr>
+                    <th>Oligo ID</th>
                     <th>Oligo Name</th>
                     <th>Sequence</th>
                     <th>Size</th>
@@ -70,6 +75,7 @@
 
                 {% for oligo in oligos %}
                     <tr>
+                        <td>{{ oligo.id }}</td>
                         <td style="text-align: left;">{{ oligo.name }}</td>
                         <td style="text-align:left;">{{ oligo.dna_sequence }}</td>
                         <td>{{ oligo.sequence|length }}</td>

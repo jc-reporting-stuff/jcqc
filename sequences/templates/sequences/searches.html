@@ -56,9 +56,10 @@
             </div>
 
             <div class="search-box">
-                <h2>TODO: Search by plate name</h2>
-                <p>Once we get the instrument side of things started.</p>
-                <button type="submit" name="search" value="sequence" class="button-primary">Search by plate name</button>
+                <h2>Search by plate name</h2>
+                <p>Enter full or partial plate name.</p>
+                {{ plate_name_form.as_p }}
+                <button type="submit" name="search" value="plate" class="button-primary">Search by plate name</button>
             </div>
         
         </div>

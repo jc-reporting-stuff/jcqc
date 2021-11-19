@@ -35,6 +35,8 @@ urlpatterns = [
     path('runfile/download/', views.CreateRunfile, name='runfile_download'),
     path('sequence/download/', views.IndividualSequenceDownloadView,
          name='sequence_download'),
+    path('sequence/bulk-download/', views.BulkSequenceDownloadView.as_view(),
+         name='sequence_bulk_download'),
 
     path('worksheet/<str:name>/<int:block>', views.WorksheetDetailView.as_view(),
          name='worksheet_detail'),

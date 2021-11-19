@@ -106,7 +106,7 @@ class DateRangeForm(forms.Form):
             ('0', f'All Clients (Count: {len(all_clients)})'), ]
         for client in all_clients:
             client_choices.append(
-                (client.id, f'{client.display_name()} ({client.id})'),)
+                (client.id, f'{client.display_name} ({client.id})'),)
         self.fields['client'].choices = client_choices
 
 

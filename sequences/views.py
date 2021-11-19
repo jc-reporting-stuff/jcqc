@@ -2,7 +2,7 @@ from typing import Sequence
 from django.conf import settings
 from django.contrib.messages.api import success
 from django.forms.formsets import formset_factory
-from django.http.response import FileResponse, HttpResponse, HttpResponseRedirect
+from django.http.response import FileResponse, HttpResponse, HttpResponseRedirect, StreamingHttpResponse
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect, reverse
 from django.forms import modelformset_factory, formset_factory, utils
@@ -41,9 +41,9 @@ class ReactionListView(ListView):
     def get_queryset(self):
         user = self.request.user
         qs1 = Reaction.objects.filter(
-            account__owner=user).order_by('-submission_id', 'template', 'primer')
+            account__owner=user).order_by('-id')
         qs2 = Reaction.objects.filter(
-            submitter=user).order_by('-submission_id', 'template', 'primer')
+            submitter=user).order_by('-id')
         qs = qs1 | qs2
         return qs
 
@@ -447,7 +447,7 @@ def get_search_queries(search_type):
     if search_type == 'range':
         return ['submission', 'date', 'sequence']
     elif search_type == 'text':
-        return ['template', 'primer', 'status']
+        return ['template', 'primer', 'status', 'plate']
     else:
         return []
 
@@ -485,6 +485,7 @@ class SequenceSearchView(View):
             prefix="sequence", initial={'high': max_reaction.id})
         template_name_form = TextSearch(prefix="template")
         primer_name_form = TextSearch(prefix="primer")
+        plate_name_form = TextSearch(prefix="plate")
         status_form = StatusForm(prefix='status')
 
         context = {
@@ -493,6 +494,7 @@ class SequenceSearchView(View):
             'sequence_range_form': sequence_range_form,
             'template_name_form': template_name_form,
             'primer_name_form': primer_name_form,
+            'plate_name_form': plate_name_form,
             'status_form': status_form
         }
         return render(request, 'sequences/searches.html', context=context)
@@ -551,6 +553,10 @@ class SequenceListView(View):
         elif data['query'] == 'status':
             queryset = Reaction.objects.filter(
                 status=data['text'])
+
+        elif data['query'] == 'plate':
+            queryset = Reaction.objects.filter(
+                plates__name__icontains=data['text'])
 
         queryset = queryset.order_by("id")
 
@@ -1080,6 +1086,9 @@ class WorksheetUpdateWellView(View):
             worksheet.save()
             well_count += 1
 
+        messages.success(
+            request, f'Updated Worksheet {worksheets[0].plate.name} to start at well {worksheets[0].well}.')
+
         return redirect(reverse('sequencing:worksheet_list'))
 
 
@@ -1296,3 +1305,33 @@ class SendNotificationEmails(View):
                 request, f'Unable to send emails, email IT to investigate. Might have to manually email: {user_emails}')
 
         return redirect(reverse('sequencing:prep_menu'))
+
+
+class BulkSequenceDownloadView(View):
+    def post(self, request):
+        reaction_ids = []
+        for key in request.POST.keys():
+            try:
+                rxn_id = re.match(r'(\d+)-checkbox', key).groups()[0]
+                reaction_ids.append(rxn_id)
+            except AttributeError:
+                pass
+
+        reactions = Reaction.objects.filter(id__in=reaction_ids)
+        if not request.user.is_staff or not request.user.is_superuser:
+            reactions = reactions.filter(submitter=request.user) | reactions.filter(
+                account__owner=request.user)
+
+        filenames = []
+        base_path = os.path.join(
+            settings.FILES_BASE_DIR, settings.CUSTOMER_SEQUENCES_DIR, request.user.username)
+        for reaction in reactions:
+            base_filename = f'{reaction.id}_{reaction.template.name}_{reaction.primer.name}_{reaction.latest_worksheet.padded_well}'
+            filenames.append(os.path.join(base_path, f'{base_filename}.seq'))
+            filenames.append(os.path.join(base_path, f'{base_filename}.ab1'))
+
+        response = utils.create_zip_for(filenames, request)
+        now = datetime.datetime.now()
+        download_filename = f'Sequence_Files_{now:%Y-%m-%d-%H-%M}.zip'
+        response['Content-Disposition'] = f'attachment; filename={download_filename}'
+        return response

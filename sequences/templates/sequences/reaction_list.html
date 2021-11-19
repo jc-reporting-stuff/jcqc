@@ -7,37 +7,51 @@
 <h1 class="centered">Sequencing reactions for {{ user.username }}</h1>
 
 {% if reactions %}
-    <table class="oligo-view">
-        <tr>
-            <th>Submission ID</th>
-            <th>Sequence ID</th>
-            <th>Template</th>
-            <th>Primer</th>
-            <th>Status</th>
-            <th>Submission Date</th>
-            <th>Download</th>
-
-        </tr>
-        {% for reaction in reactions %}
+    <form method="post" action="{% url 'sequencing:sequence_bulk_download' %}">
+        {% csrf_token %}
+        <table class="oligo-view" style="width: 80rem;">
             <tr>
-                <td><a href="{% url 'sequencing:submission_detail' reaction.submission_id %}">{{ reaction.submission_id }}</a></td>
-                <td>{{ reaction.id }}</td>
-                <td style="text-align: left;"><a href="{% url 'sequencing:template_detail' reaction.template.id %}">{{ reaction.template }}</td>
-                <td style="text-align: left;"><a href="{% url 'sequencing:primer_detail' reaction.primer.id %}">{{ reaction.primer }}</a></td>
-                <td>{{ reaction.get_status_display }}</td>
-                <td>{{ reaction.submit_date }}</td>
-                <td>
-                    {% if reaction.status == 'd' %}
-                        <a href="{% url 'sequencing:sequence_download' %}?username={{ user.username}}&filename={{ reaction.get_filename }}&type=ab1">Trace</a>
-                        <a href="{% url 'sequencing:sequence_download' %}?username={{ user.username}}&filename={{ reaction.get_filename }}&type=seq">Text</a>
-                    {% else %}
-                        Not available
-                    {% endif %}
-                </td>
+                <th style="text-align: right;"><input type="checkbox" onchange="selectAll(event)" id="top-checkbox" checked="true"></th>
+                <th style="width: 8rem;">Submission ID</th>
+                <th>Sequence ID</th>
+                <th>Template</th>
+                <th>Primer</th>
+                <th>Status</th>
+                <th>Submission Date</th>
+                <th>Download</th>
 
             </tr>
-        {% endfor %}
-    </table>
+            {% for reaction in reactions %}
+                <tr>
+                    <td>{% if reaction.status == 'd' %}<input type="checkbox" name="{{ reaction.id }}-checkbox" checked="true">{% endif %}</td>
+                    <td><a href="{% url 'sequencing:submission_detail' reaction.submission_id %}">{{ reaction.submission_id }}</a></td>
+                    <td>{{ reaction.id }}</td>
+                    <td style="text-align: left;"><a href="{% url 'sequencing:template_detail' reaction.template.id %}">{{ reaction.template }}</td>
+                    <td style="text-align: left;"><a href="{% url 'sequencing:primer_detail' reaction.primer.id %}">{{ reaction.primer }}</a></td>
+                    <td>{{ reaction.get_status_display }}</td>
+                    <td>{{ reaction.submit_date }}</td>
+                    <td>
+                        {% if reaction.status == 'd' %}
+                            <a href="{% url 'sequencing:sequence_download' %}?username={{ user.username}}&filename={{ reaction.get_filename }}&type=ab1">Trace</a>
+                            <a href="{% url 'sequencing:sequence_download' %}?username={{ user.username}}&filename={{ reaction.get_filename }}&type=seq">Text</a>
+                        {% else %}
+                            Not available
+                        {% endif %}
+                    </td>
+
+                </tr>
+            {% endfor %}
+        </table>
+
+        <div class="container half-width" style="text-align: center;">
+            <button name="select-all" onclick="selectAll(event)" id="select-all-button" class="button-primary">Select None</button>
+            <input type="submit" value="Bulk Download Selected Files" class="button-primary">
+        </div>
+    </form>
+
+    {% load static %}
+    <script src="{% static 'js/admin_list_functions.js' %}">
+    </script>
 
 {% else %}
 
