@@ -78,8 +78,8 @@ def dropbox_folders():
 # If the create flag is set to true, create the folder if it does not exist.
 def check_customer_folder_exists(path, create=True):
     if not os.path.exists(path) and create:
-        os.makedirs(os.path.join(
-            settings.FILES_BASE_DIR, settings.CUSTOMER_SEQUENCES_DIR))
+        os.mkdir(os.path.join(
+            settings.FILES_BASE_DIR, settings.CUSTOMER_SEQUENCES_DIR), mode=0o775)
     return
 
 

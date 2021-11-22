@@ -1210,7 +1210,7 @@ class DistributeFilesView(View):
                 username = sequence.submitter.username
                 user_folder_path = os.path.join(sequences_base_path, username)
                 if not os.path.isdir(user_folder_path):
-                    os.mkdir(user_folder_path, 0o744)
+                    os.mkdir(user_folder_path, 0o775)
                 src = os.path.join(sequences_folder, filename)
                 dst = os.path.join(user_folder_path, filename)
                 shutil.copyfile(src, dst)

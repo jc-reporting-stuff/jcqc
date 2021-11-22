@@ -220,3 +220,11 @@ PAGINATE_SEARCH_LENGTH = 25
 # Dropbox and file distribution constants
 DROPBOX_DIR = 'dropbox'
 CUSTOMER_SEQUENCES_DIR = 'customer_sequences'
+
+
+# celery
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
