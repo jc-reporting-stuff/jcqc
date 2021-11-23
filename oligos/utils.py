@@ -1,3 +1,26 @@
+def create_bank_file_from(oligos):
+
+    file_text = ''
+    top_line = '\"Applied Biosystems Oligonucleotide Synthesizer Software Bank File\"\n\n'
+
+    file_text += top_line
+
+    for idx, oligo in enumerate(oligos):
+        idx += 1
+        if idx <= 12:
+            file_text += f'\"Bank 1, Column {idx}\"\n'
+            file_text += '\"Column: Enabled\"\n'
+            file_text += '\"TritylOff: Off\"\n'
+            file_text += f'\"Oligo ID: {oligo.name}\"\n'
+            file_text += f'\"Number of Bases: {len(oligo.sequence)}\"\n'
+            file_text += f'\"Sequence: {oligo.sequence}\"\n'
+            file_text += f'\"Vial ID: {oligo.id}\"\n\n'
+
+    last_line = '\"Cycle File: C:\Program Files\3900 DNA Synthesizer\3900Cycles\40nm,0.05M, Rev E.xls\"'
+    file_text += last_line
+    return file_text
+
+
 class EpsonValues:
     A = 15400
     C = 7400

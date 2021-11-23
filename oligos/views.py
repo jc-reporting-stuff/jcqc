@@ -11,6 +11,7 @@ from django.views.generic.base import View
 from django.utils.timezone import localtime, now, make_aware
 from django.core.paginator import Paginator
 from django.conf import settings
+from oligos import utils
 
 from oligos.forms import EasyOrderForm, EnterODForm, OligoInitialForm, OligoOrderForm, IdRangeForm, DateRangeForm, OligoTextSearch, PriceForm
 from .models import Oligo, OliPrice
@@ -483,8 +484,60 @@ class OligoListActionsView(View):
                 oligos_to_label = oligos_to_label[:80]
             return CreateLabels(oligos_to_label)
 
+        elif action == 'create-bankfile':
+            oligos_to_update = get_checked_oligos_from_data(post_data)
+            if len(oligos_to_update) == 0:
+                messages.info(request, 'No oligos selected.')
+                redirect_url = request.POST.get('return-url')
+                return HttpResponseRedirect(redirect_url)
+
+            if len(oligos_to_update) > 12:
+                messages.info(
+                    request, 'Bank file can only contain up to 12 oligos. Using first twelve.')
+                oligos_to_update = oligos_to_update[:12]
+            oligos = Oligo.objects.filter(
+                id__in=oligos_to_update).order_by('id')
+            for oligo in oligos:
+                last_base = oligo.sequence[-1:]
+                if last_base == 'A':
+                    oligo.last_colour = 'Green'
+                elif last_base == 'C':
+                    oligo.last_colour = 'Red'
+                elif last_base == 'G':
+                    oligo.last_colour = 'Yellow'
+                elif last_base == 'T':
+                    oligo.last_colour = 'Blue'
+                elif last_base in 'RYKMSWBDHVNI':
+                    oligo.last_colour = 'White'
+                else:
+                    oligo.last_colur = 'Error!'
+            return render(request, 'oligos/bankfile.html', context={'oligos': oligos})
+
         redirect_url = request.POST.get('return-url')
         return HttpResponseRedirect(redirect_url)
+
+
+class BankfileDownload(View):
+    def get(self, request):
+        ids = request.GET.get('ids')
+        id_list = ids.split(',')
+        for idt in id_list:
+            try:
+                idt = int(idt)
+            except ValueError:
+                messages.warning(
+                    request, f'{idt} is an invalid Oligo ID. Ignored.')
+                id_list.remove(idt)
+        response = HttpResponse(
+            content_type='text/plain',
+            headers={
+                'Content-Disposition': f'attachment; filename="newOrder1.bnk"'},
+        )
+        print(id_list)
+        oligos = Oligo.objects.filter(id__in=id_list).order_by('id')
+        runfile_contents = utils.create_bank_file_from(oligos)
+        response.write(runfile_contents)
+        return response
 
 
 def ReportOrderView(request):

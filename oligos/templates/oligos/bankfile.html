@@ -1,0 +1,44 @@
+{% extends '_base.html' %}
+
+{% block title %}Oligo Search Results{% endblock title %}
+
+{% block content %}
+
+    <div style="width: 60rem; margin: auto;">
+
+    <h1>Download Bank File</h1>
+
+    <p>Bank file was created with the following samples.</p>
+
+        <table class="oligo-view">
+            <tr>
+                <th style="text-align:left">Oligo Name</th>
+                <th>Scale</th>
+                <th>Size</th>
+                <th>Purity</th>
+                <th>3′ end</th>
+                <th>OrderID</th>
+                <th>Tube#</th>
+            </tr>
+
+            {% for oligo in oligos %}
+                <tr>
+                    <td style="text-align:left;">{{ oligo.name }}</td>
+                    <td>{{ oligo.scale }}</td>
+                    <td>{{ oligo.sequence|length }}</td>
+                    <td>{{ oligo.purity|title }}</td>
+                    <td>{{ oligo.last_colour }}</td>
+                    <td>{{ oligo.order_id }}</td>
+                    <td>{{ forloop.counter }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <p>The bank file is currently designed for ABI 3900 High Throughput DNA Synthesizer.</p>
+        <p>To download the bank file, please
+            <a href="{% url 'oligos:bankfile' %}?ids={% for oligo in oligos %}{{ oligo.id }}{% if not forloop.last %},{% endif %}{% endfor %}">click here</a>
+        and save it on desktop.</p>
+
+    </div>
+
+{% endblock content %}
