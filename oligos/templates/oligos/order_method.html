@@ -22,11 +22,12 @@
                 <button type="button" onclick="gotoAccounts()" class="button-primary">Add an account</button>
             </p>
 
+
+            <p style="text-align:center;">How many different oligos are you ordering today: {{ form.oligo_count }}</p>
+
+            <p style="text-align:center"><input type="submit" name="creating" value="Proceed" class="button-primary" style="padding: 0.25rem 3rem;"></p>
+
             <hr>
-
-            <p>How many different oligos are you ordering today: {{ form.oligo_count }}</p>
-
-            <input type="submit" name="creating" value="Proceed" class="button-primary">
 
 
             <div class="pt-8">If you have a large number of oligos to order you might prefer using
