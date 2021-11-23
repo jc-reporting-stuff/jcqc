@@ -5,10 +5,11 @@ def create_bank_file_from(oligos):
 
     file_text += top_line
 
+    sample_count = 0
     for idx, oligo in enumerate(oligos):
-        idx += 1
-        if idx <= 12:
-            file_text += f'\"Bank 1, Column {idx}\"\n'
+        sample_count = idx + 1
+        if sample_count <= 12:
+            file_text += f'\"Bank 1, Column {sample_count}\"\n'
             file_text += '\"Column: Enabled\"\n'
             file_text += '\"TritylOff: Off\"\n'
             file_text += f'\"Oligo ID: {oligo.name}\"\n'
@@ -16,7 +17,17 @@ def create_bank_file_from(oligos):
             file_text += f'\"Sequence: {oligo.sequence}\"\n'
             file_text += f'\"Vial ID: {oligo.id}\"\n\n'
 
-    last_line = '\"Cycle File: C:\Program Files\3900 DNA Synthesizer\3900Cycles\40nm,0.05M, Rev E.xls\"'
+    while sample_count < 12:
+        sample_count += 1
+        file_text += f'\"Bank 1, Column {sample_count}\"\n'
+        file_text += '\"Column: Enabled\"\n'
+        file_text += '\"TritylOff: Off\"\n'
+        file_text += f'\"Oligo ID: \"\n'
+        file_text += f'\"Number of Bases: 0\"\n'
+        file_text += f'\"Sequence: \"\n'
+        file_text += f'\"Vial ID: \"\n\n'
+
+    last_line = '\"Cycle File: C:\\Program Files\\3900 DNA Synthesizer\\3900Cycles\\40nm,0.05M, Rev E.xls\"'
     file_text += last_line
     return file_text
 
