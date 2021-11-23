@@ -227,6 +227,12 @@ header .ugls-header-banner {
   .admin-link:hover {
     background-color: #d1d5db; }
 
+#header-account-image {
+  height: 1.5rem;
+  position: relative;
+  top: 5px;
+  margin: 0 0.125rem; }
+
 #user-icon {
   width: 1rem;
   display: inline; }
@@ -238,6 +244,18 @@ header .ugls-header-banner {
   display: inline;
   filter: brightness(0) saturate(100%) invert(23%) sepia(8%) saturate(1500%) hue-rotate(178deg) brightness(98%) contrast(91%);
   margin-right: 0.125rem; }
+
+.account-box {
+  width: 30rem;
+  margin-left: auto;
+  margin-right: 0;
+  background: #f3f4f6;
+  border: 1px solid #9ca3af;
+  color: 1px solid #1f2937;
+  border-radius: 0.25rem 0.5rem;
+  padding: 0.5rem 1rem; }
+  .account-box p {
+    margin: 0; }
 
 .info-content {
   width: 60rem;
@@ -286,6 +304,11 @@ form {
     margin: 1rem; }
   form .centered {
     text-align: center; }
+  form .error {
+    color: #dc2626;
+    font-weight: 600; }
+    form .error input {
+      background-color: #fee2e2; }
   form .control-group {
     display: inline-block; }
   form .form-number {
@@ -340,7 +363,7 @@ form {
   form textarea {
     border: 1px solid #9ca3af;
     border-radius: 0.5rem;
-    margin: 0.5rem 0.75rem;
+    margin: 0.25rem 0.75rem;
     padding: 0.35rem 0.75rem;
     letter-spacing: 0.01rem;
     font-size: 1rem; }
@@ -666,6 +689,18 @@ fieldset {
 
 .unstriped-table {
   background-color: white; }
+
+#sequencing-submission-form {
+  font-family: Arial, Verdana, Sans;
+  width: 98%;
+  margin: auto; }
+  #sequencing-submission-form p,
+  #sequencing-submission-form td {
+    font-family: Arial, Verdana, Sans;
+    font-size: 11px;
+    margin: 0 auto;
+    padding: 0;
+    text-align: left; }
 
 .worksheet-search-table {
   text-align: left;

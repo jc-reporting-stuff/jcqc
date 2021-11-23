@@ -35,7 +35,7 @@ def validate_template_name(value):
     regexp = '^[a-zA-Z0-9\-_\(\)\+\.]*$'
     if not re.match(regexp, value):
         raise ValidationError(
-            '%(value)s contains invalid characters', params={'value': value})
+            'Invalid characters (see below)', params={'value': value})
 
 
 class TemplateModelForm(forms.ModelForm):
@@ -59,6 +59,11 @@ class TemplateModelForm(forms.ModelForm):
             'pcr_purify': 'Purification Required'
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.error_messages = {'required': 'Required'}
+
 
 class PrimerModelForm(forms.ModelForm):
     name = forms.CharField(max_length=16, validators=[validate_template_name])
@@ -76,6 +81,11 @@ class PrimerModelForm(forms.ModelForm):
             'volume': 'Vol.<br>(µL)',
             'melting_temperature': 'Temperature',
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.error_messages = {'required': 'Required'}
 
 
 class MultiReactionField(forms.CharField):

@@ -533,7 +533,6 @@ class BankfileDownload(View):
             headers={
                 'Content-Disposition': f'attachment; filename="newOrder1.bnk"'},
         )
-        print(id_list)
         oligos = Oligo.objects.filter(id__in=id_list).order_by('id')
         runfile_contents = utils.create_bank_file_from(oligos)
         response.write(runfile_contents)

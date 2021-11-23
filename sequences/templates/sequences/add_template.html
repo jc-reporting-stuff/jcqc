@@ -81,8 +81,12 @@
                             </th>
                             {% for field in form %}
                                 {% if not forloop.last %}
-                                    <td>
-                                        {{ field }}
+                                    <td {% if field.errors %}class="error"{% endif %}>
+                                        <label for="field.id_for_label" class="visually-hidden">{{field.label}}</label>{{ field }}
+                                        {{ field.errors }}
+                                        {% if field.help_text %}
+                                            {{ field.help_text|safe }}
+                                        {% endif %}
                                     </td>
                                 {% endif %}
                                 {% if forloop.last %}
@@ -102,7 +106,7 @@
             <input type="hidden" name="reaction-count" value="{{ reaction_count }}">
             <input type="hidden" name="account-id" value="{{ account_id }}">
 
-            <div style="display: flex; width: 100%; justify-content: space-between;">
+            <div style="display: flex; width: 70rem; margin: auto; justify-content: space-between; align-items: baseline;">
                 <div>
                     <input type="submit" name="proceed-reactions" value="Proceed to reactions" class="button-primary">
                     <input type="reset" value="Clear all" class="button-primary">

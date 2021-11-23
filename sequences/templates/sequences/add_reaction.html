@@ -22,13 +22,35 @@
 
             <div>
                 {% csrf_token %}
-                {{ reaction_formset.management_form }}
 
-                {% for form in reaction_formset %}
-                    <h2>Reaction #{{ forloop.counter}}</h2>
-                    {{ form|crispy }}
-                    <hr>
-                {% endfor %}
+                {{ reaction_formset.management_form }}
+                    <table class="oligo-view">
+                        <tr>
+                            <th>No.</th>
+                            {% for field in reaction_formset.0 %}
+                                <th>{{ field.label }}{% if field.field.required%}<span class="asteriskField">*</span>{% endif %}</th>
+                            {% endfor %}
+                        </tr>
+
+                        {% for form in reaction_formset %}
+                            <tr>
+                                <th>{{ forloop.counter }}
+                                    {% for hidden in form.hidden_fields %}
+                                        {{ hidden }}
+                                    {% endfor %}
+                                </th>
+                                {% for field in form %}
+                                    <td {% if field.errors %}class="error"{% endif %}>
+                                        <label for="field.id_for_label" class="visually-hidden">{{field.label}}</label>{{ field }}
+                                        {{ field.errors }}
+                                        {% if field.help_text %}
+                                            {{ field.help_text|safe }}
+                                        {% endif %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
 
                 <input type="hidden" name="template-count" value="{{ template_count }}">
                 <input type="hidden" name="primer-count" value="{{ primer_count }}">

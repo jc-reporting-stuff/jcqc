@@ -39,20 +39,22 @@
         }
     </style>
 
-    <div style="text-align: center;">
-        <p style="font: bold 18pt Times New Roman; letter-spacing: 1px; margin-bottom: 0px; color: black;">
-            <img src="{% static '/images/lsd_logo.jpg' %}">
-            Sequencing Request Form
-        </p>
+    <div id="sequencing-submission-form">
+        <div style="margin: auto; display: flex; justify-content: space-around; align-items: flex-end; width:600px; margin-bottom: 1rem;">
+            <img src="{% static '/images/LS_Logo.gif' %}">
+            <div style="font: bold 18pt Times New Roman; letter-spacing: 1px; margin-bottom: 0px; color: black;">
+                Sequencing Request Form
+            </div>
+        </div>
 
-        <br>
-        <table style="margin: auto;" cellpadding="0" cellspacing="0" border="0" width="660" class="tableformatting">
+        <div style="sequencing-form">
+        <table style="margin: auto; margin-bottom: 1rem;" cellpadding="0" cellspacing="0" border="0" class="table-formatting">
             <tr>
                 <td>
-                    <strong>Please submit this form with your samples to:</strong> Lab Services,
-            University of Guelph<br> 95 Stone Road West, Guelph, ON, Canada N1H 8J7
-            <br>
-            Tel: (519) 823-1268, ext 57223;  Email: <a href="mailto:sequence@uoguelph.ca">sequence@uoguelph.ca</a>.</td>
+                    <p style="margin-top: 3px;"><strong>Please submit this form with your samples to:</strong> Lab Services,
+            University of Guelph<br>95 Stone Road West, Guelph, ON, Canada N1H 8J7,
+            Tel: (519) 823-1268, ext 57223;  Email: <a href="mailto:sequence@uoguelph.ca">sequence@uoguelph.ca</a>.
+                </td>
             </tr>
         </table>
         </p>
@@ -60,13 +62,13 @@
 
             <table cellpadding="0" cellspacing="0" border="0" width="660" style="margin: auto;">
                 <tr>
-                    <td align="left" valign="middle" colspan="2" width="60%">
+                    <td style="width: 60%; vertical-align: middle;">
                         <strong>Submitted by:</strong><br>
                         {{ submitter.display_name }}<br>
                         {{ submitter.department }}<br>
                         {{ submitter.phone }} {% if submitter.extension %}(ext. {{ submitter.extension }}){% endif %}<br>
                         {{ submitter.email }}</td>	
-                    <td valign="middle" colspan="2" align="left" width="40%" style="font-size: 0.75rem; background-color: #eee; margin: 0.5rem;">
+                    <td colspan="2" style="font-size: 0.75rem; background-color: #f6f6f6; margin: 0.5rem; width: 40%; vertical-align: middle;">
                         LABORATORY USE ONLY (MOL-013.1)<br>
                         Rec'd by:___________ <br>
                         Date Received:___________<br>
@@ -78,7 +80,7 @@
                 </tr>
                 <tr>
                     <td align="left" colspan="2" width="60%" style="font-size: 1.25rem; font-weight: bold;">
-                        <h3>Submission ID: {{ submission_id }}</h3>
+                        <p style="font-size: 1rem;">Submission ID: {{ submission_id }}</p>
                     </td>
                     <td align="right" colspan="2" width="40%">
                         <form>
@@ -94,7 +96,7 @@
                 <td class="inner-table">	
                     <table cellpadding="0" cellspacing="0" border="1" width="660" class="tableformatting">
                         <tr class="black-border-bottom">
-                            <th align="center" colspan="9" style="font-size: 1.2rem;">Template Description</th>
+                            <th align="center" colspan="9" style="font-size: 0.9rem;">Template Description</th>
                         </tr>
                         <tr class="light-bottom-border">
                             <th align="left">DNA name</th>
@@ -129,7 +131,7 @@
                     <td class="inner-table">
                         <table cellpadding="0" cellspacing="0" border="1" width="660" class="tableformatting" style="margin-top: 3px;">
                             <tr>
-                                <th align="center" colspan="8" class="black-border-bottom;" style="font-size: 1.2rem;">Primer Description</th>
+                                <th align="center" colspan="8" class="black-border-bottom;" style="font-size: 0.9rem;">Primer Description</th>
                             </tr>
                             <tr>
                                 <th align="left">No.</th>
@@ -171,7 +173,7 @@
                 <td colspan="2" class="inner-table">
                     <table cellpadding="0" cellspacing="0" border="1" width="660" class="tableformatting"  style="margin-top: 3px;">
                         <tr>
-                            <th align="center" colspan="7" style="font-size: 1.2rem;">Sequencing Reactions Requested</th>
+                            <th align="center" colspan="7" style="font-size: 0.9rem;">Sequencing Reactions Requested</th>
                         </tr>
                         <tr>
                             <th align="left">Item.</th>
