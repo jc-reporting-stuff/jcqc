@@ -63,6 +63,15 @@ form {
   }
   label {
     font-weight: 600;
+    &.visually-hidden:not(:focus):not(:active) {
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      height: 1px;
+      overflow: hidden;
+      position: absolute;
+      white-space: nowrap;
+      width: 1px;
+    }
   }
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
@@ -72,6 +81,7 @@ form {
   input[type="number"] {
     max-width: 4rem;
     -moz-appearance: textfield;
+    text-align: right;
   }
   input[type="text"],
   input[type="password"],

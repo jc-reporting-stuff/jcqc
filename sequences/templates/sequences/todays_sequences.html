@@ -14,6 +14,7 @@
                 <th>Seq ID</th>
                 <th>Client Name</th>
                 <th>Type</th>
+                <th>Template</th>
                 <th>Primer</th>
                 <th>Source</th>
                 <th>Comment</th>
@@ -25,6 +26,7 @@
                     <td>{{ reaction.id }}</td>
                     <td>{{ reaction.submitter.display_name }}</td>
                     <td>{{ reaction.template.get_type_display }}</td>
+                    <td>{{ reaction.template.name }}</td>
                     <td>{{ reaction.primer.name }}</td>
                     <td>{{ reaction.source }}</td>
                     <td>{{ reaction.get_comment }}</td>

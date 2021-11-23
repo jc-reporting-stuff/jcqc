@@ -31,41 +31,42 @@ class ReactionForm(forms.Form):
         self.fields['hardcopy'] = forms.BooleanField(required=False)
 
 
-class MultiReactionField(forms.CharField):
-    def to_python(self, value):
-        if not value:
-            return []
-        split_values = value.split('\n')
-        return [v for v in split_values if v.strip()]
-
-    def validate(self, value):
-        super().validate(value)
-        regex = r'^(.+?)[\t;,]\s*(.+?).*'
-        for line in value:
-            try:
-                re.match(regex, line).groups()
-            except:
-                raise ValidationError(
-                    'Check that input is comma, semicolon or tab delimited. One reaction per line.')
+def validate_template_name(value):
+    regexp = '^[a-zA-Z0-9\-_\(\)\+\.]*$'
+    if not re.match(regexp, value):
+        raise ValidationError(
+            '%(value)s contains invalid characters', params={'value': value})
 
 
 class TemplateModelForm(forms.ModelForm):
+    name = forms.CharField(max_length=17, validators=[validate_template_name])
+    template_size = forms.IntegerField(min_value=50, max_value=999999)
+    template_concentration = forms.FloatField(min_value=0, max_value=999999)
+    template_volume = forms.FloatField(min_value=1, max_value=999999)
+
     class Meta:
         model = Template
         fields = (
             'name', 'type', 'template_size', 'insert_size',
-            'template_concentration', 'template_volume', 'comment', 'pcr_purify'
+            'template_concentration', 'template_volume', 'comment', 'pcr_purify',
         )
+
         labels = {
-            'template_size': 'Size<br>(total bp)',
-            'insert_size': 'Insert Size<br>(bp)',
-            'template_concentration': 'Conc.<br>(ng/µL)',
-            'template_volume': 'Vol.<br>(µL)',
+            'template_size': 'Size (total bp)',
+            'insert_size': 'Insert Size (bp)',
+            'template_concentration': 'Conc. (ng/µL)',
+            'template_volume': 'Vol. (µL)',
             'pcr_purify': 'Purification Required'
         }
 
 
 class PrimerModelForm(forms.ModelForm):
+    name = forms.CharField(max_length=16, validators=[validate_template_name])
+    concentration = forms.FloatField(min_value=0, max_value=9999999999)
+    volume = forms.FloatField(min_value=1, max_value=9999999999)
+    melting_temperature = forms.FloatField(
+        min_value=1, max_value=9999999999, required=False)
+
     class Meta:
         model = Primer
         fields = (
@@ -75,6 +76,24 @@ class PrimerModelForm(forms.ModelForm):
             'volume': 'Vol.<br>(µL)',
             'melting_temperature': 'Temperature',
         }
+
+
+class MultiReactionField(forms.CharField):
+    def to_python(self, value):
+        if not value:
+            return []
+        split_values = value.split('\n')
+        return [v for v in split_values if v.strip()]
+
+    def validate(self, value):
+        super().validate(value)
+        regex = r'^([a-zA-Z0-9\-_\(\)\+]+)[\t;,]\s*([a-zA-Z0-9\-_\(\)\+]+).*'
+        for line in value:
+            try:
+                re.match(regex, line).groups()
+            except:
+                raise ValidationError(
+                    'Check that input is comma, semicolon or tab delimited and no invalid characters. One reaction per line.')
 
 
 class ReactionEasyOrderForm(forms.Form):
@@ -143,6 +162,8 @@ class ReactionEasyOrderForm(forms.Form):
                     css_class='row-holder-fieldset'
                 ),
             ),
+            HTML('<div style="margin-left: 3rem;"><p>Format each line as follows where ⟹ is comma, semicolon or tab.</p> \
+                    <p>TemplateName ⟹ PrimerName ⟹ Comment (optional)</p></div>'),
             Field('reactions')
         )
 

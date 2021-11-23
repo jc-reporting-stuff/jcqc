@@ -21,7 +21,7 @@ from pages.models import Message
 
 
 from sequences.models import Plate, Reaction, SeqPrice, Worksheet
-from sequences.forms import PrimerModelForm, ReactionEasyOrderForm, ReactionForm, IdRangeForm, DateRangeForm, RunfilePrepForm, StatusForm, TemplateModelForm, TextSearch, PriceForm, WorksheetSearchForm
+from sequences import forms
 
 
 from sequences.models import Template, Primer, Reaction, Account
@@ -140,13 +140,14 @@ def ReactionAddView(request):
             return HttpResponseRedirect(reverse_lazy('sequencing:method_select'))
 
         # Create formsets to pass to page #
-        TemplateFormset = modelformset_factory(Template, form=TemplateModelForm,
+        TemplateFormset = modelformset_factory(Template, form=forms.TemplateModelForm,
                                                extra=template_count)
 
-        PrimerFormset = modelformset_factory(Primer, form=PrimerModelForm,
+        PrimerFormset = modelformset_factory(Primer, form=forms.PrimerModelForm,
                                              extra=primer_count)
 
-        ReactionFormset = formset_factory(ReactionForm, extra=reaction_count)
+        ReactionFormset = formset_factory(
+            forms.ReactionForm, extra=reaction_count)
 
         # This indicates coming from the method-select/choose number of things page
         if request.POST.get('template-primer-add'):
@@ -278,10 +279,10 @@ def ReactionAddView(request):
 
 class BulkReactionAddView(FormView):
     template_name = 'sequences/bulk_add.html'
-    form_class = ReactionEasyOrderForm
+    form_class = forms.ReactionEasyOrderForm
 
     def get(self, request):
-        form = ReactionEasyOrderForm()
+        form = forms.ReactionEasyOrderForm()
         account_id = request.GET.get('account_id')
         if not account_id:
             messages.info(
@@ -290,7 +291,7 @@ class BulkReactionAddView(FormView):
         return render(request, 'sequences/bulk_add.html', context={'form': form, 'account_id': account_id})
 
     def post(self, request):
-        form = ReactionEasyOrderForm(request.POST or None)
+        form = forms.ReactionEasyOrderForm(request.POST or None)
 
         if not form.is_valid():
             return render(request, 'sequences/bulk_add.html', context={'form': form})
@@ -301,13 +302,17 @@ class BulkReactionAddView(FormView):
         reactions = []
         for reaction in data['reactions']:
             try:
-                ex = r'^([^\t;,]+)[\t;,]\s*([^\t\r;,]+)[\t;,]?\s*?([^\r]*)\r?$'
+                ex = r'^([a-zA-Z0-9\-_\(\)\+]+)[\t;,]\s*([a-zA-Z0-9\-_\(\)\+]+)[\t;,]?\s*?([^\r]*)\r?$'
                 groups = re.match(ex, reaction).groups()
+                if len(groups[0]) > 17 or len(groups[1]) > 17:
+                    messages.info(
+                        request, f'{groups[0]} has {len(groups[0])} characters. {groups[1]} has {len(groups[1])} characters. Template and \
+                        primer names may only contain up to 17 characters.')
+                    return render(request, 'sequences/bulk_add.html', context={'form': form, 'account_id': account_id})
                 reactions.append(groups)
-                print(groups)
             except AttributeError:
                 messages.info(
-                    request, f'Could not match the line {reaction}. Check formatting and try again.')
+                    request, f'Could not match the line {reaction}. Check formatting, length and characters and try again. ')
                 return render(request, 'sequences/bulk_add.html', context={'form': form, 'account_id': account_id})
 
         primer_names = []
@@ -478,15 +483,15 @@ class SequenceSearchView(View):
                 return redirect(get_redirect_url(search=search, text=text))
 
         max_reaction = Reaction.objects.all().order_by('-id').first()
-        id_range_form = IdRangeForm(
+        id_range_form = forms.IdRangeForm(
             prefix="submission", initial={'high': max_reaction.submission_id})
-        date_range_form = DateRangeForm(prefix="date")
-        sequence_range_form = IdRangeForm(
+        date_range_form = forms.DateRangeForm(prefix="date")
+        sequence_range_form = forms.IdRangeForm(
             prefix="sequence", initial={'high': max_reaction.id})
-        template_name_form = TextSearch(prefix="template")
-        primer_name_form = TextSearch(prefix="primer")
-        plate_name_form = TextSearch(prefix="plate")
-        status_form = StatusForm(prefix='status')
+        template_name_form = forms.TextSearch(prefix="template")
+        primer_name_form = forms.TextSearch(prefix="primer")
+        plate_name_form = forms.TextSearch(prefix="plate")
+        status_form = forms.StatusForm(prefix='status')
 
         context = {
             'id_range_form': id_range_form,
@@ -610,10 +615,10 @@ class SequenceListActionsView(View):
 class BillingView(View):
     def get(self, request):
         max_reaction = Reaction.objects.all().order_by('-id').first()
-        range_form = IdRangeForm(initial={'high': max_reaction.id})
+        range_form = forms.IdRangeForm(initial={'high': max_reaction.id})
 
         prices = SeqPrice.objects.filter(current=True).last()
-        price_form = PriceForm(instance=prices, prefix="price")
+        price_form = forms.PriceForm(instance=prices, prefix="price")
 
         context = {
             'range_form': range_form,
@@ -622,8 +627,8 @@ class BillingView(View):
         return render(request, 'sequences/billing.html', context=context)
 
     def post(self, request):
-        range_form = IdRangeForm(request.POST)
-        price_form = PriceForm(request.POST, prefix="price")
+        range_form = forms.IdRangeForm(request.POST)
+        price_form = forms.PriceForm(request.POST, prefix="price")
         if not range_form.is_valid() or not price_form.is_valid():
             context = {
                 'range_form': range_form,
@@ -749,7 +754,7 @@ class BillingView(View):
 
 
 class RemoveOrderView(FormView):
-    form_class = IdRangeForm
+    form_class = forms.IdRangeForm
     template_name = 'sequences/remove_order.html'
 
     def form_valid(self, form):
@@ -799,7 +804,7 @@ class PrepMenuView(TemplateView):
 
 class WorksheetSearchView(View):
     def get(self, request):
-        form = WorksheetSearchForm
+        form = forms.WorksheetSearchForm
         reactions = (Reaction.objects.filter(
             status__in='sq').order_by('id'))
         min_value = reactions.first().id
@@ -814,7 +819,7 @@ class WorksheetSearchView(View):
 
 class WorksheetAddView(View):
     def post(self, request):
-        form = WorksheetSearchForm(request.POST)
+        form = forms.WorksheetSearchForm(request.POST)
 
         if not form.is_valid():
             messages.info(request, 'Form invalid, try again.')
@@ -1094,11 +1099,11 @@ class WorksheetUpdateWellView(View):
 
 class RunfileCreateView(View):
     def get(self, request):
-        form = RunfilePrepForm
+        form = forms.RunfilePrepForm
         return render(request, 'sequences/runfile_create.html', context={'form': form})
 
     def post(self, request):
-        form = RunfilePrepForm(request.POST)
+        form = forms.RunfilePrepForm(request.POST)
         if not form.is_valid():
             return render(request, 'sequences/runfile_create.html', context={'form': form})
 

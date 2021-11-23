@@ -316,13 +316,22 @@ form {
     font-size: 0.8rem !important; }
   form label {
     font-weight: 600; }
+    form label.visually-hidden:not(:focus):not(:active) {
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      height: 1px;
+      overflow: hidden;
+      position: absolute;
+      white-space: nowrap;
+      width: 1px; }
   form input::-webkit-outer-spin-button,
   form input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0; }
   form input[type="number"] {
     max-width: 4rem;
-    -moz-appearance: textfield; }
+    -moz-appearance: textfield;
+    text-align: right; }
   form input[type="text"],
   form input[type="password"],
   form input[type="number"],

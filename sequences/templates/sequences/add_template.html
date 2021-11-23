@@ -11,35 +11,89 @@
         <p>This is <strong>Step 2 of 3.</strong></p>
 
         <form method="post" action="">
-
+              {% csrf_token %}
 
             <div>
 
-                <h1>Templates</h1>
+                <div style="width: 70rem; margin: auto;">
 
-            
-                {% csrf_token %}
-                {{ template_formset.management_form }}
+                    <h1 style="margin-left: 2rem;">Templates</h1>
 
-                {% for form in template_formset %}
-                    <h2>Template #{{ forloop.counter}}</h2>
-                    {{ form|crispy }}
-                    <hr>
-                {% endfor %}
+                    {{ template_formset.management_form }}
+
+                    <table class="oligo-view">
+                        <tr>
+                            <th>No.</th>
+                            {% for field in template_formset.0 %}
+                                {% if not forloop.last %}
+                                    <th>{{ field.label }}{% if field.field.required%}<span class="asteriskField">*</span>{% endif %}</th>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+
+                    {% for form in template_formset %}
+                        <tr>
+                            <th>{{ forloop.counter }}
+                                {% for hidden in form.hidden_fields %}
+                                    {{ hidden }}
+                                {% endfor %}
+                            </th>
+                            {% for field in form %}
+                                {% if not forloop.last %}
+                                    <td {% if field.errors %}class="error"{% endif %}>
+                                        <label for="field.id_for_label" class="visually-hidden">{{field.label}}</label>{{ field }}
+                                        {{ field.errors }}
+                                        {% if field.help_text %}
+                                            {{ field.help_text|safe }}
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </table>
+                </div>
             
             </div>
 
             <div {% if primer_formset|length == 0 %}style="display: none"{% endif%}>
 
-            <h1>Your own Primer Description</h1>
+                <div style="width: 70rem; margin: auto;">
+                    <h1 style="margin-left: 2rem;">Primers</h1>
 
-                {{ primer_formset.management_form }}
+                    {{ primer_formset.management_form }}
+                    <table class="oligo-view">
+                        <tr>
+                            <th>No.</th>
+                            {% for field in primer_formset.0 %}
+                                {% if not forloop.last %}
+                                    <th>{{ field.label }}{% if field.field.required%}<span class="asteriskField">*</span>{% endif %}</th>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
 
-                {% for form in primer_formset %}
-                    <h2>Primer #{{ forloop.counter}}</h2>
-                    {{ form|crispy }}
-                    <hr>
-                {% endfor %}
+                    {% for form in primer_formset %}
+                        <tr>
+                            <th>{{ forloop.counter }}
+                                {% for hidden in form.hidden_fields %}
+                                    {{ hidden }}
+                                {% endfor %}
+                            </th>
+                            {% for field in form %}
+                                {% if not forloop.last %}
+                                    <td>
+                                        {{ field }}
+                                    </td>
+                                {% endif %}
+                                {% if forloop.last %}
+                                    {{ field }}
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </table>
+
+                </div>
             
             </div>
 
@@ -62,9 +116,9 @@
             </div>
 
             <div class="container half-width">
-                <p><strong>Note:</strong></p>
-                <p>Template and primer names have to be clearly labelled on your tubes, bags and boxes or plates etc. They can be up to 16
-                characters which only consist of letters, numbers, -_()+. Space, quotation mark or asterisk are not accepted.</p>
+                <p><strong>Note:</strong>
+                Template and primer names have to be clearly labelled on your tubes, bags and boxes or plates etc. They can be up to 16
+                characters which only consist of letters, numbers, and <code>- _ ( ) +</code>. Spaces, quotation marks, asterisks and other symbols are not accepted.</p>
             </div>
                 
 
