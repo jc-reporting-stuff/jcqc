@@ -5,10 +5,11 @@
 
 {% load crispy_forms_tags%}
 {% load index %}
+{% load static %}
 
 {% block content %}
 
-    <div class="container" style="width: 80rem;">
+    <div class="container" style="max-width: 90%;">
 
         <form method="post" style="margin: 0;">
             {% csrf_token %}
@@ -24,13 +25,11 @@
 
                  {{ formset.management_form }}
 
-                    <table class="oligo-view">
+                    <table class="oligo-view" style="width: 100%;">
                         <tr>
                             <th>No.</th>
                             {% for field in formset.0 %}
-                                {% if not forloop.last %}
                                     <th>{{ field.label }}{% if field.field.required%}<span class="asteriskField">*</span>{% endif %}</th>
-                                {% endif %}
                             {% endfor %}
                         </tr>
 
@@ -42,11 +41,10 @@
                                 {% endfor %}
                             </th>
                             {% for field in form %}
-                                {% if not forloop.last %}
                                     <td 
                                         {% if field.errors %}class="error"{% endif %}
-                                        {% if forloop.counter == 3 %}style="width: 25%;"{% endif %}
-                                        {% if forloop.counter == 4 %}style="width: 25%;"{% endif %}
+                                        {% if forloop.counter == 3 %}style="width: 23%;"{% endif %}
+                                        {% if forloop.counter == 4 %}style="width: 23%;"{% endif %}
                                     >
                                         <label for="field.id_for_label" class="visually-hidden">{{field.label}}</label>{{ field }}
                                         {{ field.errors }}
@@ -54,7 +52,6 @@
                                             {{ field.help_text|safe }}
                                         {% endif %}
                                     </td>
-                                {% endif %}
                             {% endfor %}
                         </tr>
                     {% endfor %}
@@ -86,8 +83,10 @@
 
                 <input type="hidden" name="account_id" value="{{ account_id }}">
 
-                <input type="submit" name="previewing" value="Proceed to Preview" class="button-primary">
-                <input type="reset" value="Clear"  class="button-primary">
+                <div style="width: 50%; margin: auto; text-align: center;">
+                    <input type="submit" name="previewing" value="Proceed to Preview" class="button-primary">
+                    <input type="reset" value="Clear"  class="button-primary" style="margin-left: 2rem;">
+                </div>
 
             </div>
 
@@ -97,8 +96,6 @@
                 <div>
 
                     <h1>Step 3 of 3: Verify your orders</h1>
-
-                    <p>&gt;&gt; Using account {{ account.code }} - {{ account.comment }}</p>
 
                     <table class="oligo-view">
                         <tr>
@@ -125,7 +122,10 @@
                         {% endfor %}
                     </table>
 
-                    <input type="submit" name="submitting" value="Order Oligos"  class="button-primary">
+                    <div style="display: flex; align-items: center; justify-content: space-around; margin-bottom: 2rem;">
+                        {% include 'components/account.html' %}
+                        <input type="submit" name="submitting" value="Order Oligos"  class="button-primary">
+                    </div>
 
                     <div class="container half-width">Oligos will be delivered right to your door once they are ready if you are a University of Guelph internal customer or sent via courier
                     if you are not located around the University of Guelph campus.</div>

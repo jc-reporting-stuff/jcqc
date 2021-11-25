@@ -47,7 +47,7 @@ div {
   padding: 0.2rem; }
 
 a {
-  text-decoration: none;
+  text-decoration: underline;
   color: #1d4ed8; }
   a:visited {
     color: #1e3a8a; }
@@ -208,7 +208,8 @@ header .ugls-header-banner {
           .nav-container .nav-group-container .nav-group .nav-box .bottom-box a {
             color: #fcd34d;
             padding: 0.125rem 0.5rem;
-            font-weight: normal; }
+            font-weight: normal;
+            text-decoration: none; }
             .nav-container .nav-group-container .nav-group .nav-box .bottom-box a:hover {
               color: #fde68a; }
           .nav-container .nav-group-container .nav-group .nav-box .bottom-box span {
@@ -247,8 +248,6 @@ header .ugls-header-banner {
 
 .account-box {
   width: 30rem;
-  margin-left: auto;
-  margin-right: 0;
   background: #f3f4f6;
   border: 1px solid #9ca3af;
   color: 1px solid #1f2937;

@@ -1,0 +1,12 @@
+{% load static %}
+
+<div class="account-box">
+    <p style="font-size: 1.25rem; font-weight: bold">
+        <img src="{% static 'images/financial-account-icon.svg' %}" id="header-account-image">
+        Account
+    </p>
+    <p>
+        <strong>Code:</strong> {{ account.code }}<br>
+        <strong>Comment:</strong> {{ account.comment }}
+    </p>
+</div>

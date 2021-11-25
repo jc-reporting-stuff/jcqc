@@ -35,7 +35,7 @@
       {% endfor %}
     </table>
 
-    <div style="display: flex; align-items: center;">
+    <div style="display: flex; align-items: center; justify-content: space-between;">
 
       <div>
         <input
@@ -48,20 +48,15 @@
         to make changes.
       </div>
 
-      <div class="account-box">
-        <p style="font-size: 1.25rem; font-weight: bold">
-          <img src="{% static 'images/financial-account-icon.svg' %}" id="header-account-image">
-          Account
-        </p>
-        <p><strong>Code:</strong> {{ account.code }}<br>
-          <strong>Comment:</strong> {{ account.comment }}</p>
-      </div>
+      {% include 'components/account.html' %}
     </div>
 
     <input type="hidden" name="template-count" value="{{ template_count }}" />
     <input type="hidden" name="primer-count" value="{{ primer_count }}" />
     <input type="hidden" name="reaction-count" value="{{ reaction_count }}" />
     <input type="hidden" name="account-id" value="{{ account_id }}" />
+
+    <hr>
 
     <p>When you place the order, a printout page (completed Sequencing Report Form) will be shown.</p>
     <p>The form will be needed for your submission and no sample will be accepted without it.</p>
