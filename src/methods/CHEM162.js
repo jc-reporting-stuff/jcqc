@@ -27,14 +27,9 @@ const CHEM162 = {
   sigFigs: 3,
   referenceMaterials: [
     {
-      name: 'QM-S Q1807',
-      rangesLow: [2.23, 0.747, 3.47, 1.03, 0.913, 0.119, 1.11, null],
-      rangesHigh: [3.2, 0.851, 4.3, 1.22, 1.16, 0.152, 1.73, null]
-    },
-    {
       name: 'QM-S Q2007',
-      rangesLow: [4.69, 0.494, 0.558, 2.191, 1.03, 0.113, 1.59, null],
-      rangesHigh: [6.99, 0.579, 0.77, 2.572, 1.24, 0.141, 2.6, null]
+      rangesLow: [4.69, 0.494, 0.558, 2.191, 1.04, 0.117, 1.59, null],
+      rangesHigh: [6.99, 0.579, 0.77, 2.572, 1.21, 0.141, 2.6, null]
     },
     {
       name: 'QM-B Q1720',
