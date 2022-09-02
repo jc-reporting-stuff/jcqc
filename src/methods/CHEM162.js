@@ -32,6 +32,11 @@ const CHEM162 = {
       rangesHigh: [6.99, 0.579, 0.77, 2.572, 1.21, 0.141, 2.6, null]
     },
     {
+      name: 'QM-S Q2116',
+      rangesLow: [1.47, 0.793, 2.75, 1.18, 1.3, 0.238, 2.57, null],
+      rangesHigh: [2.73, 1.08, 3.48, 1.49, 1.58, 0.273, 3.62, null]
+    },
+    {
       name: 'QM-B Q1720',
       rangesLow: [null, null, null, null, null, 0.169, null, 0.109],
       rangesHigh: [null, null, null, null, null, 0.238, null, 0.134]
